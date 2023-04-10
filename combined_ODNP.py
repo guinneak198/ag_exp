@@ -22,7 +22,6 @@ from datetime import datetime
 logger = init_logging(level="debug")
 target_directory = getDATADIR(exp_type="ODNP_NMR_comp/ODNP")
 fl = figlist_var()
-thermal_scans = 4
 # {{{ import acquisition parameters
 parser_dict = SpinCore_pp.configuration('active.ini')
 nPoints = int(parser_dict['acq_time_ms']*parser_dict['SW_kHz']+0.5)
@@ -224,6 +223,7 @@ for j in range(thermal_scans):
         #                         that powers and other parameters are defined
         #                         globally w/in the script, as this function is not
         #                         designed to be moved outside the module
+        time_axis_coords = DNP_data.getaxis("indirect")
     else:
         DNP_data = run_spin_echo(
             nScans=parser_dict['nScans'],
@@ -246,7 +246,6 @@ for j in range(thermal_scans):
         #                         globally w/in the script, as this function is not
         #                         designed to be moved outside the module
     DNP_thermal_done = time.time()
-    time_axis_coords = DNP_data.getaxis("indirect")
     time_axis_coords[j]["start_times"] = DNP_ini_time
     time_axis_coords[j]["stop_times"] = DNP_thermal_done
     power_settings_dBm = np.zeros_like(dB_settings)
@@ -261,7 +260,7 @@ for j in range(thermal_scans):
                 parser_dict['uw_dip_center_GHz'] + parser_dict['uw_dip_width_GHz'] / 2,
             )
         p.set_power(this_dB)
-        for k in range(10):
+        for k in range(20):
             time.sleep(0.5)
             if p.get_power_setting() >= this_dB:
                 break
@@ -269,11 +268,11 @@ for j in range(thermal_scans):
             raise ValueError("After 10 tries, the power has still not settled")
         time.sleep(5)
         power_settings_dBm[j] = p.get_power_setting()
-        time_axis_coords[j + thermal_scans]["start_times"] = time.time()
+        time_axis_coords[j + 4]["start_times"] = time.time()
         run_spin_echo(
             nScans=parser_dict['nScans'],
-            indirect_idx=j + thermal_scans,
-            indirect_len=len(powers) + thermal_scans,
+            indirect_idx=j + 4,
+            indirect_len=len(powers) + 4,
             adcOffset=parser_dict['adc_offset'],
             carrierFreq_MHz=parser_dict['carrierFreq_MHz'],
             nPoints=nPoints,
@@ -284,7 +283,7 @@ for j in range(thermal_scans):
             SW_kHz=parser_dict['SW_kHz'],
             ret_data=DNP_data,
         )
-        time_axis_coords[j + thermal_scans]["stop_times"] = time.time()
+        time_axis_coords[j + 4]["stop_times"] = time.time()
     DNP_data.set_prop("stop_time", time.time())
     DNP_data.set_prop("postproc_type", "spincore_ODNP_v4")
     DNP_data.set_prop("acq_params", parser_dict.asdict())
