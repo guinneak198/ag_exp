@@ -200,107 +200,54 @@ with power_control() as p:
     p.mw_off()
     time.sleep(16.0)
     p.start_log()
+for j in range(thermal_scans):
     DNP_ini_time = time.time()
-    DNP_data = run_spin_echo(
-        nScans=parser_dict['nScans'],
-        indirect_idx=0,
-        indirect_len=len(powers) + 4,
-        ph1_cyc=Ep_ph1_cyc,
-        adcOffset=parser_dict['adc_offset'],
-        carrierFreq_MHz=parser_dict['carrierFreq_MHz'],
-        nPoints=nPoints,
-        nEchoes=parser_dict['nEchoes'],
-        p90_us=parser_dict['p90_us'],
-        repetition_us=parser_dict['repetition_us'],
-        tau_us=parser_dict['tau_us'],
-        SW_kHz=parser_dict['SW_kHz'],
-        indirect_fields=("start_times", "stop_times"),
-        ret_data=None,
-    )  # assume that the power axis is 1 longer than the
-    #                         "powers" array, so that we can also store the
-    #                         thermally polarized signal in this array (note
-    #                         that powers and other parameters are defined
-    #                         globally w/in the script, as this function is not
-    #                         designed to be moved outside the module
+    if j == 0:
+        DNP_data = run_spin_echo(
+            nScans=parser_dict['nScans'],
+            indirect_idx=j,
+            indirect_len=len(powers) + thermal_scans,
+            adcOffset=parser_dict['adc_offset'],
+            carrierFreq_MHz=parser_dict['carrierFreq_MHz'],
+            nPoints=nPoints,
+            nEchoes=parser_dict['nEchoes'],
+            p90_us=parser_dict['p90_us'],
+            repetition_us=parser_dict['repetition_us'],
+            tau_us=parser_dict['tau_us'],
+            SW_kHz=parser_dict['SW_kHz'],
+            indirect_fields=("start_times", "stop_times"),
+            ret_data=None,
+        )  # assume that the power axis is 1 longer than the
+        #                         "powers" array, so that we can also store the
+        #                         thermally polarized signal in this array (note
+        #                         that powers and other parameters are defined
+        #                         globally w/in the script, as this function is not
+        #                         designed to be moved outside the module
+        time_axis_coords = DNP_data.getaxis("indirect")
+    else:
+        DNP_data = run_spin_echo(
+            nScans=parser_dict['nScans'],
+            indirect_idx=j,
+            indirect_len=len(powers) + thermal_scans,
+            adcOffset=parser_dict['adc_offset'],
+            carrierFreq_MHz=parser_dict['carrierFreq_MHz'],
+            nPoints=nPoints,
+            nEchoes=parser_dict['nEchoes'],
+            p90_us=parser_dict['p90_us'],
+            repetition_us=parser_dict['repetition_us'],
+            tau_us=parser_dict['tau_us'],
+            SW_kHz=parser_dict['SW_kHz'],
+            indirect_fields=("start_times", "stop_times"),
+            ret_data=DNP_data,
+        )  # assume that the power axis is 1 longer than the
+        #                         "powers" array, so that we can also store the
+        #                         thermally polarized signal in this array (note
+        #                         that powers and other parameters are defined
+        #                         globally w/in the script, as this function is not
+        #                         designed to be moved outside the module
     DNP_thermal_done = time.time()
-    time_axis_coords = DNP_data.getaxis("indirect")
-    time_axis_coords[0]["start_times"] = DNP_ini_time
-    time_axis_coords[0]["stop_times"] = DNP_thermal_done
-    DNP_ini_time = time.time()
-    DNP_data = run_spin_echo(
-        nScans=parser_dict['nScans'],
-        indirect_idx=1,
-        indirect_len=len(powers) + 4,
-        ph1_cyc=Ep_ph1_cyc,
-        adcOffset=parser_dict['adc_offset'],
-        carrierFreq_MHz=parser_dict['carrierFreq_MHz'],
-        nPoints=nPoints,
-        nEchoes=parser_dict['nEchoes'],
-        p90_us=parser_dict['p90_us'],
-        repetition_us=parser_dict['repetition_us'],
-        tau_us=parser_dict['tau_us'],
-        SW_kHz=parser_dict['SW_kHz'],
-        indirect_fields=("start_times", "stop_times"),
-        ret_data=DNP_data,
-    )  # assume that the power axis is 1 longer than the
-    #                         "powers" array, so that we can also store the
-    #                         thermally polarized signal in this array (note
-    #                         that powers and other parameters are defined
-    #                         globally w/in the script, as this function is not
-    #                         designed to be moved outside the module
-    DNP_thermal_done = time.time()
-    time_axis_coords[1]["start_times"] = DNP_ini_time
-    time_axis_coords[1]["stop_times"] = DNP_thermal_done
-    DNP_ini_time = time.time()
-    DNP_data = run_spin_echo(
-        nScans=parser_dict['nScans'],
-        indirect_idx=2,
-        indirect_len=len(powers) + 4,
-        ph1_cyc=Ep_ph1_cyc,
-        adcOffset=parser_dict['adc_offset'],
-        carrierFreq_MHz=parser_dict['carrierFreq_MHz'],
-        nPoints=nPoints,
-        nEchoes=parser_dict['nEchoes'],
-        p90_us=parser_dict['p90_us'],
-        repetition_us=parser_dict['repetition_us'],
-        tau_us=parser_dict['tau_us'],
-        SW_kHz=parser_dict['SW_kHz'],
-        indirect_fields=("start_times", "stop_times"),
-        ret_data=DNP_data,
-    )  # assume that the power axis is 1 longer than the
-    #                         "powers" array, so that we can also store the
-    #                         thermally polarized signal in this array (note
-    #                         that powers and other parameters are defined
-    #                         globally w/in the script, as this function is not
-    #                         designed to be moved outside the module
-    DNP_thermal_done = time.time()
-    time_axis_coords[2]["start_times"] = DNP_ini_time
-    time_axis_coords[2]["stop_times"] = DNP_thermal_done
-    DNP_ini_time = time.time()
-    DNP_data = run_spin_echo(
-        nScans=parser_dict['nScans'],
-        indirect_idx=3,
-        indirect_len=len(powers) + 4,
-        ph1_cyc=Ep_ph1_cyc,
-        adcOffset=parser_dict['adc_offset'],
-        carrierFreq_MHz=parser_dict['carrierFreq_MHz'],
-        nPoints=nPoints,
-        nEchoes=parser_dict['nEchoes'],
-        p90_us=parser_dict['p90_us'],
-        repetition_us=parser_dict['repetition_us'],
-        tau_us=parser_dict['tau_us'],
-        SW_kHz=parser_dict['SW_kHz'],
-        indirect_fields=("start_times", "stop_times"),
-        ret_data=DNP_data,
-    )  # assume that the power axis is 1 longer than the
-    #                         "powers" array, so that we can also store the
-    #                         thermally polarized signal in this array (note
-    #                         that powers and other parameters are defined
-    #                         globally w/in the script, as this function is not
-    #                         designed to be moved outside the module
-    DNP_thermal_done = time.time()
-    time_axis_coords[3]["start_times"] = DNP_ini_time
-    time_axis_coords[3]["stop_times"] = DNP_thermal_done
+    time_axis_coords[j]["start_times"] = DNP_ini_time
+    time_axis_coords[j]["stop_times"] = DNP_thermal_done
     power_settings_dBm = np.zeros_like(dB_settings)
     time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
     for j, this_dB in enumerate(dB_settings):
