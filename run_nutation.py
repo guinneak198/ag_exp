@@ -10,13 +10,13 @@ from SpinCore_pp.ppg import run_spin_echo
 import logging
 fl = figlist_var()
 #{{{Parameters that change for new samples
-output_name = 'bal_probe_nutation_2'
-adcOffset = 31
-carrierFreq_MHz = 14.893329
+output_name = '200uM_TEMPOL_2'
+adcOffset = 39
+carrierFreq_MHz = 14.8931849
 nScans = 4
 nEchoes = 1
-repetition = 1.0e6
-p90_range = linspace(7.,11.,15,endpoint=False)
+repetition = 12.0e6
+p90_range = linspace(7,10,3,endpoint=False)
 ph1_cyc = r_[0,2]
 ph2_cyc = r_[0,2]
 SW_kHz = 3.9 #24.0 originally
