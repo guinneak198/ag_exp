@@ -45,6 +45,7 @@ vd_list_us = (
     * 1e6
 )  # convert to microseconds
 FIR_rep = 2*(1.0/(config_dict['concentration']*config_dict['krho_hot']+1.0/config_dict['T1water_hot']))*1e6
+FIR_rep = 10e6
 config_dict['FIR_rep'] = FIR_rep
 print("VD LIST IS *********************************************")
 print(vd_list_us)
@@ -99,50 +100,6 @@ if os.path.exists(filename_out):
 input(
     "B12 needs to be unplugged and turned off for the thermal! Don't have the power server running just yet"
 )
-# }}}
-# {{{Collect Thermals - serves as a control to compare the thermal of Ep to ensure no microwaves were leaking
-control_thermal = run_spin_echo(
-    nScans=config_dict["nScans"],
-    indirect_idx=0,
-    indirect_len=len(powers) + 1,
-    ph1_cyc=Ep_ph1_cyc,
-    adcOffset=config_dict["adc_offset"],
-    carrierFreq_MHz=config_dict["carrierFreq_MHz"],
-    nPoints=nPoints,
-    nEchoes=config_dict["nEchoes"],
-    p90_us=config_dict["p90_us"],
-    repetition_us=config_dict["repetition_us"],
-    tau_us=config_dict["tau_us"],
-    SW_kHz=config_dict["SW_kHz"],
-    indirect_fields=("start_times", "stop_times"),
-    ret_data=None,
-)  # assume that the power axis is 1 longer than the
-#                         "powers" array, so that we can also store the
-#                         thermally polarized signal in this array (note
-#                         that powers and other parameters are defined
-#                         globally w/in the script, as this function is not
-#                         designed to be moved outside the module
-control_thermal.set_prop("postproc_type", "spincore_ODNP_v3")
-control_thermal.set_prop("acq_params", config_dict.asdict())
-control_thermal.chunk("t", ["ph1", "t2"], [len(Ep_ph1_cyc), -1])
-control_thermal.setaxis("ph1", Ep_ph1_cyc / 4)
-control_thermal.reorder(['ph1','nScans','t2'])
-control_thermal.name('control_thermal')
-nodename = control_thermal.name()
-try:
-    control_thermal.hdf5_write(f"{filename_out}", directory=target_directory)
-except:
-    print(
-        f"I had problems writing to the correct file {filename}.h5, so I'm going to try to save your file to temp_ctrl.h5 in the current directory"
-    )
-    if os.path.exists("temp_ctrl.h5"):
-        print("There is already a temp_ctrl.h5 -- I'm removing it")
-        os.remove("temp_ctrl.h5")
-        DNP_data.hdf5_write("temp_ctrl.h5", directory=target_directory)
-        filename_out = "temp_ctrl.h5"
-        input("change the name accordingly once this is done running!")
-print("\n*** FILE SAVED IN TARGET DIRECTORY ***\n")
-logger.debug(strm("Name of saved data", control_thermal.name()))
 # }}}
 # {{{IR at no power
 #   this is outside the log, so to deal with this during processing, just check

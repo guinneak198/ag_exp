@@ -10,12 +10,12 @@ from SpinCore_pp.ppg import run_spin_echo
 import logging
 fl = figlist_var()
 #{{{Parameters that change for new samples
-output_name = '200uM_TEMPOL_2'
+output_name = 'ras_batch230606_I36_nutation_1'
 adcOffset = 39
-carrierFreq_MHz = 14.8931849
+carrierFreq_MHz = 14.892248
 nScans = 4
 nEchoes = 1
-repetition = 12.0e6
+repetition = 10.0e6
 p90_range = linspace(7,10,3,endpoint=False)
 ph1_cyc = r_[0,2]
 ph2_cyc = r_[0,2]
