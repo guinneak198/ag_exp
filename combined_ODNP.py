@@ -45,7 +45,6 @@ vd_list_us = (
     * 1e6
 )  # convert to microseconds
 FIR_rep = 2*(1.0/(config_dict['concentration']*config_dict['krho_hot']+1.0/config_dict['T1water_hot']))*1e6
-FIR_rep = 10e6
 config_dict['FIR_rep'] = FIR_rep
 print("VD LIST IS *********************************************")
 print(vd_list_us)

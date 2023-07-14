@@ -10,13 +10,13 @@ from SpinCore_pp.ppg import run_spin_echo
 import logging
 fl = figlist_var()
 #{{{Parameters that change for new samples
-output_name = 'ras_batch230606_I36_nutation_1'
-adcOffset = 39
-carrierFreq_MHz = 14.892248
+output_name = 'ras_batch230627_I36_nutation_1'
+adcOffset = 41
+carrierFreq_MHz = 14.891841
 nScans = 4
 nEchoes = 1
 repetition = 10.0e6
-p90_range = linspace(7,10,3,endpoint=False)
+p90_range = linspace(7,9,3,endpoint=False)
 ph1_cyc = r_[0,2]
 ph2_cyc = r_[0,2]
 SW_kHz = 3.9 #24.0 originally
