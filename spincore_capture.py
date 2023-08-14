@@ -36,8 +36,8 @@ def verifyParams():
 #output_name = 'capProbe_noise'
 SW_kHz = 10000
 output_name = '30mV_calib_'+str(SW_kHz)+'kHz'
-adcOffset = 34
-carrierFreq_MHz = 14.8
+adcOffset = 40
+carrierFreq_MHz = 14.84
 tx_phases = r_[0.0,90.0,180.0,270.0]
 amplitude = 1.0
 nScans = 5
