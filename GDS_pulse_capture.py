@@ -1,3 +1,5 @@
+"""Zoom out to about 10 us timescale on GDS, and 100 mV. Acquire mode should be Hi resolution and trigger should be set to normal
+"""
 from pyspecdata import *
 import os
 from Instruments import *
