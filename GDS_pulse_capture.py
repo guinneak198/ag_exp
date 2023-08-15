@@ -58,8 +58,8 @@ def API_sender(value):
     return
 #}}}
 date = datetime.now().strftime('%y%m%d')
-output_name = '2mV_20us_4p05p90_350tau_amp'
-adcOffset = 47
+output_name = '100tau_3p2p90_GDS_pulse_zoom'
+adcOffset = 46
 carrierFreq_MHz = 14.8
 tx_phases = r_[0.0,90.0,180.0,270.0]
 nScans = 1
@@ -73,8 +73,8 @@ SW_kHz = 3.9#50.0
 nPoints = 2048#int(aq/SW_kHz+0.5)#1024*2
 acq_time = nPoints/SW_kHz # ms
 tau_adjust = 0.0
-tau = 150#5e3#deadtime + acq_time*1e3*(1./8.) + tau_adjust
-p90 = 90#us (28x expected 90 time)
+tau = 100#5e3#deadtime + acq_time*1e3*(1./8.) + tau_adjust
+p90 = 3.2#us (28x expected 90 time)
 print("ACQUISITION TIME:",acq_time,"ms")
 print("TAU DELAY:",tau,"us")
 data_length = 2*nPoints*nEchoes*nPhaseSteps
@@ -99,7 +99,7 @@ acq_params['tau_us'] = tau
 amp_list = [1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0]
 for index,val in enumerate(amp_list):
     #p90 = val # us
-    amplitude = 0.2 # pulse amp, set from 0.0 to 1.0
+    amplitude = 1.0 # pulse amp, set from 0.0 to 1.0
     print("***")
     print("INDEX %d - AMPLITUDE %f"%(index,val))
     print("***")
@@ -126,32 +126,25 @@ for index,val in enumerate(amp_list):
     #raw_data.astype(float)
     datalist = []
     datalist1 = []
-    #with GDS_scope() as g:
-    #    print("ACQUIRING")
-    #    #g.acquire_mode('average',8)
-    #    print("ACQUIRED")
-    #    for j in range(1,len(amp_list)+1):
-    #        print("TRYING TO GRAB WAVEFORM")
-    #        datalist.append(g.waveform(ch=2))
-    #        datalist1.append(g.waveform(ch=3))
-    #    print("GOT WAVEFORM")
-    #    nutation_data = concat(datalist,'ch').reorder('t')
+    with GDS_scope() as g:
+        print("ACQUIRING")
+        #g.acquire_mode('average',8)
+        print("ACQUIRED")
+        for j in range(1,len(amp_list)+1):
+            print("TRYING TO GRAB WAVEFORM")
+            datalist.append(g.waveform(ch=2))
+        print("GOT WAVEFORM")
+        nutation_data = concat(datalist,'ch').reorder('t')
     SpinCore_pp.stopBoard();
 print("EXITING...\n")
 print("\n*** *** ***\n")
-#nutation_data.chunk('t',['ph2','ph1','t2'],[2,4,-1])
-#nutation_data.setaxis('ph2',r_[0:2]/4).setaxis('ph1',r_[0:4]/4)
-#nutation_data.set_units('t2','s')
-#nutation_data.set_prop('postproc_type','spincore_nutation_v2')
-#
 s = nutation_data['ch',0]
 s.set_units('t','s')
 fl.next('sequence')
 fl.plot(s)
-fl.show();quit()
 
 
-save_file = False
+save_file = True
 while save_file:
     try:
         print("SAVING FILE...")

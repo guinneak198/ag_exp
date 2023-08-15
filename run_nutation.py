@@ -10,13 +10,13 @@ from SpinCore_pp.ppg import run_spin_echo
 import logging
 fl = figlist_var()
 #{{{Parameters that change for new samples
-output_name = 'ras_batch230627_I36_nutation_1'
-adcOffset = 41
-carrierFreq_MHz = 14.891841
-nScans = 4
+output_name = '3p8mM_TEMPOL_bal_probe_nutation_test'
+adcOffset = 46
+carrierFreq_MHz = 14.893442
+nScans = 1
 nEchoes = 1
-repetition = 10.0e6
-p90_range = linspace(7,9,3,endpoint=False)
+repetition = 2.8e6
+p90_range = linspace(0.5,20,60,endpoint=False)
 ph1_cyc = r_[0,2]
 ph2_cyc = r_[0,2]
 SW_kHz = 3.9 #24.0 originally
@@ -85,8 +85,7 @@ nutation_data.chunk('t',
         ['ph2','ph1','t2'],[len(ph1_cyc),len(ph2_cyc),-1]).setaxis(
                 'ph2',ph2_cyc/4).setaxis('ph1',ph1_cyc/4)
 nutation_data.reorder('t2',first=False)
-nutation_data.hdf5_write(myfilename,
-        directory=getDATADIR(exp_type='ODNP_NMR_comp/nutation'))
+nutation_data.hdf5_write(myfilename)
 logging.info("Name of saved data",nutation_data.name())
 logging.info("Shape of saved data",ndshape(nutation_data))
 SpinCore_pp.stopBoard()
