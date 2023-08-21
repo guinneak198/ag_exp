@@ -33,19 +33,19 @@ def verifyParams():
     return
 #}}}
 
-output_name = '9p4mM_balProbe_varTau_test_5'
+output_name = '9p4mM_balProbe_varTau_fine_3p9kHz_4scan'
 node_name = 'var_tau'
 adcOffset = 51
-carrierFreq_MHz = 14.892442
+carrierFreq_MHz = 14.89244
 tx_phases = r_[0.0,90.0,180.0,270.0]
 amplitude = 1.0
-nScans = 1
+nScans = 4
 nEchoes = 1
 phase_cycling = True
 coherence_pathway = [('ph1',1),('ph2',-2)]
 date = datetime.now().strftime('%y%m%d')
 if phase_cycling:
-    nPhaseSteps = 8
+    nPhaseSteps = 4
 if not phase_cycling:
     nPhaseSteps = 1
 #{{{ note on timinzag
@@ -53,17 +53,17 @@ if not phase_cycling:
 # as this is generally what the SpinCore takes
 # note that acq_time is always milliseconds
 #}}}
-p90 = 6.3
+p90 = 6.2
 deadtime = 10.0
-repetition = 1e6
+repetition = 1.5e6
 
-SW_kHz = 40
+SW_kHz = 3.9
 acq_ms = 51.2
 nPoints = int(acq_ms*SW_kHz+0.5)
 nPoints = 1024*2
 
 acq_time = nPoints/SW_kHz # ms
-tau_adjust_range = r_[1e3:35e3:1000]#np.linspace(1e1,50e3,30)
+tau_adjust_range = r_[1e3:60e3:6000]#np.linspace(1e1,50e3,30)
 print("TAU RANGE:")
 print(tau_adjust_range)
 input("Does this look okay?")
@@ -108,60 +108,62 @@ for index,val in enumerate(tau_adjust_range):
     acq_time = SpinCore_pp.configureRX(SW_kHz, nPoints, nScans, nEchoes, nPhaseSteps) #ms
     acq_params['acq_time_ms'] = acq_time
     SpinCore_pp.init_ppg();
-    if phase_cycling:
-        SpinCore_pp.load([
-            ('marker','start',1),
-            ('phase_reset',1),
-            ('delay_TTL',deblank),
-            ('pulse_TTL',p90,'ph1',r_[0,1,2,3]),
-            ('delay',tau),
-            ('delay_TTL',deblank),
-            ('pulse_TTL',2.0*p90,'ph2',r_[0,2]),
-            ('delay',deadtime),
-            ('acquire',acq_time),
-            ('delay',repetition),
-            ('jumpto','start')
-            ])
-    if not phase_cycling: 
-        SpinCore_pp.load([
-            ('marker','start',nScans),
-            ('phase_reset',1),
-            ('delay_TTL',deblank),
-            ('pulse_TTL',p90,0.0),
-            ('delay',tau),
-            ('delay_TTL',deblank),
-            ('pulse_TTL',2.0*p90,0.0),
-            ('delay',deadtime),
-            ('acquire',acq_time),
-            ('delay',repetition),
-            ('jumpto','start')
-            ])
-    SpinCore_pp.stop_ppg();
-    if phase_cycling:
-        for x in range(nScans):
-            print("SCAN NO. %d"%(x+1))
-            SpinCore_pp.runBoard();
-    if not phase_cycling:
+    for x in range(nScans):
+        if phase_cycling:
+            SpinCore_pp.load([
+                ('marker','start',1),
+                ('phase_reset',1),
+                ('delay_TTL',deblank),
+                ('pulse_TTL',p90,'ph1',r_[0,1,2,3]),
+                ('delay',tau),
+                ('delay_TTL',deblank),
+                ('pulse_TTL',2.0*p90,'ph2',r_[0]),#r_[0,2]),
+                ('delay',deadtime),
+                ('acquire',acq_time),
+                ('delay',repetition),
+                ('jumpto','start')
+                ])
+        if not phase_cycling: 
+            SpinCore_pp.load([
+                ('marker','start',nScans),
+                ('phase_reset',1),
+                ('delay_TTL',deblank),
+                ('pulse_TTL',p90,0.0),
+                ('delay',tau),
+                ('delay_TTL',deblank),
+                ('pulse_TTL',2.0*p90,0.0),
+                ('delay',deadtime),
+                ('acquire',acq_time),
+                ('delay',repetition),
+                ('jumpto','start')
+                ])
+        SpinCore_pp.stop_ppg();
+        #if phase_cycling:
+        #    for x in range(nScans):
+        #        print("SCAN NO. %d"%(x+1))
         SpinCore_pp.runBoard();
-    raw_data = SpinCore_pp.getData(data_length, nPoints, nEchoes, nPhaseSteps, output_name)
-    raw_data.astype(float)
-    data = []
-    # according to JF, this commented out line
-    # should work same as line below and be more effic
-    #data = raw_data.view(complex128)
-    data[::] = np.complex128(raw_data[0::2]+1j*raw_data[1::2])
-    print("COMPLEX DATA ARRAY LENGTH:",np.shape(data)[0])
-    print("RAW DATA ARRAY LENGTH:",np.shape(raw_data)[0])
-    dataPoints = float(np.shape(data)[0])
-    time_axis = np.linspace(int(0),nEchoes*nPhaseSteps*acq_time*1e-3,int(dataPoints))
-    data = nddata(np.array(data),'t')
-    data.setaxis('t',time_axis).set_units('t','s')
-    data.name('signal')
-    if index == 0:
-        var_tau_data = ndshape([len(tau_adjust_range),len(time_axis)],['tau','t']).alloc(dtype=np.complex128)
-        var_tau_data.setaxis('tau',tau_axis*1e-6).set_units('tau','s')
-        var_tau_data.setaxis('t',time_axis).set_units('t','s')
-    var_tau_data['tau',index] = data
+        if not phase_cycling:
+            SpinCore_pp.runBoard();
+        raw_data = SpinCore_pp.getData(data_length, nPoints, nEchoes, nPhaseSteps, output_name)
+        raw_data.astype(float)
+        data = []
+        # according to JF, this commented out line
+        # should work same as line below and be more effic
+        #data = raw_data.view(complex128)
+        data[::] = np.complex128(raw_data[0::2]+1j*raw_data[1::2])
+        print("COMPLEX DATA ARRAY LENGTH:",np.shape(data)[0])
+        print("RAW DATA ARRAY LENGTH:",np.shape(raw_data)[0])
+        dataPoints = float(np.shape(data)[0])
+        time_axis = np.linspace(int(0),nEchoes*nPhaseSteps*acq_time*1e-3,int(dataPoints))
+        data = nddata(np.array(data),'t')
+        data.setaxis('t',time_axis).set_units('t','s')
+        data.name('signal')
+        if index == 0 and x == 0:
+            var_tau_data = ndshape([len(tau_adjust_range),nScans,len(time_axis)],['tau','nScans','t']).alloc(dtype=np.complex128)
+            var_tau_data.setaxis('tau',tau_axis*1e-6).set_units('tau','s')
+            var_tau_data.setaxis('nScans',r_[0:nScans])
+            var_tau_data.setaxis('t',time_axis).set_units('t','s')
+        var_tau_data['tau',index]['nScans',x] = data
 SpinCore_pp.stopBoard();
 print("EXITING...\n")
 print("\n*** *** ***\n")
