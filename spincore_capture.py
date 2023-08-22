@@ -35,12 +35,12 @@ def verifyParams():
 
 #output_name = 'capProbe_noise'
 SW_kHz = 10000
-output_name = '30mV_compare'+str(SW_kHz)+'kHz'
-adcOffset = 35
-carrierFreq_MHz = 14.86
+output_name = 'probe_27chokes_magon_'+str(SW_kHz)+'kHz'
+adcOffset = 40
+carrierFreq_MHz = 14.893
 tx_phases = r_[0.0,90.0,180.0,270.0]
 amplitude = 1.0
-nScans = 1
+nScans = 5
 nEchoes = 1
 phase_cycling = False
 coherence_pathway = [('ph1',1),('ph2',-2)]

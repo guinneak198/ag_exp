@@ -33,10 +33,10 @@ def verifyParams():
     return
 #}}}
 
-output_name = '9p4mM_balProbe_varTau_fine_3p9kHz_4scan'
+output_name = '27mM_balProbe_varTau_4kHz_4scan'
 node_name = 'var_tau'
-adcOffset = 51
-carrierFreq_MHz = 14.89244
+adcOffset = 46
+carrierFreq_MHz = 14.893
 tx_phases = r_[0.0,90.0,180.0,270.0]
 amplitude = 1.0
 nScans = 4
@@ -53,17 +53,17 @@ if not phase_cycling:
 # as this is generally what the SpinCore takes
 # note that acq_time is always milliseconds
 #}}}
-p90 = 6.2
+p90 = 5.5
 deadtime = 10.0
-repetition = 1.5e6
+repetition = 0.8e6
 
-SW_kHz = 3.9
-acq_ms = 51.2
+SW_kHz = 4
+acq_ms = 1024.
 nPoints = int(acq_ms*SW_kHz+0.5)
 nPoints = 1024*2
 
 acq_time = nPoints/SW_kHz # ms
-tau_adjust_range = r_[1e3:60e3:6000]#np.linspace(1e1,50e3,30)
+tau_adjust_range = r_[1e3:35e3:5e3]#np.linspace(1e1,50e3,30)
 print("TAU RANGE:")
 print(tau_adjust_range)
 input("Does this look okay?")

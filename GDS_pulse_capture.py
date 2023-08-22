@@ -58,9 +58,9 @@ def API_sender(value):
     return
 #}}}
 date = datetime.now().strftime('%y%m%d')
-output_name = '100tau_6p2p90_GDS_pulse_zoom'
-adcOffset = 47
-carrierFreq_MHz = 14.8
+output_name = '100tau_5p5p90_GDS_pulse'
+adcOffset = 44
+carrierFreq_MHz = 14.893
 tx_phases = r_[0.0,90.0,180.0,270.0]
 nScans = 1
 nEchoes = 1
@@ -74,7 +74,7 @@ nPoints = 2048#int(aq/SW_kHz+0.5)#1024*2
 acq_time = nPoints/SW_kHz # ms
 tau_adjust = 0.0
 tau = 100#5e3#deadtime + acq_time*1e3*(1./8.) + tau_adjust
-p90 = 6.2#us (28x expected 90 time)
+p90 = 5.5#us (28x expected 90 time)
 print("ACQUISITION TIME:",acq_time,"ms")
 print("TAU DELAY:",tau,"us")
 data_length = 2*nPoints*nEchoes*nPhaseSteps
