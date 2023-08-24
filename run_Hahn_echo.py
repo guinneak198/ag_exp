@@ -12,7 +12,9 @@ the NMR computer to set the field etc.
 from pylab import *
 from pyspecdata import *
 import os
+from pyspecdata.file_saving.hdf_save_dict_to_group import hdf_save_dict_to_group
 import SpinCore_pp
+import h5py
 from SpinCore_pp.ppg import run_spin_echo
 from datetime import datetime
 from Instruments.XEPR_eth import xepr
@@ -21,6 +23,7 @@ fl = figlist_var()
 #{{{importing acquisition parameters
 config_dict = SpinCore_pp.configuration('active.ini')
 nPoints = int(config_dict['acq_time_ms']*config_dict['SW_kHz']+0.5)
+target_directory = getDATADIR(exp_type="ODNP_NMR_comp/Echoes")
 #}}}
 #{{{create filename and save to config file
 date = datetime.now().strftime('%y%m%d')
@@ -119,8 +122,7 @@ if os.path.exists(filename+'.h5'):
     echo_data.hdf5_write(f'{filename_out}/{nodename}')
 else:
     try:
-        echo_data.hdf5_write(filename+'.h5',
-                directory=target_directory)
+        echo_data.hdf5_write(filename+'.h5')
     except:
         print(f"I had problems writing to the correct file {filename}.h5, so I'm going to try to save your file to temp.h5 in the current directory")
         if os.path.exists("temp.h5"):
