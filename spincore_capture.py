@@ -34,13 +34,13 @@ def verifyParams():
 #}}}
 
 #output_name = 'capProbe_noise'
-SW_kHz = 10000
-output_name = 'probe_27chokes_magon_'+str(SW_kHz)+'kHz'
-adcOffset = 40
-carrierFreq_MHz = 14.893
+SW_kHz = 20000
+output_name = 'probe_chokes_2_'+str(SW_kHz)+'kHz'
+adcOffset = 45
+carrierFreq_MHz = 14.893504
 tx_phases = r_[0.0,90.0,180.0,270.0]
 amplitude = 1.0
-nScans = 5
+nScans = 100
 nEchoes = 1
 phase_cycling = False
 coherence_pathway = [('ph1',1),('ph2',-2)]
@@ -56,12 +56,12 @@ if not phase_cycling:
 #}}}
 p90 = 4.0
 deadtime = 10.0
-repetition = 1e6
+repetition = 1e4
 
 #SW_kHz = 3.9
-nPoints = 2048*2
+nPoints = 1024*2
 
-acq_time = nPoints/SW_kHz # ms
+acq_time = nPoints/SW_kHz + 1.0 # ms
 tau_adjust = 0.0
 deblank = 1.0
 tau = deadtime + acq_time*1e3*(1./8.) + tau_adjust

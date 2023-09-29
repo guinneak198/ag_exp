@@ -1,180 +1,133 @@
+from pylab import *
 from pyspecdata import *
-import os
-from Instruments import *
+from numpy import *
 import SpinCore_pp
-import socket
-import sys
-import time
+from SpinCore_pp.ppg import generic
+import os
 from datetime import datetime
-import numpy as np
-fl = figlist_var()
-#{{{ Verify arguments compatible with board
-def verifyParams():
-    if (nPoints > 16*1024 or nPoints < 1):
-        print("ERROR: MAXIMUM NUMBER OF POINTS IS 16384.")
-        print("EXITING.")
-        quit()
-    else:
-        print("VERIFIED NUMBER OF POINTS.")
-    if (nScans < 1):
-        print("ERROR: THERE MUST BE AT LEAST 1 SCAN.")
-        print("EXITING.")
-        quit()
-    else:
-        print("VERIFIED NUMBER OF SCANS.")
-    if (p90 < 0.065):
-        print("ERROR: PULSE TIME TOO SMALL.")
-        print("EXITING.")
-        quit()
-    else:
-        print("VERIFIED PULSE TIME.")
-    if (tau < 0.065):
-        print("ERROR: DELAY TIME TOO SMALL.")
-        print("EXITING.")
-        quit()
-    else:
-        print("VERIFIED DELAY TIME.")
-    return
-#}}}
-#{{{ for setting EPR magnet
-def API_sender(value):
-    IP = "jmfrancklab-bruker.syr.edu"
-    if len(sys.argv) > 1:
-        IP = sys.argv[1]
-    PORT = 6001
-    print("target IP:", IP)
-    print("target port:", PORT)
-    MESSAGE = str(value)
-    print("SETTING FIELD TO...", MESSAGE)
-    sock = socket.socket(socket.AF_INET, # Internet
-            socket.SOCK_STREAM) # TCP
-    sock.connect((IP, PORT))
-    sock.send(MESSAGE)
-    sock.close()
-    print("FIELD SET TO...", MESSAGE)
-    time.sleep(5)
-    return
-#}}}
-date = datetime.now().strftime('%y%m%d')
-output_name = '2mV_20us_4p05p90_350tau_amp'
-adcOffset = 47
-carrierFreq_MHz = 14.8
-tx_phases = r_[0.0,90.0,180.0,270.0]
-nScans = 1
-nEchoes = 1
-nPhaseSteps = 1
-# NOTE: Number of segments is nEchoes * nPhaseSteps
-GDS = True
-deadtime = 10.0
-repetition = 0.25e6
-SW_kHz = 3.9#50.0
-nPoints = 2048#int(aq/SW_kHz+0.5)#1024*2
-acq_time = nPoints/SW_kHz # ms
-tau_adjust = 0.0
-tau = 150#5e3#deadtime + acq_time*1e3*(1./8.) + tau_adjust
-p90 = 90#us (28x expected 90 time)
-print("ACQUISITION TIME:",acq_time,"ms")
-print("TAU DELAY:",tau,"us")
-data_length = 2*nPoints*nEchoes*nPhaseSteps
-amp_range = np.linspace(0,0.5,200)[1:]#,endpoint=False)
-#{{{ setting acq_params dictizaonary
-acq_params = {}
-acq_params['adcOffset'] = adcOffset
-acq_params['carrierFreq_MHz'] = carrierFreq_MHz
-acq_params['amplitude'] = amp_range
-acq_params['nScans'] = nScans
-acq_params['nEchoes'] = nEchoes
-acq_params['p90_us'] = p90
-acq_params['deadtime_us'] = deadtime
-acq_params['repetition_us'] = repetition
-acq_params['SW_kHz'] = SW_kHz
-acq_params['nPoints'] = nPoints
-acq_params['tau_adjust_us'] = tau_adjust
-acq_params['deblank_us'] = 1.0
-acq_params['tau_us'] = tau
-#acq_params['pad_us'] = pad 
-#}}}
-amp_list = [1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0]
-for index,val in enumerate(amp_list):
-    #p90 = val # us
-    amplitude = 0.2 # pulse amp, set from 0.0 to 1.0
-    print("***")
-    print("INDEX %d - AMPLITUDE %f"%(index,val))
-    print("***")
-    SpinCore_pp.configureTX(adcOffset, carrierFreq_MHz, tx_phases, amplitude, nPoints)
-    acq_time = SpinCore_pp.configureRX(SW_kHz, nPoints, nScans, nEchoes, nPhaseSteps) #ms
-    acq_params['acq_time_ms'] = acq_time
-    SpinCore_pp.init_ppg();
-    SpinCore_pp.load([
-        ('marker','thisstart',1),
-        ('phase_reset',1),
-        ('delay_TTL',1.0),
-        ('pulse_TTL',p90,0),
-        ('delay',tau),
-        ('delay_TTL',1.0),
-        ('pulse_TTL',2.0*p90,0),
-        ('delay',deadtime),
-        ('acquire',acq_time),
-        ('delay',repetition),
-        ('jumpto','thisstart'),
-        ])
-    SpinCore_pp.stop_ppg();
-    SpinCore_pp.runBoard();
-    #raw_data = SpinCore_pp.getData(data_length, nPoints, nEchoes, nPhaseSteps, output_name)
-    #raw_data.astype(float)
-    datalist = []
-    datalist1 = []
-    #with GDS_scope() as g:
-    #    print("ACQUIRING")
-    #    #g.acquire_mode('average',8)
-    #    print("ACQUIRED")
-    #    for j in range(1,len(amp_list)+1):
-    #        print("TRYING TO GRAB WAVEFORM")
-    #        datalist.append(g.waveform(ch=2))
-    #        datalist1.append(g.waveform(ch=3))
-    #    print("GOT WAVEFORM")
-    #    nutation_data = concat(datalist,'ch').reorder('t')
-    SpinCore_pp.stopBoard();
-print("EXITING...\n")
-print("\n*** *** ***\n")
-#nutation_data.chunk('t',['ph2','ph1','t2'],[2,4,-1])
-#nutation_data.setaxis('ph2',r_[0:2]/4).setaxis('ph1',r_[0:4]/4)
-#nutation_data.set_units('t2','s')
-#nutation_data.set_prop('postproc_type','spincore_nutation_v2')
-#
-s = nutation_data['ch',0]
-s.set_units('t','s')
-fl.next('sequence')
-fl.plot(s)
-fl.show();quit()
+import h5py
 
-
-save_file = False
-while save_file:
+# {{{importing acquisition parameters
+config_dict = SpinCore_pp.configuration("active.ini")
+nPoints = int(config_dict["acq_time_ms"] * config_dict["SW_kHz"] + 0.5)
+config_dict["acq_time_ms"] = nPoints / config_dict["SW_kHz"]
+# }}}
+# {{{create filename and save to config file
+date = datetime.now().strftime("%y%m%d")
+config_dict["type"] = "CPMG"
+config_dict["date"] = date
+config_dict["cpmg_counter"] += 1
+filename = f"{config_dict['date']}_{config_dict['chemical']}_{config_dict['type']}"
+# }}}
+# {{{set phase cycling
+phase_cycling = True
+if phase_cycling:
+    ph_overall = r_[0, 1, 2, 3]
+    ph_diff = r_[0, 2]
+    ph1_cyc = array([(j + k) % 4 for k in ph_overall for j in ph_diff])
+    ph2_cyc = array([(k + 1) % 4 for k in ph_overall for j in ph_diff])
+    nPhaseSteps = len(ph_overall) * len(ph_diff)
+# }}}
+# {{{symmetric tau
+short_delay_us = 1.0
+tau_evol_us = (
+    2 * config_dict["p90_us"] / pi
+)  # evolution during pulse -- see eq 6 of coherence paper
+pad_end_us = config_dict["deadtime_us"] - config_dict["deblank_us"] - 2 * short_delay_us
+twice_tau_echo_us = config_dict["acq_time_ms"] + (
+    2 * config_dict["deadtime_us"]
+)  # the period between end of first 180 pulse and start of next
+config_dict["tau_us"] = twice_tau_echo_us / 2.0 - tau_evol_us - config_dict["deblank_us"]
+# }}}
+# {{{check total points
+total_pts = nPoints * nPhaseSteps * config_dict["nEchoes"]
+assert total_pts < 2**14, (
+    "You are trying to acquire %d points (too many points) -- either change SW or acq time so nPoints x nPhaseSteps is less than 16384\nyou could try reducing the acq_time_ms to %f"
+    % (total_pts, config_dict["acq_time_ms"] * 16384 / total_pts)
+)
+# }}}
+ph1_cyc = r_[0,1,2,4]
+ph2_cyc = r_[0,2]
+# {{{run cpmg
+data = generic(
+        ppg_list=[
+                ("phase_reset", 1),
+                ("delay_TTL", config_dict['deblank_us']),
+                ("pulse_TTL", config_dict['p90_us'], "ph1", ph1_cyc),
+                ("delay", config_dict['tau_us']),
+                ("delay_TTL", config_dict['deblank_us']),
+                ("pulse_TTL", 2*config_dict['p90_us'], "ph2", ph2_cyc),
+                ("delay", config_dict['deadtime_us']),
+                ("acquire", config_dict['acq_time_ms']),
+                ("delay", config_dict['repetition_us']),
+            ],
+        nScans=config_dict["nScans"],
+        indirect_idx=0,
+        indirect_len=1,
+        adcOffset=config_dict["adc_offset"],
+        carrierFreq_MHz=config_dict["carrierFreq_MHz"],
+        nPoints=nPoints,
+        acq_time_ms = config_dict['acq_time_ms'],
+        SW_kHz=config_dict["SW_kHz"],
+        ret_data = None)
+# }}}
+print("SUCCESSFULLY RAN GENERIC")
+# {{{ chunk and save data
+data.chunk(
+    "t",
+    ["nScans", "ph_overall", "ph_diff", "tE", "t2"],
+    [
+        config_dict["nScans"],
+        len(ph_overall),
+        len(ph_diff),
+        config_dict["nEchoes"],
+        nPoints,
+    ],
+)
+data.setaxis("nScans", r_[0 : len(config_dict["nScans"])])
+data.setaxis("ph_overall", ph_overall / 4)
+data.setaxis("ph_diff", ph_diff / 4)
+data.name(config_dict["type"] + "_" + config_dict["cpmg_counter"])
+data.set_prop("postproc_type", "spincore_CPMGv2")
+data.set_prop("acq_params", config_dict.asdict())
+target_directory = getDATADIR(exp_type="ODNP_NMR_comp/CPMG")
+filename_out = filename + ".h5"
+nodename = data.name()
+if os.path.exists(f"{filename_out}"):
+    print("this file already exists so we will add a node to it!")
+    with h5py.File(
+        os.path.normpath(os.path.join(target_directory, f"{filename_out}"))
+    ) as fp:
+        if nodename in fp.keys():
+            print("this nodename already exists, so I will call it temp_cpmg")
+            data.name("temp_cpmg")
+            nodename = "temp_cpmg"
+    data.hdf5_write(f"{filename_out}", directory=target_directory)
+else:
     try:
-        print("SAVING FILE...")
-        nutation_data.set_prop('acq_params',acq_params)
-        nutation_data.name('GDS_capture')
-        nutation_data.hdf5_write(date+'_'+output_name+'.h5')
-        print("Name of saved data",nutation_data.name())
-        print("Units of saved data",nutation_data.get_units('t2'))
-        print("Shape of saved data",ndshape(nutation_data))
-        save_file = False
-    except Exception as e:
-        print("\nEXCEPTION ERROR.")
-        print("FILE MAY ALREADY EXIST IN TARGET DIRECTORY.")
-        print("WILL TRY CURRENT DIRECTORY LOCATION...")
-        output_name = input("ENTER NEW NAME FOR FILE (AT LEAST TWO CHARACTERS):")
-        if len(output_name) is not 0:
-            nutation_data.hdf5_write(date+'_'+output_name+'.h5')
-            print("\n*** FILE SAVED WITH NEW NAME IN CURRENT DIRECTORY ***\n")
-            break
-        else:
-            print("\n*** *** ***")
-            print("UNACCEPTABLE NAME. EXITING WITHOUT SAVING DATA.")
-            print("*** *** ***\n")
-            break
-        save_file = False
-fl.show()
-
-
+        data.hdf5_write(f"{filename_out}", directory=target_directory)
+    except:
+        print(
+            f"I had problems writing to the correct file {filename}.h5, so I'm going to try to save your file to temp_cpmg.h5 in the current h5 file"
+        )
+        if os.path.exists("temp_cpmg.h5"):
+            print("there is a temp_cpmg.h5 already! -- I'm removing it")
+            os.remove("temp_cpmg.h5")
+            data.hdf5_write("temp_cpmg.h5")
+            print(
+                "if I got this far, that probably worked -- be sure to move/rename temp_cpmg.h5 to the correct name!!"
+            )
+print("\n*** FILE SAVED IN TARGET DIRECTORY ***\n")
+print(("Name of saved data", data.name()))
+config_dict.write()
+# {{{ Image raw data
+with figlist_var() as fl:
+    fl.next("Raw - time")
+    fl.image(data.mean("nScans"))
+    data.reorder("t2", first=False)
+    for_plot = data.C
+    for_plot.ft("t2", shift=True)
+    for_plot.ft(["ph_overall", "ph_diff"], unitary=True)
+    fl.next("FTed data")
+    fl.image(for_plot.mean("nScans"))
+# }}}

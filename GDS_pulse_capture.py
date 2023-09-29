@@ -4,6 +4,7 @@ from pyspecdata import *
 import os
 from Instruments import *
 import SpinCore_pp
+from SpinCore_pp import prog_plen
 import socket
 import sys
 import time
@@ -58,9 +59,9 @@ def API_sender(value):
     return
 #}}}
 date = datetime.now().strftime('%y%m%d')
-output_name = '100tau_5p5p90_GDS_pulse'
-adcOffset = 44
-carrierFreq_MHz = 14.893
+output_name = '100tau_p90_3p75_GDS'
+adcOffset = 48
+carrierFreq_MHz = 14.893504
 tx_phases = r_[0.0,90.0,180.0,270.0]
 nScans = 1
 nEchoes = 1
@@ -74,7 +75,9 @@ nPoints = 2048#int(aq/SW_kHz+0.5)#1024*2
 acq_time = nPoints/SW_kHz # ms
 tau_adjust = 0.0
 tau = 100#5e3#deadtime + acq_time*1e3*(1./8.) + tau_adjust
-p90 = 5.5#us (28x expected 90 time)
+p90 = 3.75#us (28x expected 90 time)
+prog_p90_us = prog_plen(p90)
+prog_p180_us = prog_plen(2*p90)
 print("ACQUISITION TIME:",acq_time,"ms")
 print("TAU DELAY:",tau,"us")
 data_length = 2*nPoints*nEchoes*nPhaseSteps
@@ -96,7 +99,7 @@ acq_params['deblank_us'] = 1.0
 acq_params['tau_us'] = tau
 #acq_params['pad_us'] = pad 
 #}}}
-amp_list = [1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0]
+amp_list = [1.0,1.0,1.0,1.0,1.0]
 for index,val in enumerate(amp_list):
     #p90 = val # us
     amplitude = 1.0 # pulse amp, set from 0.0 to 1.0
@@ -111,10 +114,10 @@ for index,val in enumerate(amp_list):
         ('marker','thisstart',1),
         ('phase_reset',1),
         ('delay_TTL',1.0),
-        ('pulse_TTL',p90,0),
+        ('pulse_TTL',prog_p90_us,0),
         ('delay',tau),
         ('delay_TTL',1.0),
-        ('pulse_TTL',2.0*p90,0),
+        ('pulse_TTL',prog_p180_us,0),
         ('delay',deadtime),
         ('acquire',acq_time),
         ('delay',repetition),

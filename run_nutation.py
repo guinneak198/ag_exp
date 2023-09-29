@@ -7,19 +7,20 @@ import sys
 import time
 from datetime import datetime
 from SpinCore_pp.ppg import run_spin_echo
+from SpinCore_pp import prog_plen
 import logging
 fl = figlist_var()
 #{{{Parameters that change for new samples
-output_name = '27mM_balProbe_nutation_3'
-adcOffset = 46
-carrierFreq_MHz = 14.893
+output_name = '70mM_TEMPOL_nutation_1'
+adcOffset = 45
+carrierFreq_MHz = 14.893504
 nScans = 4
 nEchoes = 1
-repetition = 0.8e6
-p90_range = linspace(1.0,20,20,endpoint=False)
+repetition = 0.7e6
+p90_range = linspace(2,15,3,endpoint=False)
 SW_kHz = 3.9 #24.0 originally
 acq_time = 1024.
-tau = 3500
+tau = 8000
 #}}}
 ph1_cyc = r_[0,1,2,3]
 #{{{These should stay the same regardless of sample

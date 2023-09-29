@@ -3,6 +3,7 @@ import os
 import sys
 import SpinCore_pp
 from datetime import datetime
+from SpinCore_pp import prog_plen
 fl = figlist_var()
 #{{{ Verify arguments compatible with board
 def verifyParams():
@@ -33,13 +34,13 @@ def verifyParams():
     return
 #}}}
 
-output_name = '27mM_balProbe_varTau_4kHz_4scan'
+output_name = '27mM_balProbe_varTau_40kHz_p903p75_1scan'
 node_name = 'var_tau'
-adcOffset = 46
-carrierFreq_MHz = 14.893
+adcOffset = 45
+carrierFreq_MHz = 14.893504
 tx_phases = r_[0.0,90.0,180.0,270.0]
 amplitude = 1.0
-nScans = 4
+nScans = 1
 nEchoes = 1
 phase_cycling = True
 coherence_pathway = [('ph1',1),('ph2',-2)]
@@ -53,12 +54,14 @@ if not phase_cycling:
 # as this is generally what the SpinCore takes
 # note that acq_time is always milliseconds
 #}}}
-p90 = 5.5
+p90 = 3.75
+prog_p90 = prog_plen(p90)
+prog_p180 = prog_plen(2*p90)
 deadtime = 10.0
-repetition = 0.8e6
+repetition = 1e6
 
-SW_kHz = 4
-acq_ms = 1024.
+SW_kHz = 40
+acq_ms = 51.2
 nPoints = int(acq_ms*SW_kHz+0.5)
 nPoints = 1024*2
 
@@ -114,10 +117,10 @@ for index,val in enumerate(tau_adjust_range):
                 ('marker','start',1),
                 ('phase_reset',1),
                 ('delay_TTL',deblank),
-                ('pulse_TTL',p90,'ph1',r_[0,1,2,3]),
+                ('pulse_TTL',prog_p90,'ph1',r_[0,1,2,3]),
                 ('delay',tau),
                 ('delay_TTL',deblank),
-                ('pulse_TTL',2.0*p90,'ph2',r_[0]),#r_[0,2]),
+                ('pulse_TTL',prog_p180,'ph2',r_[0]),#r_[0,2]),
                 ('delay',deadtime),
                 ('acquire',acq_time),
                 ('delay',repetition),
@@ -128,10 +131,10 @@ for index,val in enumerate(tau_adjust_range):
                 ('marker','start',nScans),
                 ('phase_reset',1),
                 ('delay_TTL',deblank),
-                ('pulse_TTL',p90,0.0),
+                ('pulse_TTL',prog_p90,0.0),
                 ('delay',tau),
                 ('delay_TTL',deblank),
-                ('pulse_TTL',2.0*p90,0.0),
+                ('pulse_TTL',prog_p180_us,0.0),
                 ('delay',deadtime),
                 ('acquire',acq_time),
                 ('delay',repetition),
