@@ -7,12 +7,12 @@ import sys
 import time
 from datetime import datetime
 from SpinCore_pp.ppg import run_spin_echo
-from SpinCore_pp import prog_plen
+#from SpinCore_pp import prog_plen
 import logging
 fl = figlist_var()
 #{{{Parameters that change for new samples
 output_name = '70mM_TEMPOL_nutation_1'
-adcOffset = 45
+adcOffset = 44
 carrierFreq_MHz = 14.893504
 nScans = 4
 nEchoes = 1

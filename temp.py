@@ -33,7 +33,7 @@ short_delay_us = 1.0
 tau_evol_us = (
     2 * config_dict["p90_us"] / pi
 )  # evolution during pulse -- see eq 6 of coherence paper
-pad_end_us = config_dict["deadtime_us"] - config_dict["deblank_us"] - 2 * short_delay_us
+pad_end_us = config_dict["deadtime_us"] - config_dict["deblank_us"]# - 2 * short_delay_us
 twice_tau_echo_us = config_dict["acq_time_ms"] + (
     2 * config_dict["deadtime_us"]
 )  # the period between end of first 180 pulse and start of next
@@ -46,24 +46,32 @@ assert total_pts < 2**14, (
     % (total_pts, config_dict["acq_time_ms"] * 16384 / total_pts)
 )
 # }}}
-ph1_cyc = r_[0,1,2,4]
-ph2_cyc = r_[0,2]
 # {{{run cpmg
 data = generic(
         ppg_list=[
-                ("phase_reset", 1),
+            ("marker","start",1),
+            ("phase_reset", 1),
                 ("delay_TTL", config_dict['deblank_us']),
-                ("pulse_TTL", config_dict['p90_us'], "ph1", ph1_cyc),
+                ("pulse_TTL", config_dict['p90_us'], "ph_cyc", ph1_cyc),
                 ("delay", config_dict['tau_us']),
                 ("delay_TTL", config_dict['deblank_us']),
-                ("pulse_TTL", 2*config_dict['p90_us'], "ph2", ph2_cyc),
+                ("pulse_TTL", 2*config_dict['p90_us'], "ph_cyc", ph2_cyc),
                 ("delay", config_dict['deadtime_us']),
                 ("acquire", config_dict['acq_time_ms']),
+                ("delay", pad_end_us),
+                #("marker","echo_label",(config_dict['nEchoes']-1)),
+                ("delay_TTL", config_dict['deblank_us']),
+                ("pulse_TTL", 2*config_dict['p90_us'], "ph_cyc", ph2_cyc),
+                ("delay", config_dict['deadtime_us']),
+                ("acquire", config_dict['acq_time_ms']),
+                ("delay", pad_end_us),
+                #("jumpto", "echo_label"),
                 ("delay", config_dict['repetition_us']),
+                ("jumpto","start")
             ],
         nScans=config_dict["nScans"],
         indirect_idx=0,
-        indirect_len=1,
+        indirect_len=1,#config_dict['nEchoes'],
         adcOffset=config_dict["adc_offset"],
         carrierFreq_MHz=config_dict["carrierFreq_MHz"],
         nPoints=nPoints,
@@ -75,20 +83,12 @@ print("SUCCESSFULLY RAN GENERIC")
 # {{{ chunk and save data
 data.chunk(
     "t",
-    ["nScans", "ph_overall", "ph_diff", "tE", "t2"],
-    [
-        config_dict["nScans"],
-        len(ph_overall),
-        len(ph_diff),
-        config_dict["nEchoes"],
-        nPoints,
-    ],
-)
-data.setaxis("nScans", r_[0 : len(config_dict["nScans"])])
+    ["ph_overall", "ph_diff", "t2"],
+    [len(ph_overall),len(ph_diff),-1])
+data.setaxis("nScans", r_[0 : config_dict["nScans"]])
 data.setaxis("ph_overall", ph_overall / 4)
 data.setaxis("ph_diff", ph_diff / 4)
-data.name(config_dict["type"] + "_" + config_dict["cpmg_counter"])
-data.set_prop("postproc_type", "spincore_CPMGv2")
+data.name(config_dict["type"] + "_" + str(config_dict["cpmg_counter"]))
 data.set_prop("acq_params", config_dict.asdict())
 target_directory = getDATADIR(exp_type="ODNP_NMR_comp/CPMG")
 filename_out = filename + ".h5"
@@ -127,7 +127,7 @@ with figlist_var() as fl:
     data.reorder("t2", first=False)
     for_plot = data.C
     for_plot.ft("t2", shift=True)
-    for_plot.ft(["ph_overall", "ph_diff"], unitary=True)
+    for_plot.ft(["ph_overall","ph_diff"], unitary=True)
     fl.next("FTed data")
-    fl.image(for_plot.mean("nScans"))
+    fl.image(for_plot)
 # }}}
