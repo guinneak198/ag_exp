@@ -11,13 +11,13 @@ from SpinCore_pp.ppg import run_spin_echo
 import logging
 fl = figlist_var()
 #{{{Parameters that change for new samples
-output_name = '9mM_TEMPOL_nutation_1'
+output_name = 'batch230927_M67_nutation_1'
 adcOffset = 44
-carrierFreq_MHz = 14.893504
+carrierFreq_MHz = 14.893263
 nScans = 4
 nEchoes = 1
-repetition = 1.2e6
-p90_range = linspace(8,15,3,endpoint=False)
+repetition = 12e6
+p90_range = linspace(2,10,3,endpoint=False)
 SW_kHz = 3.9 #24.0 originally
 acq_time = 1024.
 tau = 8000
