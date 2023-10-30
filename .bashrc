@@ -1,5 +1,5 @@
 alias vim='vim -u /c/Program\ Files\ \(x86\)/Vim/vim80/gvimrc_example.vim'
-alias gvim="~/gvim.sh"
+alias gvim='~/gvim.sh'
 #alias chrome="/C/Program\ Files\ \(x86\)/Google/Chrome/Application/chrome.exe"
 alias sumatra="start sumatrapdf -reuse-instance"
 alias py="winpty python -Wignore"
