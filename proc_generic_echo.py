@@ -29,21 +29,21 @@ all_data["generic echo"].reorder("t2", first=False).ft(['ph_diff','ph_overall'],
 pathways["generic echo"] = {"ph_diff":1,# fourier conjugate of ?p1
         "ph_overall":-1,# fourier conjugate of ?p1+?p2
         }
-all_data["3 echo cpmg"] = find_file(
+all_data["16 echo cpmg"] = find_file(
     "231030_CPMG_test_acq_CPMG.h5",
     exp_type="ODNP_NMR_comp/CPMG",
     expno="CPMG_15",
 )
-all_data['3 echo cpmg'].chunk("t", ["ph_overall","ph_diff","t2"], [2,4,-1]).labels(
+all_data['16 echo cpmg'].chunk("t", ["ph_overall","ph_diff","t2"], [2,4,-1]).labels(
         {
             "ph_diff":r_[0:4],
             "ph_overall":r_[0:2],
                     })
-all_data["3 echo cpmg"].reorder("t2", first=False).ft(['ph_diff','ph_overall'], unitary=True)
-pathways["3 echo cpmg"] = {"ph_diff":1,# fourier conjugate of ?p1
+all_data["16 echo cpmg"].reorder("t2", first=False).ft(['ph_diff','ph_overall'], unitary=True)
+pathways["16 echo cpmg"] = {"ph_diff":1,# fourier conjugate of ?p1
         "ph_overall":-1,# fourier conjugate of ?p1+?p2
         }
-show_raw = '3 echo cpmg'
+show_raw = '16 echo cpmg'
 with figlist_var() as fl:
     obs(
         f"spectral width {all_data[show_raw].get_prop('acq_params')['SW_kHz']}~kHz"

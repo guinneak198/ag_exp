@@ -11,12 +11,12 @@ from SpinCore_pp.ppg import run_spin_echo
 import logging
 fl = figlist_var()
 #{{{Parameters that change for new samples
-output_name = 'CPMG_prep_nutation_1'
-adcOffset = 48
-carrierFreq_MHz = 14.889383
+output_name = 'ras_batch2310_S51_nutation_3'
+adcOffset = 49
+carrierFreq_MHz = 14.892623
 nScans = 4
 nEchoes = 1
-repetition = 1.34e6
+repetition = 10e6
 p90_range = linspace(7,12,6,endpoint=False)
 SW_kHz = 3.9 #24.0 originally
 acq_time = 1024.
