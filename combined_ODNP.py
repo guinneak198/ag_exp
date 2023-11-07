@@ -306,7 +306,7 @@ with power_control() as p:
         last_dB_setting = this_dB    
 
         # }}}
-        for k in range(15):
+        for k in range(10):
             time.sleep(0.5)
             # JF notes that the following works for powers going up, but not
             # for powers going down -- I don't think this has been a problem to
@@ -317,7 +317,13 @@ with power_control() as p:
             if p.get_power_setting() >= this_dB:
                 break
         if p.get_power_setting() < this_dB:
-            raise ValueError("After 10 tries, the power has still not settled")
+            try:
+                for k in range(20):
+                    time.sleep(0.5)
+                    if p.get_power_setting() >= this_dB:
+                        break
+            except:        
+                raise ValueError("After 10 tries, the power has still not settled")
         time.sleep(5)
         meter_power = p.get_power_setting()
         ini_time = time.time()
