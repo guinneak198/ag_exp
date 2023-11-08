@@ -256,8 +256,8 @@ with power_control() as p:
         )
         if j == 0:
             retval = p.dip_lock(
-                config_dict["uw_dip_center_GHz"] - config_dict["uw_dip_width_GHz"] / 2,
-                config_dict["uw_dip_center_GHz"] + config_dict["uw_dip_width_GHz"] / 2,
+                config_dict['uw_dip_center_GHz'] - config_dict['uw_dip_width_GHz'] / 2,
+                config_dict['uw_dip_center_GHz'] + config_dict['uw_dip_width_GHz'] / 2,
             )
         p.set_power(this_dB)
         for k in range(10):
@@ -319,21 +319,15 @@ with power_control() as p:
     last_dB_setting = 10
     for j, this_dB in enumerate(T1_powers_dB):
         # {{{ make small steps in power if needed
-        if j == 0:
+        if this_dB - last_dB_setting > 3:
+            smallstep_dB = last_dB_setting + 2
+            while smallstep_dB + 2 < this_dB:
+                p.set_power(smallstep_dB)
+                smallstep_dB += 2
             p.set_power(this_dB)
-        else:    
-            if this_dB - last_dB_setting > 3:
-                smallstep_dB = last_dB_setting + 2
-                while smallstep_dB + 2 < this_dB:
-                    print("SETTING THIS POWER %d"%smallstep_dB)
-                    p.set_power(smallstep_dB)
-                    smallstep_dB += 2
-                    last_dB_setting = this_dB
-                p.set_power(this_dB)
-        last_dB_setting = this_dB    
-
+            last_dB_setting = this_dB    
         # }}}
-        for k in range(15):
+        for k in range(10):
             time.sleep(0.5)
             # JF notes that the following works for powers going up, but not
             # for powers going down -- I don't think this has been a problem to
