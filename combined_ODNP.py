@@ -89,14 +89,14 @@ IR_postproc = "spincore_IR_v1" # note that you have changed the way the data is 
 Ep_postproc = "spincore_ODNP_v3"
 # }}}
 #{{{check total points
-total_points = len(Ep_ph1_cyc) * nPoints
-assert total_points < 2 ** 14, (
-    "For Ep: You are trying to acquire %d points (too many points) -- either change SW or acq time so nPoints x nPhaseSteps is less than 16384\nyou could try reducing the acq_time_ms to %f"
+total_pts = len(Ep_ph1_cyc) * nPoints
+assert total_pts < 2 ** 14, (
+    "For Ep: You are trying to acquire %d points (too many points) -- either change SW or acq time so nPoints x nPhaseSteps is less than 16384"
     % total_pts
 )
 total_pts = len(IR_ph2_cyc) * len(IR_ph1_cyc) * nPoints
 assert total_pts < 2 ** 14, (
-    "For IR: You are trying to acquire %d points (too many points) -- either change SW or acq time so nPoints x nPhaseSteps is less than 16384\nyou could try reducing the acq_time_ms to %f"
+    "For IR: You are trying to acquire %d points (too many points) -- either change SW or acq time so nPoints x nPhaseSteps is less than 16384"
     % total_pts
 )
 # }}}
@@ -139,19 +139,30 @@ control_thermal.set_prop("acq_params", config_dict.asdict())
 control_thermal.name("control_thermal")
 nodename = control_thermal.name()
 # {{{ on first write, if we can't access the directory, write to a temp file
-try:
+if os.path.exists(filename):
+    print("this file already exists so we will add a node to it!")
+    with h5py.File(
+        os.path.normpath(os.path.join(target_directory, filename))
+    ) as fp:
+        if nodename in fp.keys():
+            print("this nodename already exists, so I will call it temp_ctrl")
+            control_thermal.name("temp_ctrl")
+            nodename = "temp_ctrl"
     control_thermal.hdf5_write(filename, directory=target_directory)
-except:
-    final_log.append(
-        f"I had problems writing to the correct file {filename}, so I'm going to try to save your file to temp_ctrl.h5 in the current directory"
-    )
-    if os.path.exists("temp_ctrl.h5"):
-        final_log.append("There is already a temp_ctrl.h5 -- I'm removing it")
-        os.remove("temp_ctrl.h5")
-        target_directory = os.path.getcwd()
-        filename = "temp_ctrl.h5"
-        DNP_data.hdf5_write(filename, directory=target_directory)
-        final_log.append("change the name accordingly once this is done running!")
+else:
+    try:
+        control_thermal.hdf5_write(filename, directory=target_directory)
+    except:
+        print(
+            f"I had problems writing to the correct file {filename}, so I'm going to try to save your file to temp.h5 in the current directory"
+        )
+        if os.path.exists("temp.h5"):
+            print("there is a temp.h5 already! -- I'm removing it")
+            os.remove("temp.h5")
+            control_thermal.hdf5_write("temp.h5")
+            print(
+                "if I got this far, that probably worked -- be sure to move/rename temp.h5 to the correct name!!"
+            )
 # }}}
 logger.info("\n*** FILE SAVED IN TARGET DIRECTORY ***\n")
 logger.debug(strm("Name of saved data", control_thermal.name()))
@@ -195,20 +206,30 @@ vd_data.set_prop("acq_params", config_dict.asdict())
 vd_data.set_prop("postproc_type", IR_postproc)
 nodename = vd_data.name()
 # {{{ again, implement a file fallback
-with h5py.File(
-    os.path.normpath(os.path.join(target_directory, f"{filename}"))
-) as fp:
-    if nodename in fp.keys():
-        final_log.append("this nodename already exists, so I will call it temp")
-        nodename = "temp_noPower"
-        final_log.append(
-            f"I had problems writing to the correct file {filename} so I'm going to try to save this node as temp_noPower"
+if os.path.exists(filename):
+    print("this file already exists so we will add a node to it!")
+    with h5py.File(
+        os.path.normpath(os.path.join(target_directory, filename))
+    ) as fp:
+        if nodename in fp.keys():
+            print("this nodename already exists, so I will call it temp_IR_noPower")
+            vd_data.name("temp_IR_noPower")
+            nodename = "temp_IR_noPower"
+    vd_data.hdf5_write(filename, directory=target_directory)
+else:
+    try:
+        vd_data.hdf5_write(filename, directory=target_directory)
+    except:
+        print(
+            f"I had problems writing to the correct file {filename}, so I'm going to try to save your file to temp.h5 in the current directory"
         )
-        vd_data.name(nodename)
-# hdf5_write should be outside the h5py.File with block, since it opens the file itself
-vd_data.hdf5_write(filename, directory=target_directory)
-# }}}
-logger.debug("\n*** FILE SAVED IN TARGET DIRECTORY ***\n")
+        if os.path.exists("temp.h5"):
+            print("there is a temp.h5 already! -- I'm removing it")
+            os.remove("temp.h5")
+            vd_data.hdf5_write("temp.h5")
+            print(
+                "if I got this far, that probably worked -- be sure to move/rename temp.h5 to the correct name!!"
+            )
 logger.debug(strm("Name of saved data", vd_data.name()))
 # }}}
 # {{{run enhancement
@@ -246,6 +267,8 @@ with power_control() as p:
             ret_data=DNP_data,
         )
         DNP_thermal_done = time.time()
+        if j == 0:
+            time_axis_coords = DNP_data.getaxis("indirect")
         time_axis_coords[j]["start_times"] = DNP_ini_time
         time_axis_coords[j]["stop_times"] = DNP_thermal_done
     power_settings_dBm = np.zeros_like(dB_settings)
@@ -298,49 +321,69 @@ with power_control() as p:
         DNP_data.reorder(["ph1", "nScans", "t2"])
     DNP_data.name(config_dict["type"])
     nodename = DNP_data.name()
-    try:
+    if os.path.exists(filename):
+        print("this file already exists so we will add a node to it!")
+        with h5py.File(
+            os.path.normpath(os.path.join(target_directory, filename))
+        ) as fp:
+            if nodename in fp.keys():
+                print("this nodename already exists, so I will call it temp_IR_noPower")
+                DNP_data.name("temp_ODNP")
+                nodename = "temp_ODNP"
         DNP_data.hdf5_write(filename, directory=target_directory)
-    except:
-        print(
-            f"I had problems writing to the correct file {filename}, so I'm going to try to save your file to temp_ODNP.h5 in the current h5 file"
-        )
-        target_directory = os.path.getcwd()
-        filename = "temp_ctrl.h5"
-        if os.path.exists("temp_ODNP.h5"):
-            final_log.append("there is a temp_ODNP.h5 already! -- I'm removing it")
-            os.remove("temp_ODNP.h5")
+    else:
+        try:
             DNP_data.hdf5_write(filename, directory=target_directory)
-            final_log.append(
-                "if I got this far, that probably worked -- be sure to move/rename temp_ODNP.h5 to the correct name!!")
+        except:
+            print(
+                f"I had problems writing to the correct file {filename}, so I'm going to try to save your file to temp.h5 in the current directory"
+            )
+            if os.path.exists("temp.h5"):
+                print("there is a temp.h5 already! -- I'm removing it")
+                os.remove("temp.h5")
+                DNP_data.hdf5_write("temp.h5")
+                print(
+                    "if I got this far, that probably worked -- be sure to move/rename temp.h5 to the correct name!!"
+                )
     logger.info("\n*** FILE SAVED IN TARGET DIRECTORY ***\n")
     logger.debug(strm("Name of saved data", DNP_data.name()))
     # }}}
     # {{{run IR
     last_dB_setting = 10
     for j, this_dB in enumerate(T1_powers_dB):
+        #first_power = p.get_power_setting()
+        #print("I AM CURRENTLY AT THIS POWER",first_power)
         # {{{ make small steps in power if needed
-        if this_dB - last_dB_setting > 3:
-            smallstep_dB = last_dB_setting + 2
-            while smallstep_dB + 2 < this_dB:
-                p.set_power(smallstep_dB)
-                smallstep_dB += 2
-            p.set_power(this_dB)
-            last_dB_setting = this_dB    
+        #print("I WANT TO SET IT TO %d"%this_dB)
+        #if this_dB - last_dB_setting > 3:
+        #    smallstep_dB = last_dB_setting + 2
+        #    while smallstep_dB + 2 < this_dB:
+        #        logger.debug(
+        #            "SETTING THIS POWER", smallstep_dB)
+        #        p.set_power(smallstep_dB)
+        #        for k in range(10):
+        #            time.sleep(0.5)
+        #            if p.get_power_setting() >= smallstep_dB:
+        #                break
+        #        if p.get_power_setting() < smallstep_dB:
+        #            raise ValueError("After 10 tries, the power has still not settled")
+        #        smallstep_dB += 2
+        #        time.sleep(5)
+        #        meter_power = p.get_power_setting()
+        print("SETTING THIS POWER",this_dB)
+        p.set_power(this_dB)
         # }}}
         for k in range(10):
             time.sleep(0.5)
-            # JF notes that the following works for powers going up, but not
-            # for powers going down -- I don't think this has been a problem to
-            # date, and would rather not potentially break a working
-            # implementation, but we should PR and fix this in the future.
-            # (Just say whether we're closer to the newer setting or the older
-            # setting.)
+            print(p.get_power_setting())
             if p.get_power_setting() >= this_dB:
                 break
+        print("THIS IS THE POWER BEFORE I BREAK",p.get_power_setting())    
         if p.get_power_setting() < this_dB:
             raise ValueError("After 10 tries, the power has still not settled")
         time.sleep(5)
         meter_power = p.get_power_setting()
+        last_dB_setting = this_dB    
         ini_time = time.time()
         vd_data = None
         for vd_idx, vd in enumerate(vd_list_us):
@@ -375,24 +418,36 @@ with power_control() as p:
         vd_data.setaxis("nScans", r_[0 : config_dict["nScans"]])
         vd_data.name(T1_node_names[j])
         nodename = vd_data.name()
-        with h5py.File(
-            os.path.normpath(os.path.join(target_directory, filename))
+        if os.path.exists(filename):
+            print("this file already exists so we will add a node to it!")
+            with h5py.File(
+                os.path.normpath(os.path.join(target_directory, filename))
             ) as fp:
-            tempcounter = 1
-            orig_nodename = nodename
-            while nodename in fp.keys():
-                nodename = "%s_temp_%d"%(orig_nodename,tempcounter)
-                final_log.append("this nodename already exists, so I will call it {nodename}")
-                vd_data.name(nodename)
-                tempcounter += 1
-        # hdf5_write should be outside the h5py.File with block, since it opens the file itself
-        vd_data.hdf5_write(filename, directory=target_directory)
+                if nodename in fp.keys():
+                    print("this nodename already exists, so I will call it temp_IR_noPower")
+                    vd_data.name("temp_IR_%d"%this_dB)
+                    nodename = "temp_IR_%d"%this_dB
+            vd_data.hdf5_write(filename, directory=target_directory)
+        else:
+            try:
+                vd_data.hdf5_write(filename, directory=target_directory)
+            except:
+                print(
+                    f"I had problems writing to the correct file {filename}, so I'm going to try to save your file to temp.h5 in the current directory"
+                )
+                if os.path.exists("temp_IR_%d.h5"%this_dB):
+                    print("there is a temp_IR_%d.h5 already! -- I'm removing it"%this_dB)
+                    os.remove("temp_IR_%d.h5"%this_dB)
+                    vd_data.hdf5_write("temp_IR_%d.h5"%this_dB)
+                    print(
+                        "if I got this far, that probably worked -- be sure to move/rename temp_IR_%d.h5 to the correct name!!"%this_dB
+                    )
         print("\n*** FILE SAVED IN TARGET DIRECTORY ***\n")
         print(("Name of saved data", vd_data.name()))
     this_log = p.stop_log()
 # }}}
 config_dict.write()
-with h5py.File(os.path.join(target_directory, filename), "a") as f:
+with h5py.File(os.path.normpath(os.path.join(target_directory, filename)), "a") as f:
     log_grp = f.create_group("log")
     hdf_save_dict_to_group(log_grp, this_log.__getstate__())
 print('*'*30+'\n'+'\n'.join(final_log))
