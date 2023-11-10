@@ -161,7 +161,9 @@ sweep_data.set_prop("postproc_type", "field_sweep_v1")
 target_directory = getDATADIR(exp_type="ODNP_NMR_comp/field_dependent")
 filename_out = filename + ".h5"
 nodename = sweep_data.name()
-if os.path.exists(filename + ".h5"):
+print(filename_out)
+print(nodename)
+if os.path.exists(filename_out):
     print("this file already exists so we will add a node to it!")
     with h5py.File(
         os.path.normpath(os.path.join(target_directory, f"{filename_out}"))
@@ -172,8 +174,9 @@ if os.path.exists(filename + ".h5"):
             nodename = "temp"
     sweep_data.hdf5_write(f"{filename_out}", directory=target_directory)
 else:
+    print('IM IN THE ELSE LOOP NOW')
     try:
-        sweep_data.hdf5_write(f"{filename_out}", directory=target_directory)
+        sweep_data.hdf5_write(f"{filename_out}",directory=target_directory)
     except:
         print(
             f"I had problems writing to the correct file {filename}.h5, so I'm going to try to save your file to temp.h5 in the current directory"
@@ -181,7 +184,7 @@ else:
         if os.path.exists("temp.h5"):
             print("there is a temp.h5 already! -- I'm removing it")
             os.remove("temp.h5")
-            echo_data.hdf5_write("temp.h5")
+            sweep_data.hdf5_write("temp.h5")
             print(
                 "if I got this far, that probably worked -- be sure to move/rename temp.h5 to the correct name!!"
             )

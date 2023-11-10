@@ -7,22 +7,21 @@ import sys
 import time
 from datetime import datetime
 from SpinCore_pp.ppg import run_spin_echo
-#from SpinCore_pp import prog_plen
 import logging
 fl = figlist_var()
 #{{{Parameters that change for new samples
-output_name = 'ras_batch2310_S51_b_nutation_1'
-adcOffset = 48
-carrierFreq_MHz = 14.893674
-nScans = 4
+output_name = 'ras_batch2310_L118_a_nutation_1'
+adcOffset = 50
+carrierFreq_MHz = 14.886083
+nScans = 1
 nEchoes = 1
-repetition = 10e6
-p90_range = linspace(7,12,6,endpoint=False)
-SW_kHz = 3.9 #24.0 originally
-acq_time = 1024.
-tau = 8000
-#}}}
+repetition = 10.0e6
+p90_range = linspace(7,14,5,endpoint=False)
 ph1_cyc = r_[0,1,2,3]
+SW_kHz = 3.9 #24.0 originally
+acq_time = 1024
+tau = 3500
+#}}}
 #{{{These should stay the same regardless of sample
 date = datetime.now().strftime('%y%m%d')
 # NOTE: Number of segments is nEchoes * nPhaseSteps
@@ -52,6 +51,7 @@ nutation_data = run_spin_echo(
         tau_us = tau, 
         SW_kHz = SW_kHz, 
         indirect_fields = None, 
+        ph1_cyc = ph1_cyc, 
         ret_data = None)
 nutation_times = nutation_data.getaxis('indirect')
 nutation_times[0] = p90_range[0]
@@ -68,6 +68,7 @@ for index,p90 in enumerate(p90_range[1:]):
             repetition_us = repetition,
             tau_us = tau, 
             SW_kHz = SW_kHz, 
+            ph1_cyc = ph1_cyc, 
             ret_data = nutation_data)
     nutation_times[index + 1] = p90
 acq_params = {j:eval(j) for j in dir() if j in ['adcOffset', 'carrierFreq_MHz', 'amplitude',
@@ -81,9 +82,34 @@ nutation_data.chunk('t',
         ['ph1','t2'],[len(ph1_cyc),-1]).setaxis(
                 'ph1',ph1_cyc/4)
 nutation_data.reorder('t2',first=False)
-nutation_data.hdf5_write(myfilename)
-logging.info("Name of saved data",nutation_data.name())
-logging.info("Shape of saved data",ndshape(nutation_data))
+target_directory = getDATADIR(exp_type="ODNP_NMR_comp/nutation")
+if os.path.exists(myfilename):
+    print("this file already exists so we will add a node to it!")
+    with h5py.File(
+        os.path.normpath(os.path.join(target_directory, myfilename))
+    ) as fp:
+        if nodename in fp.keys():
+            print("this nodename already exists, so I will call it temp")
+            nutation_data.name("temp")
+            nodename = "temp"
+    nutation_data.hdf5_write(myfilename, directory=target_directory)
+else:
+    try:
+        nutation_data.hdf5_write(myfilename, directory=target_directory)
+    except:
+        print(
+            f"I had problems writing to the correct file {myfilename}, so I'm going to try to save your file to temp.h5 in the current directory"
+        )
+        if os.path.exists("temp.h5"):
+            print("there is a temp.h5 already! -- I'm removing it")
+            os.remove("temp.h5")
+            nutation_data.hdf5_write("temp.h5")
+            print(
+                "if I got this far, that probably worked -- be sure to move/rename temp.h5 to the correct name!!"
+            )
+print("\n*** FILE SAVED IN TARGET DIRECTORY ***\n")
+print(("Name of saved data", nutation_data.name()))
+print(("Shape of saved data", ndshape(nutation_data)))
 SpinCore_pp.stopBoard()
 nutation_data.reorder(['ph1','indirect'])
 fl.next('raw data')
