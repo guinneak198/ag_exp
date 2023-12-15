@@ -44,17 +44,10 @@ vd_list_us = (
     SpinCore_pp.vdlist_from_relaxivities(config_dict["concentration"], **vd_kwargs)
     * 1e6
 )  # convert to microseconds
-
 FIR_rep = 2*(1.0/(config_dict['concentration']*config_dict['krho_hot']+1.0/config_dict['T1water_hot']))*1e6
-#A and B both use this rep then rerun B without this line 
 config_dict['FIR_rep'] = FIR_rep
-print("VD LIST IS *********************************************")
-print(vd_list_us)
-print("WARREN WARREN WARREN!!!!!!!!!!!!!!!!!!!!! CHECK THIS FIR REPETITION DELAY! FOR THE CONTROLS IT SHOULD BE 10.92E6")
-print("fir repetition delay is",FIR_rep)
-
 # }}}
-# {{{Power settin
+# {{{Power settings
 dB_settings = Ep_spacing_from_phalf(
     est_phalf = config_dict['guessed_phalf']/4,
     max_power = config_dict["max_power"], 
@@ -80,7 +73,7 @@ if myinput.lower().startswith("n"):
     raise ValueError("you said no!!!")
 powers = 1e-3 * 10 ** (dB_settings / 10.0)
 # }}}
-#{{{check total points
+# {{{phase cycling
 Ep_ph1_cyc = r_[0, 1, 2, 3]
 total_points = len(Ep_ph1_cyc) * nPoints
 assert total_points < 2 ** 14, (
@@ -271,7 +264,7 @@ with power_control() as p:
             input("change the name accordingly once this is done running!")
     logger.info("FILE SAVED")
     logger.debug(strm("Name of saved enhancement data", DNP_data.name()))
-    logger.debug("shape of saved enhancement data", ndshape(DNP_data))    # }}}
+    logger.debug("shape of saved enhancement data", ndshape(DNP_data))
     # {{{run IR
     p.mw_off()
     time.sleep(16.0)
@@ -395,4 +388,3 @@ config_dict.write()
 with h5py.File(os.path.join(target_directory, f"{filename_out}"), "a") as f:
     log_grp = f.create_group("log")
     hdf_save_dict_to_group(log_grp, this_log.__getstate__())
-
