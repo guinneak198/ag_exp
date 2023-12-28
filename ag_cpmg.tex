@@ -1,0 +1,491 @@
+\section{CPMG for ``free'' monitoring of temperature}
+\subsection{CPMG pulse programming}
+\href{https://www.wrike.com/open.htm?id=1185301634}{wrike task}
+we think that we can get a DCCT that shows a CPMG with nicely centered echos in the correct coherence pathway, using the ``generic'' ppg
+
+\subsubsection{setup}
+\o[10/11 17:10-19:25]{plan this out}
+recover the pulse sequence used to run \href{https://jmfrancklab.slack.com/archives/CLMMYDD98/p1655131101075819}{this}
+\o[10/11 17:28]{talking to AG, she has an idea of the exact pulse program that was used to do this}
+AG: identify the commit and repo where the most likely suspect lives -- put that here
+\phantomsection\label{sec:identifyABCPMGppg}
+\o[10/23 18:24]{put the version that AG actually ran in new branch \texttt{AB_CPMG_old}}
+\begin{err}
+    \o{commit: e8b678a8f3a - \texttt{user_exp/AB_exp/run_CPMG.py}}
+    \o[10/23 17:57]{JF hadn't noticed before that this is a weirdo repo -- figure out where this is from}
+    \o[10/23 18:10]{found after a lot of searching that he modified above commit in use user exp repo on the computer}
+    \o[10/23 18:01]{commit: 8191b of \texttt{spincore_apps} \texttt{examples/run_CPMG.py}, modified to use a 16 step phase cycle}
+\end{err}
+then edit procedure below to note which parameter you need to change to get the desired echo window (based on the calculations at the end of this section)
+\o{$\checkmark$}
+AG: find the post on slack that is our reference for good SNR (not the paper, the original post that's the touchpoint for this) -- enter this in ``good SNR spincore reference'' below
+\href{https://jmfrancklab.slack.com/archives/CLMMYDD98/p1679057089427599}{here}
+also identify the exact dataset that is our reference, so that we can refer to it below -- double-check that this is what we are using in the code below
+
+note the $T_1$ of the sample (estimate from $k_{\rho}=353\;\text{s}^{-1}\text{M}^{-1}$ is OK) that AG plans to load into the spectrometer
+\o[10/11 17:47]{has 27 mM solution, which should be about}
+\begin{python}
+krho = 353
+C = 27e-3
+T10 = 2.5
+T1 = 1/(krho*C+1/T10)/1e-3
+obs(f"{T1:0.2f}~ms")
+obs(r"dividing $2\times T_1$ into 64 echoes gives")
+obs(f"{2*T1/64:0.2f}~ms per echo")
+\end{python}
+\o[10/11 17:59]{this seems like it's too short to be seeing the $T_2^*$ decay}
+so compare this against AG good SNR spincore reference \href{https://jmfrancklab.slack.com/archives/CLMMYDD98/p1679057089427599}{here}
+\o[10/11 18:03]{based on figure in the paper, we need 20 ms to actually see the rise and fall of the echo}
+so, let's instead try 9.4~mM
+\begin{python}
+krho = 353
+C = 9.4e-3
+T10 = 2.5
+T1 = 1/(krho*C+1/T10)/1e-3
+Necho = 32 
+obs(f"{T1:0.2f}~ms")
+obs(r"dividing $2\times T_1$ into "+f"{Necho} echoes gives")
+obs(f"{2*T1/Necho:0.2f}~ms per echo")
+obs(f"r.d. should be {5*T1*1e-3:0.2f}~s")
+\end{python}
+figure out how the second element of a ppg acquire tuple ends up being passed to a SpinCore API function.  Is this passed as a time, or converted to a number of points before being passed?
+\o[10/11 19:19]{the definition of what the ppg elements do is given in \texttt{SpinCore_pp.c}, and there we see that it uses this value as a time, directly, without converting to number of points}
+AG: figure out why \texttt{acq_time_ms} is currently passed to generic -- what is it used for? What SpinCore API function is it passed to (if any)? Are we doing this in the right way -- specifically, should we be passing the length of the total acquisition, or of the individual stroboscopic windows in the place where this info is used? (We can definitely figure this out tracing what happens to this information down to the \texttt{SpinCore_pp.c/i} level, and then looking up the corresponding API function documentation, but it might be easier to use the old CPMG sequence for a hint.)
+\o[10/23 18:13]{as part of this note that in AB's program, \texttt{configureRX} takes the number of echoes, and it's not clear if that's being passed correctly}
+\o[10/23 18:14]{also note that his \texttt{acq_time} that he uses in his ppg comes from \texttt{configureRX} -- I don't think that we are doing that!, but h5py parameters stored in the result of AB's cpmg file claim this is just \texttt{nPoints/SW_kHz}}
+
+\subsubsection{reproduce things that work}
+\o[10/12 13:02]{now we are running on the master branch of \texttt{SpinCore_pp}}
+\o[10/12 13:08]{we conclude below that the hack was needed because on 10/26 AG had built the new version w/out unneeded arg, which worked, but then probably rebuilt an older version on 11/22 (both 2022), and forgot that had been done}
+\begin{err}
+    \o[10/12 12:33]{after spending some time on this, note there is confusion on which exact branch is being used. AG is using \texttt{Hack_getData}, which feeds a bogus argument to the getData function -- however, this argument removed in ff4036c4af5c (a year ago), suggesting there is a deeper underlying issue}
+    specifically check which version of \texttt{SpinCore_pp} is being used
+    \o[10/12 12:38]{it looks like the pyd file is from Nov 22, so it should have been compiled after I made the change}
+    \o[10/12 12:44]{everything seems in order when looking at the code}
+    this is not making any sense, so ask AG when she needed to do this
+    \o[10/12 12:55]{even though it was rebuilt in november, that was by AG, and she was using a different branch at the time}
+    copy current directory to make a backup in case rebuild is screwed up
+    \o[10/12 12:56]{change old \texttt{_bak} directory to \texttt{_oldbak}, and call this one \texttt{_bak}}
+    \o[10/12 12:58]{actually, just rename current to \texttt{_bak} and make the copy the new one (no \texttt{_bak})}
+    try to rebuild
+    delete all pyd files as well as the build directory, then
+    \texttt{source environment.sh} then
+    \texttt{py setup.py develop}
+    \o[10/12 13:00]{it does create a new pyd file}
+    try to run \texttt{run_hahn_echo.py} that had failed again
+    \o[10/12 13:01]{this runs}
+    verify that it has no hack
+    \o[10/12 13:02]{AG verifies there is no hack!}
+\end{err}
+AG: set up and acquire signal with basic spin echo sequence (\texttt{run_hahn_echo.py}) from the current master branch of SpinCore, set \texttt{tau_us} (roughly time between 90 and 180) to 8400~μs, so that we are very close to what we want for the first echo in our CPMG,
+while we're at it, set r.d. to 1.34~s
+\o{$\checkmark$}
+below, create and plot a \texttt{d_new} object that pulls this new signal and verifies that we have decent SNR.  Hopefully, this will require ft of the phase cycle sequences, but no IFT of the direction dimension, and will not require chunking.
+\o[10/12 13:34]{we do not get a comparable SNR to the reference, even after shifting the carrier frequency; and we conclude that the tuned limiter does not help to make the data any better}
+\begin{err}
+    \o[13:22]{first attempt with correct parameters (\texttt{echo_3}) is noisier and larger than reference}
+    AG says to reproduce we may need to reattach tuned limiter, so do this and re-run adc offset
+    \o[10/12 13:23]{gives a value of ADC offset she says is very high -- 51}
+    \o[10/12 13:26]{adding the tuned limiter actually shifts the position of the echo!}
+    re-run to see that this is a reproducible change
+    \o[10/12 13:34]{it does seem like this is a reproducible change}
+\end{err}
+\o[10/12 13:29]{\textbf{my conclusion from this is that the chokes are not offering a reproducible solution, and that we need to look into new versions of chokes, as discussed on slack}}
+\o[10/12 13:43]{nonetheless, with ``power cycle'' here, AG power cycles the magnet power supply and the LNA power supply and also moves the cables -- one of these rights the situation!}
+\begin{err}
+    \o[10/12 13:49]{it looks like signal amplitude changes with carrier frequency}
+    so set back to 14.8934 where it looks like we get a higher amplitude
+    \o[10/12 13:55]{the amplitude of the signal doesn't change}
+\end{err}
+\par
+\begin{python}[on]
+from pylab import *
+from pyspecdata import *
+# {{{ load the files that we're interested in as different nddata objects
+all_data = {}
+all_data["reference data"] = find_file(
+    "230310_test_choke_3p9_echo.h5",
+    exp_type="ODNP_NMR_comp/Echoes",
+    expno="echo_1",
+)
+all_data["new data"] = find_file(
+    "231012_CPMG_prep_echo.h5",
+    exp_type="ODNP_NMR_comp/Echoes",
+    expno="echo_3",
+)
+all_data["new data w tuned limiter"] = find_file(
+    "231012_CPMG_prep_echo.h5",
+    exp_type="ODNP_NMR_comp/Echoes",
+    expno="echo_4",
+)
+all_data["new data w tuned limiter, repeat"] = find_file(
+    "231012_CPMG_prep_echo.h5",
+    exp_type="ODNP_NMR_comp/Echoes",
+    expno="echo_10",
+)
+all_data["new data w tuned limiter, power cycle"] = find_file(
+    "231012_CPMG_prep_echo.h5",
+    exp_type="ODNP_NMR_comp/Echoes",
+    expno="echo_12",
+)
+all_data["move carrier back"] = find_file(
+    "231012_CPMG_prep_echo.h5",
+    exp_type="ODNP_NMR_comp/Echoes",
+    expno="echo_14",
+)
+last = "new data w tuned limiter, power cycle"
+for j in all_data.values():
+    j.ift(
+        "t2"
+    )  # even though it's very sketchy which ppg wrote it, this data was apparently ft'd along all dimensions
+# }}}
+with figlist_var() as fl:
+    obs(f"spectral width {all_data[last].get_prop('acq_params')['SW_kHz']}~kHz")
+    fl.next(f"raw data for {last}")
+    fl.image(all_data[last])
+    fl.next("show time domain abs", legend=True)
+    for thislabel, thisd in all_data.items():
+        forplot = abs(thisd["ph1", 1])["t2":(None, 150e-3)]
+        fl.plot(forplot,
+            label=thislabel+"\n%0.4f"%thisd.get_prop("acq_params")["carrierFreq_MHz"])
+    fl.next("show time domain abs, normalized", legend=True)
+    for thislabel, thisd in all_data.items():
+        forplot = abs(thisd["ph1", 1])["t2":(None, 150e-3)]
+        fl.plot(forplot/forplot.max(),
+            label=thislabel)
+\end{python}
+\par
+\o[10/23 16:00 AG]{starting fresh today: inserted 9.4~mM tempol sample, and acquired signal}
+\o[10/23 17:47]{initially, there was some confusion b/c on a noise spike, and getting noisy data -- moved off of noise spike to make life easier}
+\begin{err}
+    on looking back, the reference data we're using in the script isn't
+    the same as the reference data in the slack link above.
+    Here, we compare the two, with dataset \#2 being the one in the slack link
+    \o[10/23 16:34]{JF did this together with AG here}
+    \par
+\begin{python}[on]
+from pylab import *
+from pyspecdata import *
+# {{{ load the files that we're interested in as different nddata objects
+all_data = {}
+all_data["reference data 2"] = find_file(
+    "230316_balanced_probe_3p9_echo.h5",
+    exp_type="ODNP_NMR_comp/Echoes",
+    expno="echo_1",
+)
+all_data["reference data 1"] = find_file(
+    "230310_test_choke_3p9_echo.h5",
+    exp_type="ODNP_NMR_comp/Echoes",
+    expno="echo_1",
+)
+last = "reference data 2"
+noise_starttime = 0.08 # take an std after this point to get the noise
+for j in all_data.values():
+    j.ift(
+        "t2"
+    )  # even though it's very sketchy which ppg wrote it, this data was apparently ft'd along all dimensions
+# }}}
+with figlist_var() as fl:
+    obs(
+        f"spectral width {all_data[last].get_prop('acq_params')['SW_kHz']}~kHz"
+    )
+    fl.next(f"raw data for {last}")
+    fl.image(all_data[last])
+    fl.next("show time domain abs", legend=True)
+    for thislabel, thisd in all_data.items():
+        forplot = abs(thisd["ph1", 1])["t2":(None, 150e-3)]
+        fl.plot(
+            forplot,
+            label=thislabel
+            + "\n%0.4f" % thisd.get_prop("acq_params")["carrierFreq_MHz"]
+            + "\n"
+            + "noise= %0.2e" % thisd['ph1', 1]['t2':(noise_starttime,None)].run(std,'t2').item()
+        )
+    fl.next("show time domain abs, normalized", legend=True)
+    for thislabel, thisd in all_data.items():
+        forplot = abs(thisd["ph1", 1])["t2":(None, 150e-3)]
+        fl.plot(forplot / forplot.max(), label=thislabel)
+\end{python}
+    \par
+    \o[10/23 16:44]{JF claims that above difference isn't important}
+    look at the data from today against the nicer of the two time-domain references from above
+    \o[10/23 16:45]{we find that it's noisy, and noisy relative to what we got last time, as well}
+    \par
+    \begin{python}[on]
+from pylab import *
+from pyspecdata import *
+
+# {{{ load the files that we're interested in as different nddata objects
+all_data = {}
+all_data["reference data 1"] = find_file(
+    "230310_test_choke_3p9_echo.h5",
+    exp_type="ODNP_NMR_comp/Echoes",
+    expno="echo_1",
+)
+all_data["today"] = find_file(
+    "231023_CPMG_prep_echo.h5",
+    exp_type="ODNP_NMR_comp/Echoes",
+    expno="echo_5",
+)
+all_data["new data w tuned limiter, power cycle"] = find_file(
+    "231012_CPMG_prep_echo.h5",
+    exp_type="ODNP_NMR_comp/Echoes",
+    expno="echo_12",
+)
+show_raw = "today"
+noise_starttime = 0.08 # take an std after this point to get the noise
+for j in all_data.values():
+    j.ift(
+        "t2"
+    )  # even though it's very sketchy which ppg wrote it, this data was apparently ft'd along all dimensions
+# }}}
+with figlist_var() as fl:
+    obs(
+        f"spectral width {all_data[show_raw].get_prop('acq_params')['SW_kHz']}~kHz"
+    )
+    fl.next(f"raw data for {show_raw}")
+    fl.image(all_data[show_raw])
+    fl.next("show time domain abs", legend=True)
+    for thislabel, thisd in all_data.items():
+        forplot = abs(thisd["ph1", 1])["t2":(None, 150e-3)]
+        fl.plot(
+            forplot,
+            label=thislabel
+            + "\n%0.4f" % thisd.get_prop("acq_params")["carrierFreq_MHz"]
+            + "\n"
+            + "noise= %0.2e" % thisd['ph1', 1]['t2':(noise_starttime,None)].run(std,'t2').item()
+        )
+    fl.next("show time domain abs, normalized", legend=True)
+    for thislabel, thisd in all_data.items():
+        forplot = abs(thisd["ph1", 1])["t2":(None, 150e-3)]
+        fl.plot(forplot / forplot.max(), label=thislabel)
+    \end{python}
+    \par
+\end{err}
+\par
+\begin{python}[on]
+from pylab import *
+from pyspecdata import *
+# {{{ load the files that we're interested in as different nddata objects
+all_data = {}
+all_data["reference data 1"] = find_file(
+    "230310_test_choke_3p9_echo.h5",
+    exp_type="ODNP_NMR_comp/Echoes",
+    expno="echo_1",
+)
+all_data["today moved off of noise spike"] = find_file(
+    "231023_CPMG_prep_echo.h5",
+    exp_type="ODNP_NMR_comp/Echoes",
+    expno="echo_6",
+)
+all_data["10/12 reference"] = find_file(
+    "231012_CPMG_prep_echo.h5",
+    exp_type="ODNP_NMR_comp/Echoes",
+    expno="echo_12",
+)
+show_raw = "today moved off of noise spike"
+noise_starttime = 0.08 # take an std after this point to get the noise
+for j in all_data.values():
+    j.ift(
+        "t2"
+    )  # even though it's very sketchy which ppg wrote it, this data was apparently ft'd along all dimensions
+# }}}
+with figlist_var() as fl:
+    obs(
+        f"spectral width {all_data[show_raw].get_prop('acq_params')['SW_kHz']}~kHz"
+    )
+    fl.next(f"raw data for {show_raw}")
+    fl.image(all_data[show_raw])
+    fl.next("show time domain abs", legend=True)
+    for thislabel, thisd in all_data.items():
+        forplot = abs(thisd["ph1", 1])["t2":(None, 150e-3)]
+        fl.plot(
+            forplot,
+            label=thislabel
+            + "\n%0.4f" % thisd.get_prop("acq_params")["carrierFreq_MHz"]
+            + "\n"
+            + "noise= %0.2e" % thisd['ph1', 1]['t2':(noise_starttime,None)].run(std,'t2').item()
+        )
+    fl.next("show time domain abs, normalized", legend=True)
+    for thislabel, thisd in all_data.items():
+        forplot = abs(thisd["ph1", 1])["t2":(None, 150e-3)]
+        fl.plot(forplot / forplot.max(), label=thislabel)
+\end{python}
+\par
+Adjust the echo delays (\texttt{tau_extra}) in pulse program from \cref{sec:identifyABCPMGppg}, so that $N_{echo}\tau_{echo} < 3\times T_1$, and run it
+\o[10/23 16:07 AG]{The T1 we confirmed above should be around 268.95 ms. So the $N_{echo}\tau_{echo}$ should be less than 806.85ms}
+\o[10/23 17:05 AG]{in the current script he uses 64 echoes so $64\tau_{echo} < 806.85\;\text{ms}$ or $\tau_{echo} < 12.6\;\text{ms}$}
+\o[10/23 17:08 AG]{the parameter that I should change in his script seems to be \texttt{tau_extra} which he has set to 2.5 ms}
+\o[10/23 17:17 AG]{the time between the 90 pulse and 180 is $\tau_{echo} + 1$. $\tau_{echo} = twice_{tau}/2$ and $twice_{tau} = 2*p90 + 2 * tau_{extra} + acq\_time$ where \texttt{acq_time} is the SW / nPoints which AB hard set to 2.0 kHz and 16 points. My 90 time is 4.8.}
+\o[10/23 17:20 AG]{SO I can say $\tau_{echo} = 4.8 + tau_{extra} + 8000 < 806.85e3/64 echoes$ (all in μs) or $\tau_{echo}<8.6022 ms$}
+\o[10/23 17:21 AG]{I am keeping \texttt{tau_extra} as 2500 us.}
+Adapt the basic code above to show the DCCT for just this data (the CPMG data acq with old ppg) 
+\o[10/23 18:48]{in looking at the data, we have to remember that $\Delta p_2$ gives the \textit{total} effect of the spin echoes, and so is 0 or -2}
+\o[10/23 18:49]{also, we need to remember to turn on interpolation, since otherwise we can't see the lines!}
+\par
+\begin{python}[on]
+from pylab import *
+from pyspecdata import *
+# {{{ load the files that we're interested in as different nddata objects
+all_data = {}
+all_data["AB echo"] = find_file(
+    "231023_CPMG_prep.h5",
+    exp_type="ODNP_NMR_comp/CPMG",
+    expno="CPMG_16step_1",
+)
+all_data["AB echo"] = all_data["AB echo"].chunk(
+        "t", ["ph2","ph1","Necho","t2"], [4,4,64,-1]).labels(
+                {
+                    "ph1":r_[0:4],
+                    "ph2":r_[0:4],
+                    "Necho":r_[0:64]+1,
+                    })
+all_data["AB echo"].ft(['ph1','ph2'],unitary=True)
+# }}}
+with figlist_var() as fl:
+    for thislabel, thisd in all_data.items():
+        obs(
+                f"for {thislabel} spectral width {thisd.get_prop('acq_params')['SW_kHz']}~kHz"
+                )
+        fl.next(thislabel)
+        fl.image(thisd, interpolation='bilinear')
+\end{python}
+\par
+first, based on notes from above, look at \texttt{run_cpmg} in the \texttt{generic_based_echo} branch looks like -- in paticular how it sets up configureRX
+\o[10/23 18:54]{as long as we have a loop called \texttt{echo_labels}, which we do, it should be automatically determining the number of echoes based off of that}
+\begin{err}
+    before jumping into planned diagnostic try to run \texttt{run_cpmg} on \texttt{generic_based_echo}:
+    data is already chunked as: phoverall, 4 outside of phdiff, 2
+    20 echoes where $N_{echo}\tau_{echo}$ should be less than 806.85ms, so that $\tau_{echo}$ should be 40~ms.
+    \o[10/23 19:16]{this generates what looks like complete noise:}
+\par
+\begin{python}[on]
+from pylab import *
+from pyspecdata import *
+
+# {{{ load the files that we're interested in as different nddata objects
+all_data = {}
+all_data["generic echo"] = find_file(
+    "231023_CPMG_prep_CPMG.h5",
+    exp_type="ODNP_NMR_comp/CPMG",
+    expno="CPMG_1",
+)
+all_data["generic echo"].ft(['ph_overall','ph_diff'],unitary=True)
+all_data['generic echo'].chunk('t2',['Nechos','t2'],
+        [all_data['generic echo'].get_prop('acq_params')['nEchoes'],
+            -1])
+# }}}
+with figlist_var() as fl:
+    for thislabel, thisd in all_data.items():
+        obs(
+                f"for {thislabel} spectral width {thisd.get_prop('acq_params')['SW_kHz']}~kHz"
+                )
+        fl.next(thislabel)
+        fl.image(thisd['t2',1:])# slice out first point b/c ringdown
+\end{python}
+\par
+\end{err}
+check that deblank, p90, tau, deadtime (all us) and acq time (ms) are all set to values in \texttt{active.ini} that are appropriate, and that match the defaults in \texttt{run_hahn_echo.py} where relevant
+\o{$\checkmark$}
+\begin{err}
+    \o[10/23 19:21]{ag needs to edit things in the \texttt{generic_echo} pulse program that shouldn't be there}
+    be sure to commit the version actually used!
+    \o[10/23 20:10]{26c8aa}
+\end{err}
+run the \texttt{generic_echo.py} program (from the \texttt{generic_based_echo} program of the SpinCore repo 16a64b3d2e2)
+with
+\texttt{tau_us} set to 8400~μs and \texttt{SW_kHz} set to 3.9,
+and check that it looks the same as the \texttt{run_hahn_echo.py}
+result just generated
+\o[10/23 20:08]{we had to decrease the number of points since the phase cycle is bigger, and we did 8~ms rather than 8.4~ms, and the noise had gotten worse, but we do roughly confirm that this works}
+\begin{err}
+    \o[10/23 19:57]{had to do a bunch of script editing -- different pathway, this one not FT'd}
+    \o[10/23 19:57]{get lots of noise}
+    jump back to hahn echo
+    \o[10/23 20:02]{yes, this does have bad SNR}
+    \o[10/23 20:03]{\textbf{we really really need a better choke device}}
+    \o[10/23 20:07]{note that on looking at the raw data, realized we weren't moving from phcyc domain to deltap domain -- after even though noise is bad, we get good SNR because of the many phcyc steps}
+\end{err}
+\par
+\begin{python}[on]
+from pylab import *
+from pyspecdata import *
+from pyspecProcScripts.simple_functions import select_pathway
+# {{{ load the files that we're interested in as different nddata objects
+all_data = {}
+pathways = {}
+all_data["reference data 1"] = find_file(
+    "230310_test_choke_3p9_echo.h5",
+    exp_type="ODNP_NMR_comp/Echoes",
+    expno="echo_1",
+)
+pathways["reference data 1"] = {"ph1":1}
+all_data["10/12 reference"] = find_file(
+    "231012_CPMG_prep_echo.h5",
+    exp_type="ODNP_NMR_comp/Echoes",
+    expno="echo_12",
+)
+pathways["10/12 reference"] = {"ph1":1}
+all_data["today after seeing noise"] = find_file(
+    "231023_CPMG_prep_echo.h5",
+    exp_type="ODNP_NMR_comp/Echoes",
+    expno="echo_7",
+)
+pathways["today after seeing noise"] = {"ph1":1}
+for j in all_data.values():
+    j.ift(
+        "t2"
+    )  # even though it's very sketchy which ppg wrote it, this data was apparently ft'd along all dimensions
+all_data["generic echo"] = find_file(
+    "231023_CPMG_prep_generic_echo.h5",
+    exp_type="ODNP_NMR_comp/CPMG",
+    expno="generic_echo_1",
+)
+all_data["generic echo"].reorder("t2", first=False).ft(['ph_diff','ph_overall'], unitary=True)
+pathways["generic echo"] = {"ph_diff":1,# fourier conjugate of Δp₁
+        "ph_overall":-1,# fourier conjugate of Δp₁+Δp₂
+        }
+print("t axis of initial",all_data["generic echo"].getaxis('t2')[r_[0,-1]])
+show_raw = "generic echo"
+noise_starttime = 0.08 # take an std after this point to get the noise
+# }}}
+with figlist_var() as fl:
+    obs(
+        f"spectral width {all_data[show_raw].get_prop('acq_params')['SW_kHz']}~kHz"
+    )
+    fl.next(f"raw data for {show_raw}")
+    fl.image(all_data[show_raw])
+    fl.next("show time domain abs", legend=True)
+    for thislabel, thisd in all_data.items():
+        print("looking at",thislabel)
+        thispathway = pathways[thislabel]
+        s = select_pathway(thisd, thispathway)
+        print("check shape",ndshape(select_pathway(thisd,thispathway)))
+        print("t axis",thisd.getaxis('t2')[r_[0,-1]])
+        forplot = abs(s)["t2":(None, 150e-3)]
+        fl.plot(
+            forplot,
+            label=thislabel
+            + "\n%0.4f" % s.get_prop("acq_params")["carrierFreq_MHz"]
+            + "\n"
+            + "noise= %0.2e" % s['t2':(noise_starttime,None)].run(std,'t2').item()
+        )
+    fl.next("show time domain abs, normalized", legend=True)
+    for thislabel, thisd in all_data.items():
+        thispathway = pathways[thislabel]
+        s = select_pathway(thisd, thispathway)
+        forplot = abs(s)["t2":(None, 150e-3)]
+        fl.plot(forplot / forplot.max(), label=thislabel)
+\end{python}
+\par
+Create a copy of the \texttt{generic_echo} program and add a second echo:
+The easiest way to do this is going to be to create a new \texttt{echo_acq_ms} parameter (which will replace \texttt{acq_time_ms} in \texttt{run_CPMG}), and to set this equal to 16800~μs ($2\times 8.4\;\text{ms}$)
+\o{this parameter was already created in the \texttt{generic_based_echo} branch at 1aea21f144e}
+
+see that the DCCT plot looks OK,
+and plot the time domain signal on top of the single echo result to verify that we are seeing the second echo
+
+Run the \texttt{run_CPMG} program with the number of echoes set to 2, and make sure that it generates the same result
+
+Increase the number of echoes to 32, and verify that the DCCT looks OK
+

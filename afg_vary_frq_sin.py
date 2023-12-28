@@ -1,37 +1,47 @@
 from Instruments import *
 from pyspecdata import *
 import time
+import SpinCore_pp
+from datetime import datetime
 from serial.tools.list_ports import comports
 import serial
 from scipy import signal
 print("These are the instruments available:")
 SerialInstrument(None)
 print("done printing available instruments")
+target_directory = getDATADIR(exp_type="ODNP_NMR_comp/Echoes")
 
 with SerialInstrument('AFG-2225') as s:
     print((s.respond('*idn?')))
 #{{{ Spincore settings
-SW_kHz = 10000
-adcOffset = 45
+SW_kHz = 200
+adcOffset = 42
 carrierFreq_MHz = 15.0
 tx_phases = r_[0.0,90.0,180.0,270.0]
-amplitude = 1.0
+SC_amplitude = 1.0
 nScans = 100
 nEchoes = 1
+phase_cycling = False
+coherence_pathway = [('ph1',1),('ph2',-2)]
 date = datetime.now().strftime('%y%m%d')
-nPhaseSteps = 1
+if phase_cycling:
+    nPhaseSteps = 8
+if not phase_cycling:
+    nPhaseSteps = 1
 p90 = 4.0
 deadtime = 10.0
-repetition = 134
+repetition = 1e4
 nPoints = 1024*2
 acq_time = nPoints/SW_kHz + 1.0
+tau_adjust = 0.0
 deblank = 1.0
-tau = deadtime + acq_time*1e3*(1./8.)
+tau = deadtime + acq_time*1e3*(1./8.) + tau_adjust
+pad = 0
 #{{{ setting acq_params dictionary
 acq_params = {}
 acq_params['adcOffset'] = adcOffset
 acq_params['carrierFreq_MHz'] = carrierFreq_MHz
-acq_params['amplitude'] = amplitude
+acq_params['amplitude'] = SC_amplitude
 acq_params['nScans'] = nScans
 acq_params['nEchoes'] = nEchoes
 acq_params['p90_us'] = p90
@@ -39,29 +49,42 @@ acq_params['deadtime_us'] = deadtime
 acq_params['repetition_us'] = repetition
 acq_params['SW_kHz'] = SW_kHz
 acq_params['nPoints'] = nPoints
+acq_params['tau_adjust_us'] = tau_adjust
 acq_params['deblank_us'] = deblank
 acq_params['tau_us'] = tau
-#}}}
+acq_params['pad_us'] = pad 
+if phase_cycling:
+    acq_params['nPhaseSteps'] = nPhaseSteps#}}}
 data_length = 2*nPoints*nEchoes*nPhaseSteps
 #}}}
 #{{{ AFG settings
-freq_list = [10e6,11e6,12e6,13e6,14e6,15e6,16e6,17e6,18e6,19e6,20e6]
-amplitude = 1.0 #desired Vpp
+freq_list = np.linspace(14.9e6,15.1e6,10)
+amplitude = 1.01 #desired Vpp
+print("HEYHEYHEYHEY")
+print(adcOffset)
+print(carrierFreq_MHz)
+print(tx_phases)
+print(SC_amplitude)
+print(nPoints)
+output = date+'_'+'200kHz_test_sig_sweep_nomag.h5'
 with AFG() as a:
     a.reset()
     a[0].ampl = amplitude
     for j, frq in enumerate(freq_list):
         a[0].output = True
         frq_kHz = frq/1e3 
-        output = '%d_kHz_test_sig'%frq_kHz
         print("Frequency is:",frq)
         a.sin(ch=1, V = amplitude, f = frq)
+        print("sin wave made")
         for x in range(nScans):
-            SpinCore_pp.configureTX(adcOffset, carrierFreq_MHz, tx_phases, amplitude, nPoints)
+            print("configuring")
+            SpinCore_pp.configureTX(adcOffset, carrierFreq_MHz, tx_phases, SC_amplitude, nPoints)
+            print("acq stuff")
             acq_time = SpinCore_pp.configureRX(SW_kHz, nPoints, 1, nEchoes, nPhaseSteps)
             acq_params['acq_time_ms'] = acq_time
             # acq_time is in msec!
             SpinCore_pp.init_ppg();
+            print("initing") 
             SpinCore_pp.load([
                 ('marker','start',1),
                 ('phase_reset',1),
@@ -73,7 +96,7 @@ with AFG() as a:
                 ])
             SpinCore_pp.stop_ppg();
             SpinCore_pp.runBoard();
-            raw_data = SpinCore_pp.getData(data_length, nPoints, nEchoes, nPhaseSteps, output_name)
+            raw_data = SpinCore_pp.getData(data_length, nPoints, nEchoes, nPhaseSteps)
             raw_data.astype(float)
             data_array = []
             data_array[::] = np.complex128(raw_data[0::2]+1j*raw_data[1::2])
@@ -83,12 +106,12 @@ with AFG() as a:
                 data = ndshape([len(data_array),nScans],['t','nScans']).alloc(dtype=np.complex128)
                 data.setaxis('t',time_axis).set_units('t','s')
                 data.setaxis('nScans',r_[0:nScans])
-                data.name('signal %f kHz'%rate/4)
+                data.name('signal %f kHz'%frq_kHz)
                 data.set_prop('acq_params',acq_params)
             data['nScans',x] = data_array
             SpinCore_pp.stopBoard();
-        data.set_prop('center_frq', rate)
-        data.name('centered_%d'%rate)    
+        data.set_prop('afg_frq', frq_kHz)
+        data.name('afg_%d'%frq_kHz)    
         nodename = data.name()
         if os.path.exists(output):
             print("this file already exists so we will add a node to it!")

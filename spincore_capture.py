@@ -34,10 +34,10 @@ def verifyParams():
 #}}}
 
 #output_name = 'capProbe_noise'
-SW_kHz = 20000
-output_name = 'probe_chokes_2_'+str(SW_kHz)+'kHz'
-adcOffset = 45
-carrierFreq_MHz = 14.893504
+SW_kHz = 40
+output_name = 'test_sig_'+str(SW_kHz)+'kHz'
+adcOffset = 34
+carrierFreq_MHz = 15.0
 tx_phases = r_[0.0,90.0,180.0,270.0]
 amplitude = 1.0
 nScans = 100
@@ -145,7 +145,7 @@ for x in range(nScans):
     SpinCore_pp.stop_ppg();
     print("\nRUNNING BOARD...\n")
     SpinCore_pp.runBoard();
-    raw_data = SpinCore_pp.getData(data_length, nPoints, nEchoes, nPhaseSteps, output_name)
+    raw_data = SpinCore_pp.getData(data_length, nPoints, nEchoes, nPhaseSteps)
     raw_data.astype(float)
     data_array = []
     data_array[::] = np.complex128(raw_data[0::2]+1j*raw_data[1::2])
