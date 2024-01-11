@@ -16,7 +16,7 @@ with SerialInstrument('AFG-2225') as s:
 #{{{ Spincore settings
 SW_kHz = 200
 adcOffset = 42
-carrierFreq_MHz = 15.0
+carrierFreq_MHz = 14.9
 tx_phases = r_[0.0,90.0,180.0,270.0]
 SC_amplitude = 1.0
 nScans = 100
@@ -58,15 +58,9 @@ if phase_cycling:
 data_length = 2*nPoints*nEchoes*nPhaseSteps
 #}}}
 #{{{ AFG settings
-freq_list = np.linspace(14.9e6,15.1e6,10)
-amplitude = 1.01 #desired Vpp
-print("HEYHEYHEYHEY")
-print(adcOffset)
-print(carrierFreq_MHz)
-print(tx_phases)
-print(SC_amplitude)
-print(nPoints)
-output = date+'_'+'200kHz_test_sig_sweep_nomag.h5'
+freq_list = np.linspace(14.6e6,15.4e6,100)
+amplitude = 0.001 #desired Vpp
+output = date+'_'+'digital_filter_3p9MHz_1mV.h5'
 with AFG() as a:
     a.reset()
     a[0].ampl = amplitude
@@ -76,6 +70,7 @@ with AFG() as a:
         print("Frequency is:",frq)
         a.sin(ch=1, V = amplitude, f = frq)
         print("sin wave made")
+        time.sleep(2)
         for x in range(nScans):
             print("configuring")
             SpinCore_pp.configureTX(adcOffset, carrierFreq_MHz, tx_phases, SC_amplitude, nPoints)
