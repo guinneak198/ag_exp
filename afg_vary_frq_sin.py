@@ -14,7 +14,7 @@ target_directory = getDATADIR(exp_type="ODNP_NMR_comp/Echoes")
 with SerialInstrument('AFG-2225') as s:
     print((s.respond('*idn?')))
 #{{{ Spincore settings
-SW_kHz = 200
+SW_kHz = 3.9
 adcOffset = 42
 carrierFreq_MHz = 14.9
 tx_phases = r_[0.0,90.0,180.0,270.0]
@@ -58,9 +58,9 @@ if phase_cycling:
 data_length = 2*nPoints*nEchoes*nPhaseSteps
 #}}}
 #{{{ AFG settings
-freq_list = np.linspace(14.6e6,15.4e6,100)
-amplitude = 0.001 #desired Vpp
-output = date+'_'+'digital_filter_3p9MHz_1mV.h5'
+freq_list = np.linspace(14.892e6,14.908e6,150)
+amplitude = 0.01 #desired Vpp
+output = date+'_'+'afg_sc_10mV_3p9kHz.h5'
 with AFG() as a:
     a.reset()
     a[0].ampl = amplitude
