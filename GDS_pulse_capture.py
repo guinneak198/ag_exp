@@ -59,8 +59,8 @@ def API_sender(value):
     return
 #}}}
 date = datetime.now().strftime('%y%m%d')
-output_name = '100tau_p90_3p75_GDS'
-adcOffset = 48
+output_name = '100tau_p90_12_GDS_1atten'
+adcOffset = 45
 carrierFreq_MHz = 14.893504
 tx_phases = r_[0.0,90.0,180.0,270.0]
 nScans = 1
@@ -75,7 +75,7 @@ nPoints = 2048#int(aq/SW_kHz+0.5)#1024*2
 acq_time = nPoints/SW_kHz # ms
 tau_adjust = 0.0
 tau = 100#5e3#deadtime + acq_time*1e3*(1./8.) + tau_adjust
-p90 = 3.75#us (28x expected 90 time)
+p90 = 12#us (28x expected 90 time)
 prog_p90_us = prog_plen(p90)
 prog_p180_us = prog_plen(2*p90)
 print("ACQUISITION TIME:",acq_time,"ms")
@@ -99,7 +99,7 @@ acq_params['deblank_us'] = 1.0
 acq_params['tau_us'] = tau
 #acq_params['pad_us'] = pad 
 #}}}
-amp_list = [1.0,1.0,1.0,1.0,1.0]
+amp_list = [1.0,1.0,1.0,1.0]
 for index,val in enumerate(amp_list):
     #p90 = val # us
     amplitude = 1.0 # pulse amp, set from 0.0 to 1.0

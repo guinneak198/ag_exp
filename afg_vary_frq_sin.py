@@ -19,7 +19,7 @@ adcOffset = 42
 carrierFreq_MHz = 14.9
 tx_phases = r_[0.0,90.0,180.0,270.0]
 SC_amplitude = 1.0
-nScans = 100
+nScans = 25
 nEchoes = 1
 phase_cycling = False
 coherence_pathway = [('ph1',1),('ph2',-2)]
@@ -58,9 +58,9 @@ if phase_cycling:
 data_length = 2*nPoints*nEchoes*nPhaseSteps
 #}}}
 #{{{ AFG settings
-freq_list = np.linspace(14.892e6,14.908e6,150)
+freq_list = np.linspace(14.8766e6,14.9234e6,300)
 amplitude = 0.01 #desired Vpp
-output = date+'_'+'afg_sc_10mV_3p9kHz.h5'
+output = date+'_'+'afg_sc_10mV_3p9kHz_wide_a.h5'
 with AFG() as a:
     a.reset()
     a[0].ampl = amplitude
@@ -106,7 +106,7 @@ with AFG() as a:
             data['nScans',x] = data_array
             SpinCore_pp.stopBoard();
         data.set_prop('afg_frq', frq_kHz)
-        data.name('afg_%d'%frq_kHz)    
+        data.name('afg_%d'%frq)    
         nodename = data.name()
         if os.path.exists(output):
             print("this file already exists so we will add a node to it!")

@@ -34,9 +34,9 @@ def verifyParams():
 #}}}
 
 #output_name = 'capProbe_noise'
-SW_kHz = 4000
-output_name = 'digital_filter_bkgd_1mV_'+str(SW_kHz)+'kHz'
-adcOffset = 41
+SW_kHz = 3.9
+output_name = 'afg_sc_1mV_bkgrd_'+str(SW_kHz)+'kHz'
+adcOffset = 42
 carrierFreq_MHz = 14.9
 tx_phases = r_[0.0,90.0,180.0,270.0]
 amplitude = 1.0
