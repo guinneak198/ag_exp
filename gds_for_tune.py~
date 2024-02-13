@@ -35,9 +35,9 @@ input("Please note I'm going to assume the control is hooked up to CH1 of the GD
 
 fl = figlist_var()
 
-print("These are the instruments available:")
-SerialInstrument(None)
-print("done printing available instruments")
+#print("These are the instruments available:")
+#SerialInstrument(None)
+#print("done printing available instruments")
 def grab_waveforms(g):
     # {{{ capture a "successful" waveform
     ch1 = g.waveform(ch=2)

@@ -71,8 +71,8 @@ with GDS_scope() as g:
             args=(carrier_frequency,))
     tune_thread.start()
     g.reset()
-    g.CH1.disp=True
     g.CH2.disp=True
+    g.CH3.disp=True
     g.write(':CHAN1:DISP OFF')
     g.write(':CHAN2:DISP ON')
     g.write(':CHAN3:DISP ON')
