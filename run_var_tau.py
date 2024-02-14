@@ -29,14 +29,14 @@ config_dict["echo_counter"] += 1
 filename = f"{config_dict['date']}_{config_dict['chemical']}_{config_dict['type']}_{config_dict['echo_counter']}"
 # }}}
 #{{{Parameters that change for new samples
-adcOffset = 46
-carrierFreq_MHz = 14.893442
+adcOffset = 49
+carrierFreq_MHz = 14.89
 nScans = 1
 nEchoes = 1
-repetition = 2.8e6
+repetition = 1e6
 ph1_cyc = r_[0,1,2,3]
 ph2_cyc = r_[0,2]
-SW_kHz = 200 #24.0 originally
+SW_kHz =  #24.0 originally
 acq_time = 10
 p90 = 3.2
 nPhaseSteps = 8

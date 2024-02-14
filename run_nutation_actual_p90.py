@@ -7,19 +7,20 @@ import sys
 import time
 from datetime import datetime
 from SpinCore_pp.ppg import run_spin_echo
+from SpinCore_pp import prog_plen
 import logging
 fl = figlist_var()
 #{{{Parameters that change for new samples
-output_name = '27mM_balProbe_nutation_10'
-adcOffset = 46
+output_name = '27mM_balProbe_nutation_2'
+adcOffset = 50
 carrierFreq_MHz = 14.89
-nScans = 5
+nScans = 1
 nEchoes = 1
-repetition = 0.8e6
-p90_range = linspace(0.5,16,16,endpoint=False)
+repetition = 1e6
+p90_range = linspace(0.5,16,20,endpoint=False)
 SW_kHz = 3.9 #24.0 originally
 acq_time = 1024.
-tau_us = 8000
+tau_us = 5000
 #}}}
 ph1_cyc = r_[0,1,2,3]
 #{{{These should stay the same regardless of sample
@@ -37,9 +38,14 @@ if os.path.exists(myfilename):
         "the file %s already exists, so I'm not going to let you proceed!" % myfilename
     )
 # }}}
-
+prog_p90s = []
+for j in range(len(p90_range)):
+    prog_p90_us = prog_plen(p90_range[j])
+    prog_p180_us = prog_plen(2 * p90_range[j])
+    prog_p90s.append(prog_p90_us)
+print(prog_p90s)    
 nutation_data = run_spin_echo(
-        deadtime_us = 250.0,
+        deadtime_us = 20.0,
         nScans=nScans, 
         indirect_idx = 0, 
         indirect_len = len(p90_range), 
@@ -58,6 +64,7 @@ nutation_times[0] = p90_range[0]
 for index,p90 in enumerate(p90_range[1:]):
     run_spin_echo(
             nScans=nScans, 
+            deadtime_us = 20.0,
             indirect_idx = index+1, 
             indirect_len = len(p90_range), 
             adcOffset = adcOffset,
@@ -71,7 +78,7 @@ for index,p90 in enumerate(p90_range[1:]):
             ret_data = nutation_data)
     nutation_times[index + 1] = p90
 acq_params = {j:eval(j) for j in dir() if j in ['adcOffset', 'carrierFreq_MHz', 'amplitude',
-    'nScans', 'nEchoes', 'p90_range', 'deadtime', 'repetition', 'SW_kHz',
+    'nScans', 'nEchoes', 'p90_range', 'prog_p90s','deadtime', 'repetition', 'SW_kHz',
     'nPoints', 'deblank_us', 'tau_us', 'nPhaseSteps']}
 acq_params['pulprog'] = 'spincore_nutation_v3'
 nutation_data.set_prop('acq_params',acq_params)

@@ -34,10 +34,10 @@ def verifyParams():
     return
 #}}}
 
-output_name = '27mM_balProbe_varTau_40kHz_p903p75_1scan'
+output_name = '27mM_balProbe_varTau_24kHz_p904p4_1scana'
 node_name = 'var_tau'
-adcOffset = 45
-carrierFreq_MHz = 14.893504
+adcOffset = 49
+carrierFreq_MHz = 14.89
 tx_phases = r_[0.0,90.0,180.0,270.0]
 amplitude = 1.0
 nScans = 1
@@ -54,14 +54,14 @@ if not phase_cycling:
 # as this is generally what the SpinCore takes
 # note that acq_time is always milliseconds
 #}}}
-p90 = 3.75
+p90 = 4.4
 prog_p90 = prog_plen(p90)
 prog_p180 = prog_plen(2*p90)
-deadtime = 10.0
+deadtime = 20.0
 repetition = 1e6
 
-SW_kHz = 40
-acq_ms = 51.2
+SW_kHz = 3.9
+acq_ms = 1024
 nPoints = int(acq_ms*SW_kHz+0.5)
 nPoints = 1024*2
 
@@ -72,6 +72,7 @@ print(tau_adjust_range)
 input("Does this look okay?")
 deblank = 1.0
 tau = deadtime + acq_time*1e3*(1./8.) + tau_adjust_range
+tau = deadtime + 51.2*1e3*(1./8.) + tau_adjust_range
 tau_axis = tau
 print("TAU US:",tau)
 input("okay?")
@@ -147,7 +148,7 @@ for index,val in enumerate(tau_adjust_range):
         SpinCore_pp.runBoard();
         if not phase_cycling:
             SpinCore_pp.runBoard();
-        raw_data = SpinCore_pp.getData(data_length, nPoints, nEchoes, nPhaseSteps, output_name)
+        raw_data = SpinCore_pp.getData(data_length, nPoints, nEchoes, nPhaseSteps)
         raw_data.astype(float)
         data = []
         # according to JF, this commented out line
