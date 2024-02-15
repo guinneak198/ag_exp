@@ -11,10 +11,10 @@ from SpinCore_pp import prog_plen
 import logging
 fl = figlist_var()
 #{{{Parameters that change for new samples
-output_name = '27mM_balProbe_nutation_2'
+output_name = '27mM_TEMPOL_nutation_1'
 adcOffset = 50
 carrierFreq_MHz = 14.89
-nScans = 1
+nScans = 4
 nEchoes = 1
 repetition = 1e6
 p90_range = linspace(0.5,16,20,endpoint=False)

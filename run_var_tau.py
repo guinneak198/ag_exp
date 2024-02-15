@@ -17,7 +17,6 @@ import time
 import h5py
 
 fl = figlist_var()
-tau_adjust_range = linspace(1e3,10e3,12,endpoint=False)#r_[1e3:30e3:1000]
 # {{{importing acquisition parameters
 config_dict = SpinCore_pp.configuration("active.ini")
 # }}}
@@ -29,23 +28,17 @@ config_dict["echo_counter"] += 1
 filename = f"{config_dict['date']}_{config_dict['chemical']}_{config_dict['type']}_{config_dict['echo_counter']}"
 # }}}
 #{{{Parameters that change for new samples
-adcOffset = 49
-carrierFreq_MHz = 14.89
-nScans = 1
 nEchoes = 1
-repetition = 1e6
 ph1_cyc = r_[0,1,2,3]
-ph2_cyc = r_[0,2]
-SW_kHz =  #24.0 originally
-acq_time = 10
-p90 = 3.2
-nPhaseSteps = 8
+SW_kHz =  3.9 #originally
+acq_time = 1024
+nPhaseSteps = 4
 #}}}
 # NOTE: Number of segments is nEchoes * nPhaseSteps
 nPoints = int(acq_time*SW_kHz+0.5)
-acq_time = nPoints/SW_kHz # ms
 
-tau = config_dict['deadtime_us'] + config_dict['acq_time_ms']*1e3*(1./8.) +tau_adjust_range
+tau = list(linspace(7e3,37e3,8,endpoint=False))
+#tau.reverse()
 print("YOUR TAUS ARE:")
 print(tau)
 input("Does this look right?")
@@ -67,56 +60,40 @@ if os.path.exists(myfilename):
     )
 # }}}
 # {{{ acquire varied tau data
-first_tau =(
-        config_dict["deadtime_us"]
-        + config_dict["acq_time_ms"] * 1e3 * (1.0 / 8.0)
-        + tau_adjust_range[0]
-    )
 var_tau_data = run_spin_echo(
-        nScans=nScans, 
+        nScans=config_dict['nScans'], 
         indirect_idx = 0, 
-        indirect_len = len(tau_adjust_range), 
-        adcOffset = adcOffset,
-        carrierFreq_MHz = carrierFreq_MHz, 
+        indirect_len = int(len(tau)), 
+        adcOffset = config_dict['adc_offset'],
+        carrierFreq_MHz = config_dict['carrierFreq_MHz'], 
         nPoints = nPoints,
-        nEchoes=nEchoes, 
-        p90_us = p90, 
-        repetition_us = repetition,
-        tau_us = first_tau, 
+        nEchoes=1, 
+        p90_us = config_dict['p90_us'], 
+        repetition_us = config_dict['repetition_us'],
+        tau_us = tau_axis[0], 
         SW_kHz = SW_kHz, 
-        indirect_fields = None, 
         ph1_cyc = ph1_cyc, 
-        ph2_cyc = ph2_cyc,
         ret_data = None)
 mytau_axis = var_tau_data.getaxis("indirect")
-mytau_axis[0] = first_tau
+mytau_axis[0] = tau_axis[0]
 # {{{run varied tau
-for tau_idx, val in enumerate(tau_adjust_range[1:]):
-    tau_adjust = val  # us
-    # calculate tau each time through
-    tau = (
-        config_dict["deadtime_us"]
-        + config_dict["acq_time_ms"] * 1e3 * (1.0 / 8.0)
-        + tau_adjust
-    )
+for tau_idx, val in enumerate(tau_axis[1:]):
+    tau = val  # us
     var_tau_data = run_spin_echo(
-        nScans=nScans, 
+        nScans=config_dict['nScans'], 
         indirect_idx = tau_idx+1, 
-        indirect_len = len(tau_adjust_range), 
-        adcOffset = adcOffset,
-        carrierFreq_MHz = carrierFreq_MHz, 
+        indirect_len = int(len(tau_axis)), 
+        adcOffset = config_dict['adc_offset'],
+        carrierFreq_MHz = config_dict['carrierFreq_MHz'], 
         nPoints = nPoints,
-        nEchoes=nEchoes, 
-        p90_us = p90, 
-        repetition_us = repetition,
+        nEchoes=1, 
+        p90_us = config_dict['p90_us'], 
+        repetition_us = config_dict['repetition_us'],
         tau_us = tau, 
         SW_kHz = SW_kHz, 
-        indirect_fields = None, 
         ph1_cyc = ph1_cyc, 
-        ph2_cyc = ph2_cyc,
         ret_data = var_tau_data)
     mytau_axis[tau_idx+1] = tau
-
 var_tau_data.name(config_dict["type"] + "_" + str(config_dict["echo_counter"]))
 var_tau_data.set_prop("postproc_type","SpinCore_var_tau_v1") #still needs to be added to load_Data
 var_tau_data.set_prop("acq_params", config_dict.asdict())

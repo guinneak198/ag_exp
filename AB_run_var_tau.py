@@ -34,7 +34,7 @@ def verifyParams():
     return
 #}}}
 
-output_name = '27mM_balProbe_varTau_24kHz_p904p4_1scana'
+output_name = '27mM_balProbe_varTau_40kHz_p904p52_1scan'
 node_name = 'var_tau'
 adcOffset = 49
 carrierFreq_MHz = 14.89
@@ -60,8 +60,8 @@ prog_p180 = prog_plen(2*p90)
 deadtime = 20.0
 repetition = 1e6
 
-SW_kHz = 3.9
-acq_ms = 1024
+SW_kHz = 40
+acq_ms = 51.2
 nPoints = int(acq_ms*SW_kHz+0.5)
 nPoints = 1024*2
 
@@ -72,7 +72,7 @@ print(tau_adjust_range)
 input("Does this look okay?")
 deblank = 1.0
 tau = deadtime + acq_time*1e3*(1./8.) + tau_adjust_range
-tau = deadtime + 51.2*1e3*(1./8.) + tau_adjust_range
+tau = deadtime + acq_time*1e3*(1./8.) + tau_adjust_range
 tau_axis = tau
 print("TAU US:",tau)
 input("okay?")
