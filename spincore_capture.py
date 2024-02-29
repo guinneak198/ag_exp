@@ -34,15 +34,17 @@ def verifyParams():
 #}}}
 
 #output_name = 'capProbe_noise'
-SW_kHz = 3.9
-output_name = 'afg_atten_RX_SC_1p027Vpp_'+str(SW_kHz)+'kHz'
-adcOffset = 45
-carrierFreq_MHz = 14.9
+SW_kHz = 75000
+output_name = 'termed_SC_'+str(SW_kHz)+'kHz'
+
+
+adcOffset = 38
+carrierFreq_MHz = 20
 tx_phases = r_[0.0,90.0,180.0,270.0]
 amplitude = 1.0
-nScans = 5
+nScans = 100
 nEchoes = 1
-phase_cycling = True
+phase_cycling = False
 coherence_pathway = [('ph1',-1)]
 date = datetime.now().strftime('%y%m%d')
 if phase_cycling:
