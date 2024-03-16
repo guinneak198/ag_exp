@@ -85,8 +85,8 @@ echo_data.name(config_dict['type']+'_'+str(config_dict['echo_counter']))
 if phase_cycling:
     echo_data.chunk('t',['ph1','t2'],[4,-1])
     echo_data.setaxis('ph1',r_[0.,1.,2.,3.]/4)
-    if config_dict['nScans'] > 1:
-        echo_data.setaxis('nScans',r_[0:config_dict['nScans']])
+    #if config_dict['nScans'] > 1:
+    #    echo_data.setaxis('nScans',r_[0:config_dict['nScans']])
     echo_data.reorder(['ph1','nScans','t2'])
     fl.next('image')
     fl.image(echo_data.C.mean('nScans'))
