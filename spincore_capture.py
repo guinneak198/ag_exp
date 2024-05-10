@@ -33,10 +33,9 @@ def verifyParams():
     return
 #}}}
 
-#output_name = 'capProbe_noise'
 SW_kHz = 200
-output_name = 'probe_noise_nochokes_a_'+str(SW_kHz)+'kHz'
-adcOffset = 38
+output_name = 'probe_torr_15N_VNA_tuned_c_SC_'+str(SW_kHz)+'kHz'
+adcOffset = 42
 carrierFreq_MHz = 14.89
 tx_phases = r_[0.0,90.0,180.0,270.0]
 amplitude = 1.0
@@ -54,7 +53,7 @@ if not phase_cycling:
 # as this is generally what the SpinCore takes
 # note that acq_time is always milliseconds
 #}}}
-p90 = 4.0
+p90 = 4.5
 deadtime = 10.0
 repetition = 1e4
 
