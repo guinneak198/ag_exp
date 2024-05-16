@@ -352,7 +352,7 @@ with power_control() as p:
         time_axis_coords[j]["stop_times"] = DNP_thermal_done
     power_settings_dBm = np.zeros_like(dB_settings)
     time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
-    for j, this_dB in enumerate(all_powers):
+    for j, this_dB in enumerate(final_powers):
         logger.debug(
             "SETTING THIS POWER", this_dB, "(", dB_settings[j - 1], powers[j], "W)"
         )
@@ -506,6 +506,7 @@ with power_control() as p:
             time_axis_coords[k + int(config_dict['thermal_nScans'])]["stop_times"] = time.time()
             k +=1
         # }}}DNP_data.set_prop("stop_time", time.time())
+    DNP_data.set_prop('stop_time',time.time())    
     DNP_data.set_prop("postproc_type", "spincore_ODNP_v4")
     DNP_data.set_prop("acq_params", config_dict.asdict())
     DNP_data.setaxis("nScans", r_[0 : config_dict["nScans"]])

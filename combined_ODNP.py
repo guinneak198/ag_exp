@@ -70,10 +70,8 @@ dB_settings = Ep_spacing_from_phalf(
     three_down=True
 )
 T1_powers_dB = gen_powerlist(
-    config_dict["max_power"], 
-    min_dBm_step = config_dict['min_dBm_step'], 
-    three_down=False
-) 
+    config_dict["max_power"], config_dict["num_T1s"], three_down=False
+)
 T1_node_names = ["FIR_%ddBm" % j for j in T1_powers_dB]
 logger.info("dB_settings", dB_settings)
 logger.info("correspond to powers in Watts", 10 ** (dB_settings / 10.0 - 3))
@@ -247,7 +245,7 @@ with power_control() as p:
     p.start_log()
     DNP_data = None # initially, there is no data, and run_spin_echo knows how to deal with this
     #Run the actual thermal where the power log is recording. This will be your thermal for enhancement and can be compared to previous thermals if issues arise
-    for j in range(config_dict['thermal_nscans']):
+    for j in range(thermal_scans):
         DNP_ini_time = time.time()
         # call B/C to run spin echo
         DNP_data = run_spin_echo(

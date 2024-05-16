@@ -14,10 +14,10 @@ target_directory = getDATADIR(exp_type="ODNP_NMR_comp/Echoes")
 with SerialInstrument('AFG-2225') as s:
     print((s.respond('*idn?')))
 #{{{ AFG settings
-freq_list = np.linspace(5e6,24e6,50)
-amplitude = 0.01 #desired Vpp
-output = '240115'+'_'+'GDS_noTL_AFG_10mV_a.h5'
-captures = linspace(1,100,75)
+freq_list = np.linspace(5e6,24e6,25)
+amplitude = 0.1 #desired Vpp
+output = '240123'+'_'+'100mV_AFG_GDS_20mV_5GSPS_hires.h5'
+captures = linspace(1,3,3)
 with AFG() as a:
     a.reset()
     a[0].ampl = amplitude
@@ -28,8 +28,8 @@ with AFG() as a:
             print("Frequency is:",frq)
             a.sin(ch=1, V = amplitude, f = frq)
             print("sin wave made")
-            time.sleep(30)
-            for x in range(1,101):
+            time.sleep(5)
+            for x in range(1,3):
                 ch2_waveform = g.waveform(ch=2)
                 data =concat([ch2_waveform],'ch').reorder('t')
                 if x ==1:
