@@ -82,6 +82,7 @@ twice_tau_echo_us = config_dict["echo_acq_ms"] * 1e3 + (
 config_dict["tau_us"] = (
     twice_tau_echo_us / 2.0 - tau_evol_us - config_dict["deblank_us"]
 )
+print(config_dict['tau_us'])
 # }}}
 # {{{Power settings
 dB_settings = Ep_spacing_from_phalf(
@@ -91,6 +92,7 @@ dB_settings = Ep_spacing_from_phalf(
     min_dBm_step = config_dict['min_dBm_step'],
     three_down=True
 )
+last_dB_settings = dB_settings[-3:]
 T1_powers_dB = gen_powerlist(
     config_dict["max_power"], config_dict["num_T1s"], min_dBm_step=config_dict["min_dBm_step"], three_down=False
 )
@@ -106,10 +108,13 @@ logger.info("correspond to powers in Watts", 10 ** (dB_settings / 10.0 - 3))
 logger.info("T1_powers_dB", T1_powers_dB)
 logger.info("correspond to powers in Watts", 10 ** (T1_powers_dB / 10.0 - 3))
 print("I set the tau value to %0.5f ms"%(config_dict['tau_us']*1e-3))
+powers = 1e-3 * 10 ** (dB_settings / 10.0)
+dB_settings = dB_settings[:-3]
+print(dB_settings)
+print(last_dB_settings)
 myinput = input("Look ok?")
 if myinput.lower().startswith("n"):
     raise ValueError("you said no!!!")
-powers = 1e-3 * 10 ** (dB_settings / 10.0)
 # }}}
 # {{{ these change if we change the way the data is saved
 IR_postproc = "spincore_IR_v1" # note that you have changed the way the data is saved, and so this should change likewise!!!!
@@ -350,11 +355,10 @@ with power_control() as p:
             time_axis_coords = DNP_data.getaxis("indirect")
         time_axis_coords[j]["start_times"] = DNP_ini_time
         time_axis_coords[j]["stop_times"] = DNP_thermal_done
-    power_settings_dBm = np.zeros_like(dB_settings)
     time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
     for j, this_dB in enumerate(final_powers):
         logger.debug(
-            "SETTING THIS POWER", this_dB, "(", dB_settings[j - 1], powers[j], "W)"
+            "SETTING THIS POWER", this_dB
         )
         if j == 0:
             retval = p.dip_lock(
@@ -369,7 +373,7 @@ with power_control() as p:
         if p.get_power_setting() < this_dB:
             raise ValueError("After 10 tries, the power has still not settled")
         time.sleep(5)
-        power_settings_dBm[j] = p.get_power_setting()
+        p.get_power_setting()
         if this_dB in T1_powers_dB:
             ini_time = time.time()
             cpmg_data = generic(
@@ -482,8 +486,7 @@ with power_control() as p:
             # hdf5_write should be outside the h5py.File with block, since it opens the file itself
             vd_data.hdf5_write(filename, directory=target_directory)
         if this_dB in dB_settings:
-            if j == 0:
-                k = 0
+            k = list(dB_settings).index(this_dB)
             time_axis_coords[k + int(config_dict['thermal_nScans'])]["start_times"] = time.time()
             # call D to run spin echo
             #Now that the thermal is collected we increment our powers and collect our data at each power
@@ -504,8 +507,41 @@ with power_control() as p:
                 ret_data=DNP_data,
             )
             time_axis_coords[k + int(config_dict['thermal_nScans'])]["stop_times"] = time.time()
-            k +=1
         # }}}DNP_data.set_prop("stop_time", time.time())
+    for j, this_dB in enumerate(last_dB_settings):
+        logger.debug(
+            "SETTING THIS POWER", this_dB
+        )
+        p.set_power(this_dB)
+        for k in range(10):
+            time.sleep(0.5)
+            if p.get_power_setting() >= this_dB:
+                break
+        if p.get_power_setting() < this_dB:
+            raise ValueError("After 10 tries, the power has still not settled")
+        time.sleep(5)
+        k = j+len(dB_settings)
+        p.get_power_setting()
+        time_axis_coords[k + int(config_dict['thermal_nScans'])]["start_times"] = time.time()
+        # call D to run spin echo
+        #Now that the thermal is collected we increment our powers and collect our data at each power
+        run_spin_echo(
+            nScans=config_dict["nScans"],
+            indirect_idx=k + int(config_dict['thermal_nScans']),
+            indirect_len=len(powers) + int(config_dict['thermal_nScans']),
+            adcOffset=config_dict["adc_offset"],
+            carrierFreq_MHz=config_dict["carrierFreq_MHz"],
+            nPoints=nPoints,
+            nEchoes=1,
+            ph1_cyc=Ep_ph1_cyc,
+            p90_us=config_dict["p90_us"],
+            repetition_us=config_dict["repetition_us"],
+            tau_us=config_dict["tau_us"],
+            SW_kHz=config_dict["SW_kHz"],
+            indirect_fields=("start_times", "stop_times"),
+            ret_data=DNP_data,
+        )
+        time_axis_coords[k + int(config_dict['thermal_nScans'])]["stop_times"] = time.time()
     DNP_data.set_prop('stop_time',time.time())    
     DNP_data.set_prop("postproc_type", "spincore_ODNP_v4")
     DNP_data.set_prop("acq_params", config_dict.asdict())
