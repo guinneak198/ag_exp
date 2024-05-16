@@ -375,6 +375,69 @@ with power_control() as p:
             ret_data=DNP_data,
         )
         time_axis_coords[j + int(config_dict['thermal_nScans'])]["stop_times"] = time.time()
+        ini_time = time.time()
+        cpmg_data = generic(
+            ppg_list=[
+                ("phase_reset", 1),
+                ("delay_TTL", config_dict["deblank_us"]),
+                ("pulse_TTL", config_dict["p90_us"], "ph_cyc", cpmg_ph1_cyc),
+                ("delay", config_dict["tau_us"]),
+                ("delay_TTL", config_dict["deblank_us"]),
+                ("pulse_TTL", 2.0 * config_dict["p90_us"], "ph_cyc", cpmg_ph2_cyc),
+                ("delay", config_dict["deadtime_us"]),
+                ("acquire", config_dict["echo_acq_ms"]),
+                ("delay", pad_end_us),
+                ("delay", short_delay_us),  # matching the jumpto delay
+                ("marker", "echo_label", (config_dict["nEchoes"] - 1)),
+                ("delay_TTL", config_dict["deblank_us"]),
+                ("pulse_TTL", 2.0 * config_dict["p90_us"], "ph_cyc", cpmg_ph2_cyc),
+                ("delay", config_dict["deadtime_us"]),
+                ("acquire", config_dict["echo_acq_ms"]),
+                ("delay", pad_end_us),
+                ("jumpto", "echo_label"),
+                ("delay", config_dict["repetition_us"]),
+            ],
+            nScans=config_dict["nScans"],
+            indirect_idx=0,
+            indirect_len=config_dict["nEchoes"],
+            adcOffset=config_dict["adc_offset"],
+            carrierFreq_MHz=config_dict["carrierFreq_MHz"],
+            nPoints=cpmg_nPoints,
+            acq_time_ms=config_dict["echo_acq_ms"],
+            SW_kHz=config_dict["SW_kHz"],
+            ret_data=None,
+        )
+        cpmg_data.chunk("t", ["ph_overall", "ph_diff", "nEcho", "t2"], 
+                [len(cpmg_ph_overall), len(cpmg_ph_diff),int(config_dict['nEchoes']), 
+                    -1]).labels({
+                        "ph_overall":r_[0:len(cpmg_ph_overall)],
+                        "ph_diff":r_[0:len(cpmg_ph_diff)],
+                        "nEcho":r_[0:int(config_dict['nEchoes'])]+1,}
+                        )
+        cpmg_data.setaxis("nScans", r_[0 : int(config_dict["nScans"])])
+        cpmg_data.name("CPMG_%ddBm_Ep"%this_dB)
+        cpmg_data.set_prop("stop_time", time.time())
+        cpmg_data.set_prop("start_time", ini_time)
+        cpmg_data.set_prop("acq_params", config_dict.asdict())
+        cpmg_data.set_prop("postproc_type", cpmg_postproc)
+        nodename = cpmg_data.name()
+        # {{{ again, implement a file fallback
+        with h5py.File(
+            os.path.normpath(os.path.join(target_directory, f"{filename}"))
+            ) as fp:
+            tempcounter = 1
+            orig_nodename = nodename
+            while nodename in fp.keys():
+                nodename = "%s_temp_%d"%(orig_nodename,tempcounter)
+                final_log.append("this nodename already exists, so I will call it {nodename}")
+                final_log.append(
+                    f"I had problems writing to the correct file {filename} so I'm going to try to save this node as %s_temp_%d"%(orig_nodename,tempcounter)
+                )
+                cpmg_data.name(nodename)
+                tempcounter += 1
+        # hdf5_write should be outside the h5py.File with block, since it opens the file itself
+        cpmg_data.hdf5_write(filename, directory=target_directory)
+        # }}}
     DNP_data.set_prop("stop_time", time.time())
     DNP_data.set_prop("postproc_type", "spincore_ODNP_v4")
     DNP_data.set_prop("acq_params", config_dict.asdict())
