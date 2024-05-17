@@ -55,14 +55,13 @@ twice_tau_echo_us = config_dict["echo_acq_ms"] * 1e3 + (
 config_dict["tau_us"] = (
     twice_tau_echo_us / 2.0 - tau_evol_us - config_dict["deblank_us"]
 )
-print(config_dict['tau_us'])
 # }}}
 # {{{check total points
-total_pts = nPoints * nPhaseSteps * config_dict['nEchoes']
-#assert total_pts < 2 ** 14, (
-#    "You are trying to acquire %d points (too many points) -- either change SW or acq time so nPoints x nPhaseSteps is less than 16384\nyou could try reducing the echo_acq_ms to %f"
-#    % (total_pts, config_dict["echo_acq_ms"] * 16384 / total_pts)
-#)
+total_pts = nPoints * nPhaseSteps
+assert total_pts < 2 ** 14, (
+    "You are trying to acquire %d points (too many points) -- either change SW or acq time so nPoints x nPhaseSteps is less than 16384\nyou could try reducing the echo_acq_ms to %f"
+    % (total_pts, config_dict["echo_acq_ms"] * 16384 / total_pts)
+)
 # }}}
 # {{{run cpmg
 data = generic(

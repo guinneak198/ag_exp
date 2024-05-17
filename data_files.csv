@@ -1,0 +1,451 @@
+Filename,Path,exp_type
+240515_200uM_TEMPOL_ODNP_8.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+230626_pR_batch230605_F195_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+231103_ras_batch2310_S51_a_ODNP_1.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+240517_200uM_TEMPOL_ODNP_2.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+240320_test_signal_75MHz_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230912_27mM_TEMPOL_withchokes_echo.h5,.,XXX--unknown--XXX
+231006_ras_batch230927_M67_a_ODNP_1.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+230418_200uM_TEMPOL_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+230426_pR_batch230329_A174_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+240104_aliasing_SW_4MHz_noTL_fina.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240402_27mM_TEMPOL_chokes_offspike_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231004_70mM_TEMPOL_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230526_pR_batch230515_Q183_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+231109_ras_batch2310_L118_a_ODNP_5.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+240111_digital_filter_1MHz_1mV.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231108_test_ODNP_2.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+231108_ras_batch2310_S51_a1_ODNP_1.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+230410_water_ODNP_2.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+230524_pR_batch230515_N187_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+230824_test_echo.h5,.,XXX--unknown--XXX
+240131_100tau_p90_7_GDSa.h5,.,XXX--unknown--XXX
+240229_27mM_TEMPOL_p90_3p5_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240111_digital_filter_10MHz_10mV.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230824_test_4chokes_echo.h5,.,XXX--unknown--XXX
+230828_choked_bal_echo.h5,.,XXX--unknown--XXX
+231030_CPMG_AB_control.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,ODNP_NMR_comp/CPMG
+240515_200uM_TEMPOL_ODNP_1.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+240111_GDS_noTL_10mV.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230420_pRbatch230409_N187_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+231005_ras_batch230927_M67_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231108_test_ODNP_5.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+240104_aliasing_SW_1MHz_noTL_fin.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231229_12MHz_carrier_SW_1MHz.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230504_pR_batch230329_S175_field.h5,C:\exp_data\odnp_nmr_comp\field_dependent\,XXX--unknown--XXX
+230928_probe_1b_10000kHz.h5,.,XXX--unknown--XXX
+230411_6p5mM_TEMPOL_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+230620_ras_batch230606_M67_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+230426_pR_batch230329_S184_field.h5,C:\exp_data\odnp_nmr_comp\field_dependent\,XXX--unknown--XXX
+231229_15MHz_carrier_SW_1MHz.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240402_27mM_TEMPOL_nochokes_onspike_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231026_CPMG_prep_generic_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,ODNP_NMR_comp/CPMG
+240318_test_signal_1scan_75MHz_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231030_CPMG_fin_CPMG.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,ODNP_NMR_comp/CPMG
+240314_100tau_p90_12_GDS_1atten.h5,.,XXX--unknown--XXX
+230529_ras_batch230515_M67_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+230412_70mM_TEMPOL_field.h5,C:\exp_data\odnp_nmr_comp\field_dependent\,XXX--unknown--XXX
+230915_ras_batch230905_I36_ODNP_1.h5,C:\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+230407_water_ODNP_3.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+240111_digital_filter_4MHz_10mV.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231228_200kHz_test_sig_sweep_nomag.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231108_test_ODNP_1.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+230427_pR_batch230329_S184_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+231004_70mM_TEMPOL_CPMG.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG\,XXX--unknown--XXX
+240221_27mM_TEMPOL_p90_4p52_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231109_ras_batch2310_L118_a_ODNP_4.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+temp.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240104_aliasing_SW_1MHz_noTL_wide.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240201_27mM_TEMPOL_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231108_test_ODNP_11.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+240104_aliasing_bkgd_1mV_a_10000kHz.h5,.,XXX--unknown--XXX
+230503_pR_batch230329_S184_field.h5,C:\exp_data\odnp_nmr_comp\field_dependent\,XXX--unknown--XXX
+231229_12MHz_carrier_SW_10MHz_a.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231004_70mM_TEMPOL_CPMG1_CPMG.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG\,XXX--unknown--XXX
+240104_aliasing_SW_10MHz_noTL.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231030_CPMG_16step_test_tau_CPMG.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,XXX--unknown--XXX
+230425_pR_batch230329_S175_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+230929_70mM_TEMPOL_CPMG_test_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230921_probe_split_5_20000kHz.h5,.,XXX--unknown--XXX
+231103_test_ODNP_7.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+230925_27mM_tempolp90_3_nochokes_echo.h5,C:\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230606_200uM_TEMPOL_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+230824_test_12chokes_echo.h5,.,XXX--unknown--XXX
+230601_pR_batch230515_F205_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+231109_ras_batch2310_L118_a_field.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\field_dependent\,XXX--unknown--XXX
+240117_afg_sc_10mV_3p9kHz.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240507_test_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231107_ras_batch2310_S51_a_field.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\field_dependent\,XXX--unknown--XXX
+230407_70mM_TEMPOL_field.h5,C:\exp_data\odnp_nmr_comp\field_dependent\,XXX--unknown--XXX
+231026_CPMG_prep_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240104_aliasing_SW_10MHz_noTL_finb.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231229_16MHz_carrier_SW_1MHz.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231026_CPMG_prep_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes,ODNP_NMR_comp/Echoes
+230613_ras_batch230606_S51_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+230613_ras_batch230606_S51_ODNP_2.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+231005_ras_batch230927_M67_ODNP_3.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+230712_ras_batch230627_I36_ODNP_2.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+231229_15MHz_carrier_SW_10MHz_a.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231102_ras_batch2310_S51_a_ODNP_4.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+230921_probe_split_1_20000kHz.h5,.,XXX--unknown--XXX
+240104_aliasing_SW_200kHz_noTL_fina.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230413_35mM_TEMPOL_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+231030_CPMG_test_acq_CPMG.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,XXX--unknown--XXX
+240311_27mM_TEMPOL_p90_7_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240112_afg_sc_10mV_1MHz.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230601_pR_batch230515_F205_ODNP_2.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+231031_CPMG_AB_control.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,ODNP_NMR_comp/CPMG
+230915_ras_batch230905_I36_echo.h5,C:\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231005_ras_batch230927_M67_ODNP_1.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+231108_test_ODNP_7.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+230922_27mM_tempol_echo.h5,C:\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230406_70mM_TEMPOL_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+230525_ras_batch230515_M67_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+230915_ras_batch230905_I36_field.h5,C:\exp_data\ODNP_NMR_comp\field_dependent\,XXX--unknown--XXX
+230407_water_echo.h5,C:\exp_data\odnp_nmr_comp\Echoes\,XXX--unknown--XXX
+231229_13MHz_carrier_SW_1MHz_a.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230912_27mM_TEMPOL_chokes_echo.h5,.,XXX--unknown--XXX
+230828_27mM_TEMPOL_bal_echo.h5,.,XXX--unknown--XXX
+240315_27mM_TEMPOL_1s_probe_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231005_9mM_TEMPOL_prep_CPMG.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG\,XXX--unknown--XXX
+231108_ras_batch2310_S51_a_FIN_ODNP_1.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+231107_ras_batch2310_S51_a_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240221_RX_SC_a_10000kHz.h5,.,XXX--unknown--XXX
+240111_GDS_noTL_10mV_testa.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231030_CPMG_fin_CPMG.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,XXX--unknown--XXX
+230407_70mM_TEMPOL_echo.h5,C:\exp_data\odnp_nmr_comp\Echoes\,XXX--unknown--XXX
+240502_probe_torr_incav_magon200kHz.h5,.,XXX--unknown--XXX
+231103_ras_batch2310_S51_a_ODNP_5.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+231229_15MHz_carrier_SW_1MHz_a.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231012_CPMG_prep_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240229_27mM_TEMPOL_p90_4p5_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230310_test_choke_3p9_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes,XXX--unknown--XXX
+230914_probe_SC_1_40kHz.h5,.,XXX--unknown--XXX
+240515_200uM_TEMPOL_ODNP_3.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+231023_CPMG_prep.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,ODNP_NMR_comp/CPMG
+230419_pRbatch230329_F205_ODNP_4.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+231103_ras_batch2310_S51_a_field.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\field_dependent\,XXX--unknown--XXX
+240115_GDS_noTL_AFG_10mV.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230410_water_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+240115_GDS_noTL_AFG_10mV_a.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231004_70mM_TEMPOL_CPMG_CPMG.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG\,XXX--unknown--XXX
+230614_ras_batch230606_I36_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+240215_27mM_TEMPOL_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230725_probe_in_cavity_nomag_echo.h5,C:\exp_data\odnp_nmr_comp\Echoes\,XXX--unknown--XXX
+240104_aliasing_SW_10MHz_noTL_fine.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230615_pR_batch230605_N187_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+240315_27mM_TEMPOL_1s_probe_nochokes_onspike_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240311_27mM_TEMPOL_p90_4p74_var_tau_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231030_CPMG_16step_CPMG.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,XXX--unknown--XXX
+240517_200uM_TEMPOL_ODNP_1.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+230503_pR_batch230329_A174_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+231102_ras_batch2310_S51_a_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231103_test_ODNP_6.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+240515_200uM_TEMPOL_ODNP_5.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+230824_test_10chokes_echo.h5,.,XXX--unknown--XXX
+240402_calib_test_signal_3p9kHz_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230911_probe_split_18_a_10000kHz.h5,.,XXX--unknown--XXX
+231030_CPMG_16step_test_tau_CPMG.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,ODNP_NMR_comp/CPMG
+230906_probe_fin_14_b_10000kHz.h5,.,XXX--unknown--XXX
+231109_ras_batch2310_L118_a_ODNP_2.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+240104_aliasing_bkgd_20000kHz.h5,.,XXX--unknown--XXX
+230412_70mM_TEMPOL_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+240516_200uM_TEMPOL_ODNP_2.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+230814_3p8mM_TEMPOL_balProbe_varTau_1.h5,.,XXX--unknown--XXX
+230524_ras_batch230515_E37_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+230620_ras_batch230606_M67_field.h5,C:\exp_data\odnp_nmr_comp\field_dependent\,XXX--unknown--XXX
+230627_pR_batch230605_F195_DDM_dil_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+240104_aliasing_SW_20MHz_noTL.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230919_probe_1_10000kHz.h5,.,XXX--unknown--XXX
+240515_200uM_TEMPOL_CPMG.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG\,XXX--unknown--XXX
+230921_probe_split_6_20000kHz.h5,.,XXX--unknown--XXX
+231030_CPMG_prep_a_generic_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,XXX--unknown--XXX
+230503_pR_batch230329_S175_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+230921_probe_split_3_20000kHz.h5,.,XXX--unknown--XXX
+230407_70mM_TEMPOL_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+240516_200uM_TEMPOL_ODNP_6.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+230824_test_16chokes_echo.h5,.,XXX--unknown--XXX
+230503_pR_batch230329_T177_field.h5,C:\exp_data\odnp_nmr_comp\field_dependent\,XXX--unknown--XXX
+230913_27mM_TEMPOL_p90_calib_echo.h5,.,XXX--unknown--XXX
+230411_27mM_TEMPOL_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+230504_pR_batch230329_S175_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+231106_ras_batch2310_S51_b_ODNP_2.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+230405_70mM_TEMPOL_echo.h5,C:\exp_data\odnp_nmr_comp\Echoes\,XXX--unknown--XXX
+240208_9p4mM_TEMPOL_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231229_13MHz_carrier_SW_10MHz.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240104_aliasing_SW_200kHz_noTL_fin.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240402_27mM_TEMPOL_chokes_onspike_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231108_test_ODNP_4.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+240112_afg_sc_10mV_4MHz.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230425_pR_batch230329_A174_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+230426_pR_batch230329_A174_1_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+240117_afg_sc_10mV_3p9kHz_fine.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231030_CPMG_prep_b_generic_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,ODNP_NMR_comp/CPMG
+240311_27mM_TEMPOL_test_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230922_probe_againa_10000kHz.h5,.,XXX--unknown--XXX
+230925_27mM_tempol_echo.h5,C:\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240104_aliasing_SW_20MHz_noTL_finc.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231108_ras_batch2310_S51_a1_field.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\field_dependent\,XXX--unknown--XXX
+230626_pR_batch230605_F205_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+240229_27mM_TEMPOL_p90_4p5_noTL_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231229_14MHz_carrier_SW_1MHz.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230824_allChokes_echo.h5,.,XXX--unknown--XXX
+240117_afg_sc_10mV_3p9kHz_final.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230620_ras_batch230606_K42_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+230623_ras_batch230606_K42_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+230915_RX_split_atten_2_20000kHz.h5,.,XXX--unknown--XXX
+231103_ras_batch2310_S51_a_ODNP_3.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+230606_200uM_TEMPOL_FIR_1scan_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+231030_CPMG_prep_generic_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,ODNP_NMR_comp/CPMG
+240328_27mM_TEMPOL_chokes_offspike_pm_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231030_CPMG_16step_CPMG.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,ODNP_NMR_comp/CPMG
+240229_27mM_TEMPOL_p90_4p52_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240311_27mM_TEMPOL_16scan_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230712_ras_batch230627_K104_nutation_1.h5,C:\exp_data\odnp_nmr_comp\nutation\,XXX--unknown--XXX
+230824_test_nochokes_echo.h5,.,XXX--unknown--XXX
+231005_ras_batch230927_M67_ODNP_4.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+231109_ras_batch2310_L118_a_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240201_9p4mM_TEMPOL_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240112_afg_sc_10mV_3p9kHz.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231229_14MHz_carrier_SW_10MHz_c.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231228_wide_test_sig_sweep_nomag1.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231108_ras_batch2310_S51_a_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231030_CPMG_prep_b_generic_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,XXX--unknown--XXX
+231030_CPMG_prep.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,XXX--unknown--XXX
+230922_probe_2_20000kHz.h5,.,XXX--unknown--XXX
+231106_ras_batch2310_S51_a_ODNP_1.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+231102_ras_batch2310_S51_a_ODNP_1.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+230725_test.h5,C:\exp_data\odnp_nmr_comp\noise_tests\,XXX--unknown--XXX
+240328_27mM_TEMPOL_chokes_onspike_pm_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240131_100tau_p90_3p75_GDS.h5,.,XXX--unknown--XXX
+240318_27mM_TEMPOL_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231228_SW4MHz_test_sig_sweep_nomag.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230928_probe_1b_4000kHz.h5,.,XXX--unknown--XXX
+231031_CPMG_prep_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231228_test_sig_sweep_nomag.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230921_27mM_tempol_echo.h5,C:\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240516_200uM_TEMPOL_ODNP_4.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+240311_27mM_TEMPOL_var_tau_a_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230406_70mM_TEMPOL_field.h5,C:\exp_data\odnp_nmr_comp\field_dependent\,XXX--unknown--XXX
+240311_27mM_TEMPOL_a_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230921_probe_split_4_20000kHz.h5,.,XXX--unknown--XXX
+230912_27mM_TEMPOL_echo.h5,.,XXX--unknown--XXX
+240311_27mM_TEMPOL_p90_4p74_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230411_6p5mM_TEMPOL_1_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+231005_ras_batch230927_M67_ODNP_2.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+240516_200uM_TEMPOL_ODNP_5.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+231229_12MHz_carrier_SW_10MHz_b.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231004_70mM_TEMPOL_2echo_CPMG.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG\,XXX--unknown--XXX
+240117_afg_sc_10mV_3p9kHz_again.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231108_test_ODNP_6.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+230529_ras_batch230515_E37_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+230606_200uM_TEMPOL_FIR_4scan_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+231030_CPMG_prep_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230622_pR_batch230605_F205_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+240111_digital_filter_10MHz_1mV_bkgd.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230607_30mV_200kHz_echo.h5,C:\exp_data\odnp_nmr_comp\Echoes\,XXX--unknown--XXX
+231004_70mM_TEMPOL_test2_CPMG.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG\,XXX--unknown--XXX
+240104_aliasing_SW_10MHz_noTL_zoom.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230622_ras_batch230606_K42_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+240213_27mM_TEMPOL_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240229_27mM_TEMPOL_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230614_pR_batch230605_Q183_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+230928_probe_split_2a_20000kHz.h5,.,XXX--unknown--XXX
+231108_ras_batch2310_S51_a_FIN_ODNP_3.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+231006_ras_batch230927_M67_b_ODNP_1.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+230824_test_6chokes_echo.h5,.,XXX--unknown--XXX
+231023_CPMG_prep.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,XXX--unknown--XXX
+240514_200uM_TEMPOL_ODNP_2.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+240328_27mM_TEMPOL_chokes_offspike_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230913_27mM_TEMPOL_echo.h5,.,XXX--unknown--XXX
+240517_200uM_TEMPOL_ODNP_3.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+231229_15MHz_carrier_SW_10MHz.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240328_27mM_TEMPOL_nochokes_onspike_pm_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231005_ras_batch230927_M67_field.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\field_dependent\,XXX--unknown--XXX
+231228_wide_test_sig_sweep_nomag.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230503_pR_batch230329_S175_field.h5,C:\exp_data\odnp_nmr_comp\field_dependent\,XXX--unknown--XXX
+231030_CPMG_prep_a_generic_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,ODNP_NMR_comp/CPMG
+230707_ras_batch230627_M67_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+231109_test_field.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\field_dependent\,XXX--unknown--XXX
+231005_70mM_TEMPOL_prep_CPMG.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG\,XXX--unknown--XXX
+231103_ras_batch2310_S51_a_ODNP_4.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+231012_CPMG_prep_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes,ODNP_NMR_comp/Echoes
+230912_27mM_TEMPOL_NOchokes_echo.h5,.,XXX--unknown--XXX
+231030_CPMG_test_acq_generic_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,ODNP_NMR_comp/CPMG
+240111_digital_filter_1MHz_1mV_wide.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231030_CPMG_AB_control.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG\,XXX--unknown--XXX
+230427_pR_batch230329_S184_field.h5,C:\exp_data\odnp_nmr_comp\field_dependent\,XXX--unknown--XXX
+230614_ras_batch230606_S51_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+231030_CPMG_prep_generic_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,XXX--unknown--XXX
+230828_ras_27mM_TEMPOL_bal_echo.h5,.,XXX--unknown--XXX
+230503_pR_batch230329_A174_field.h5,C:\exp_data\odnp_nmr_comp\field_dependent\,XXX--unknown--XXX
+240318_27mM_TEMPOL_26chokes_offspike_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231030_CPMG_prep_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes,XXX--unknown--XXX
+231109_ras_batch2310_L118_a_ODNP_1.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+231229_15MHz_carrier_SW_10MHz_b.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231026_CPMG_prep_generic_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,XXX--unknown--XXX
+230606_200uM_TEMPOL_FIR_long_vd_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+240111_digital_filter_3p9MHz_1mV.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230928_probe_1a_4000kHz.h5,.,XXX--unknown--XXX
+240328_27mM_TEMPOL_nochokes_offspike_pm_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231030_CPMG_test_acq_CPMG.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,ODNP_NMR_comp/CPMG
+231026_CPMG_prep_CPMG.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,XXX--unknown--XXX
+230410_70mM_TEMPOL_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+240515_200uM_TEMPOL_ODNP_7.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+230919_4MHz_SW_14p9MHz_1_4000kHz.h5,.,XXX--unknown--XXX
+240328_calib_test_signal_3p9kHz_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230915_ras_batch230905_L56_echo.h5,C:\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230414_35mM_TEMPOL_echo.h5,C:\exp_data\odnp_nmr_comp\Echoes\,XXX--unknown--XXX
+230407_water_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+211021_TEMPOL_capProbe.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,XXX--unknown--XXX
+240111_GDS_noTL_10mV_testb.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231108_test_ODNP_9.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+230928_probe_split_7a_20000kHz.h5,.,XXX--unknown--XXX
+230419_pRbatch230329_F205_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+240104_aliasing_SW_1MHz_noTL.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231031_CPMG_prep_CPMG.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,ODNP_NMR_comp/CPMG
+240516_200uM_TEMPOL_ODNP_7.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+231228_10MHz_fine_test_sig_sweep_nomag.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231030_CPMG_prep.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG\,XXX--unknown--XXX
+230419_pRbatch230329_F205_ODNP_3.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+231026_CPMG_prep_CPMG.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,ODNP_NMR_comp/CPMG
+240104_aliasing_SW_10MHz_noTL_fin.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230529_ras_batch230515_L118_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+230411_9p4mM_TEMPOL_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+240104_aliasing_SW_4MHz_noTL.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231030_CPMG_prep_c_generic_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,ODNP_NMR_comp/CPMG
+240112_afg_sc_10mV_200kHz.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230922_probe_split_1_20000kHz.h5,.,XXX--unknown--XXX
+230406_70mM_TEMPOL_echo.h5,C:\exp_data\odnp_nmr_comp\Echoes\,XXX--unknown--XXX
+231229_17MHz_carrier_SW_1MHz_a.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240112_afg_sc_10mV_10MHz.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240318_27mM_TEMPOL_nochokes_onspike_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230622_pR_batch230605_F195_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+240119_afg_sc_10mV_3p9kHz_wide.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240320_test_signal_75000kHz.h5,.,XXX--unknown--XXX
+240229_27mM_TEMPOL_chokes_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230920_test_CPMG_echo.h5,C:\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231103_test_ODNP_5.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+230414_650uM_TEMPOL_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+240514_200uM_TEMPOL_CPMG.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG\,XXX--unknown--XXX
+230426_pR_batch230329_A174_field.h5,C:\exp_data\odnp_nmr_comp\field_dependent\,XXX--unknown--XXX
+240328_calib_test_signal_200kHz_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231109_ras_batch2310_L118_a_ODNP_3.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+230919_4MHz_SW_14p9MHz_1_20000kHz.h5,.,XXX--unknown--XXX
+230707_ras_batch230627_M67_b_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+230824_test_15chokes_echo.h5,.,XXX--unknown--XXX
+240102_27mM_TEMPOL_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230712_ras_batch230627_K104_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+230425_pR_batch230329_S175_field.h5,C:\exp_data\odnp_nmr_comp\field_dependent\,XXX--unknown--XXX
+230912_100tau_p90_12p5_GDS_500mV.h5,.,XXX--unknown--XXX
+231030_CPMG_prep_c_generic_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,XXX--unknown--XXX
+230928_probe_split_2_20000kHz.h5,.,XXX--unknown--XXX
+230414_35mM_TEMPOL_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+231031_CPMG_AB_control.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,XXX--unknown--XXX
+240509_test_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230921_probe_1_20000kHz.h5,.,XXX--unknown--XXX
+230420_pRbatch230409_Q183_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+240506_test_sig_calib_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230419_pRbatch230329_F205_ODNP_2.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+231108_ras_batch2310_S51_a_FIN_ODNP_2.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+240112_afg_sc_10mV_40kHz.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230927_probe_4chokes_1_20000kHz.h5,.,XXX--unknown--XXX
+240315_RX_3_10000kHz.h5,.,XXX--unknown--XXX
+230503_pR_batch230329_S184_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+240514_200uM_TEMPOL_ODNP_1.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+240515_200uM_TEMPOL_ODNP_2.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+240515_200uM_TEMPOL_ODNP_6.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+230922_probe_1_20000kHz.h5,.,XXX--unknown--XXX
+240206_9p4mM_TEMPOL_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231012_CPMG_prep_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes,XXX--unknown--XXX
+230707_ras_batch230627_E37_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+240315_27mM_TEMPOL_1s_probe_def_onspike_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+test_sig_sweep,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231108_test_ODNP_8.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+231030_CPMG_AB_control_fin.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,XXX--unknown--XXX
+231228_test_sig_sweep.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240320_27mM_TEMPOL_onspike_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240221_27mM_TEMPOL_p90_4p52_noTL_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231030_CPMG_prep_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes,ODNP_NMR_comp/Echoes
+231103_test_ODNP_8.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+230915_ras_batch230905_L56_ODNP_1.h5,C:\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+231106_ras_batch2310_S51_b_ODNP_1.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+230912_100tau_p90_1_GDS.h5,.,XXX--unknown--XXX
+temp_ctrl.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+231031_CPMG_prep_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes,ODNP_NMR_comp/Echoes
+240516_200uM_TEMPOL_ODNP_1.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+230814_2mV_20us_4p05p90_350tau_amp.h5,.,XXX--unknown--XXX
+240516_200uM_TEMPOL_ODNP_3.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+230919_probe_4_10000kHz.h5,.,XXX--unknown--XXX
+240119_afg_sc_10mV_3p9kHz_wide_a.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240314_2tau_p90_5_GDS_1atten.h5,.,XXX--unknown--XXX
+231023_CPMG_prep_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240328_27mM_TEMPOL_chokes_offspike_noise_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240104_aliasing_SW_40kHz_noTL_fin.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231031_CPMG_AB_control_1.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,ODNP_NMR_comp/CPMG
+230524_ras_batch230515_E37_field.h5,C:\exp_data\odnp_nmr_comp\field_dependent\,XXX--unknown--XXX
+231030_CPMG_prep.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,ODNP_NMR_comp/CPMG
+231108_test_ODNP_10.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+230911_probe_split_20_10000kHz.h5,.,XXX--unknown--XXX
+231031_CPMG_prep_CPMG.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,XXX--unknown--XXX
+231103_ras_batch2310_S51_a_ODNP_6.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+231030_CPMG_AB_control.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,XXX--unknown--XXX
+231031_CPMG_AB_control_1.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,XXX--unknown--XXX
+231026_CPMG_prep_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes,XXX--unknown--XXX
+240229_27mM_TEMPOL_a_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230613_ras_batch230606_S51_field.h5,C:\exp_data\odnp_nmr_comp\field_dependent\,XXX--unknown--XXX
+230410_70mM_TEMPOL_echo.h5,C:\exp_data\odnp_nmr_comp\Echoes\,XXX--unknown--XXX
+231004_70mM_TEMPOL_rehash_CPMG.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG\,XXX--unknown--XXX
+240510_test_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240104_aliasing_SW_10MHz_noTL_finc.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240117_afg_sc_10mV_3p9kHz_wide.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231103_ras_batch2310_S51_a_ODNP_8.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+230419_pRbatch230329_F205_IR.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+230426_pR_batch230329_S184_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+230614_ras_batch230606_S51_nutation_1.h5,C:\exp_data\odnp_nmr_comp\nutation\,XXX--unknown--XXX
+240318_test_signal_1scan_3p9kHz_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230410_70mM_TEMPOL_field.h5,C:\exp_data\odnp_nmr_comp\field_dependent\,XXX--unknown--XXX
+230503_pR_batch230329_S175_ODNP_2.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+231031_CPMG_prep_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes,XXX--unknown--XXX
+231004_70mM_TEMPOL_test1_CPMG.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG\,XXX--unknown--XXX
+240515_200uM_TEMPOL_ODNP_4.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+230526_pR_batch230515_N187_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+231003_70mM_TEMPOL_CPMG_test_CPMG.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG\,XXX--unknown--XXX
+231004_70mM_TEMPOL_CPMG_prep_CPMG.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG\,XXX--unknown--XXX
+231002_70mM_TEMPOL_CPMG_test_CPMG.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG\,XXX--unknown--XXX
+231106_ras_batch2310_S51_a_field.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\field_dependent\,XXX--unknown--XXX
+231102_ras_batch2310_S51_a_ODNP_2.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+231103_ras_batch2310_S51_a_ODNP_9.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+231031_CPMG_AB_control.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG\,XXX--unknown--XXX
+231030_CPMG_AB_control_fin.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,ODNP_NMR_comp/CPMG
+240318_27mM_TEMPOL_26chokes_onspike_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230921_probe_split_2_20000kHz.h5,.,XXX--unknown--XXX
+240104_aliasing_SW_3p9kHz_noTL_fin.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231030_CPMG_test_acq_generic_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\CPMG,XXX--unknown--XXX
+230928_probe_split_3.h5,C:\exp_data\ODNP_NMR_comp\noise_tests\,XXX--unknown--XXX
+240515_200uM_TEMPOL_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231110_ras_batch2310_L118_a_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230503_pR_batch230329_T177_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+230412_water_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+231103_test_ODNP_10.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+231229_15MHz_carrier_SW_10MHz_c.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231108_ras_batch2310_S51_a_field.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\field_dependent\,XXX--unknown--XXX
+230310_test_choke_3p9_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes,ODNP_NMR_comp/Echoes
+230412_70mM_TEMPOL_echo.h5,C:\exp_data\odnp_nmr_comp\Echoes\,XXX--unknown--XXX
+240402_27mM_TEMPOL_chokes_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240328_27mM_TEMPOL_chokes_offspike_a_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230407_water_ODNP_2.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+240209_9p4mM_TEMPOL_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230712_ras_batch230627_I36_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+240104_aliasing_SW_10MHz_noTL_fina.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240320_27mM_TEMPOL_offspike_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+231103_test_ODNP_9.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\ODNP\,XXX--unknown--XXX
+231106_ras_batch2310_S51_a_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240117_afg_sc_10mV_3p9kHz_zoom.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230911_probe_split_b_10000kHz.h5,.,XXX--unknown--XXX
+240315_27mM_TEMPOL_1s_probe_nochokes_nospike_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240318_27mM_TEMPOL_26chokes_onspike_14p89_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+230627_ras_batch230606_I36_rep_10_ODNP_1.h5,C:\exp_data\odnp_nmr_comp\ODNP\,XXX--unknown--XXX
+230915_ras_batch230905_I36_echo.h5,.,XXX--unknown--XXX
+240104_aliasing_SW_4MHz_noTL_again.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX
+240311_27mM_TEMPOL_p90_4p7_var_tau_echo.h5,C:\Users\aguinnes\Syracuse University\Group-FranckGroup - General\exp_data\ODNP_NMR_comp\Echoes\,XXX--unknown--XXX

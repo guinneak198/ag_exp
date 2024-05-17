@@ -11,9 +11,9 @@ from SpinCore_pp import prog_plen
 import logging
 fl = figlist_var()
 #{{{Parameters that change for new samples
-output_name = '200uM_TEMPOL_nutation_2'
+output_name = '200uM_TEMPOL_nutation_1'
 adcOffset = 57
-carrierFreq_MHz = 14.8942427388
+carrierFreq_MHz = 14.8931467392
 nScans = 4
 nEchoes = 1
 repetition = 10e6
