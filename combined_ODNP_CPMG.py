@@ -31,6 +31,7 @@ cpmg_nPoints = int(config_dict["echo_acq_ms"] * config_dict["SW_kHz"] + 0.5)
 nPoints = int(config_dict["acq_time_ms"] * config_dict["SW_kHz"] + 0.5)
 #echo window for CPMG
 config_dict["echo_acq_ms"] = cpmg_nPoints / config_dict["SW_kHz"]
+config_dict['acq_time_ms'] = nPoints / config_dict['SW_kHz']
 # }}}
 # {{{create filename and save to config file
 date = datetime.now().strftime("%y%m%d")
@@ -98,10 +99,9 @@ T1_powers_dB = gen_powerlist(
 )
 T1_node_names = ["FIR_%ddBm" % j for j in T1_powers_dB]
 T2_node_names = ["CPMG_%ddBm" % j for j in T1_powers_dB]
-#logger.info("dB_settings", dB_settings)
-#logger.info("correspond to powers in Watts", 10 ** (dB_settings / 10.0 - 3))
-#logger.info("T1_powers_dB", T1_powers_dB)
-#logger.info("correspond to powers in Watts", 10 ** (T1_powers_dB / 10.0 - 3))
+print("Tau is set to",config_dict['tau_us'])
+print("Powers for E(p):",dB_settings)
+print("powers for IR:",T1_powers_dB)
 myinput = input("Look ok?")
 if myinput.lower().startswith("n"):
     raise ValueError("you said no!!!")
@@ -259,7 +259,7 @@ cpmg_data = generic(
         ("jumpto", "echo_label"),
         ("delay", config_dict["repetition_us"]),
     ],
-    nScans=config_dict["nScans"],
+    nScans=config_dict["thermal_nScans"],
     indirect_idx=0,
     indirect_len=config_dict["nEchoes"],
     adcOffset=config_dict["adc_offset"],
@@ -276,8 +276,8 @@ cpmg_data.chunk("t", ["ph_overall", "ph_diff", "nEcho", "t2"],
                 "ph_diff":r_[0:len(cpmg_ph_diff)],
                 "nEcho":r_[0:int(config_dict['nEchoes'])]+1,}
                 )
-cpmg_data.setaxis("nScans", r_[0:config_dict["nScans"]])
-cpmg_data.name("CPMG_noPower")
+cpmg_data.setaxis("nScans", r_[0:config_dict["thermal_nScans"]])
+cpmg_data.name("CPMG_thermal")
 cpmg_data.set_prop("stop_time", time.time())
 cpmg_data.set_prop("start_time", ini_time)
 cpmg_data.set_prop("acq_params", config_dict.asdict())
@@ -289,9 +289,9 @@ with h5py.File(
 ) as fp:
     if nodename in fp.keys():
         final_log.append("this nodename already exists, so I will call it temp")
-        nodename = "temp_cpmg_noPower"
+        nodename = "temp_cpmg_thermal"
         final_log.append(
-            f"I had problems writing to the correct file {filename} so I'm going to try to save this node as temp_cpmg_noPower"
+            f"I had problems writing to the correct file {filename} so I'm going to try to save this node as temp_cpmg_thermal"
         )
         cpmg_data.name(nodename)
 # hdf5_write should be outside the h5py.File with block, since it opens the file itself
@@ -336,6 +336,69 @@ with power_control() as p:
             time_axis_coords = DNP_data.getaxis("indirect")
         time_axis_coords[j]["start_times"] = DNP_ini_time
         time_axis_coords[j]["stop_times"] = DNP_thermal_done
+        ini_time = time.time()
+        cpmg_data = generic(
+            ppg_list=[
+                ("phase_reset", 1),
+                ("delay_TTL", config_dict["deblank_us"]),
+                ("pulse_TTL", config_dict["p90_us"], "ph_cyc", cpmg_ph1_cyc),
+                ("delay", config_dict["tau_us"]),
+                ("delay_TTL", config_dict["deblank_us"]),
+                ("pulse_TTL", 2.0 * config_dict["p90_us"], "ph_cyc", cpmg_ph2_cyc),
+                ("delay", config_dict["deadtime_us"]),
+                ("acquire", config_dict["echo_acq_ms"]),
+                ("delay", pad_end_us),
+                ("delay", short_delay_us),  # matching the jumpto delay
+                ("marker", "echo_label", (config_dict["nEchoes"] - 1)),
+                ("delay_TTL", config_dict["deblank_us"]),
+                ("pulse_TTL", 2.0 * config_dict["p90_us"], "ph_cyc", cpmg_ph2_cyc),
+                ("delay", config_dict["deadtime_us"]),
+                ("acquire", config_dict["echo_acq_ms"]),
+                ("delay", pad_end_us),
+                ("jumpto", "echo_label"),
+                ("delay", config_dict["repetition_us"]),
+            ],
+            nScans=config_dict["nScans"],
+            indirect_idx=0,
+            indirect_len=config_dict["nEchoes"],
+            adcOffset=config_dict["adc_offset"],
+            carrierFreq_MHz=config_dict["carrierFreq_MHz"],
+            nPoints=cpmg_nPoints,
+            acq_time_ms=config_dict["echo_acq_ms"],
+            SW_kHz=config_dict["SW_kHz"],
+            ret_data=None,
+        )
+        cpmg_data.chunk("t", ["ph_overall", "ph_diff", "nEcho", "t2"], 
+                [len(cpmg_ph_overall), len(cpmg_ph_diff),int(config_dict['nEchoes']), 
+                    -1]).labels({
+                        "ph_overall":r_[0:len(cpmg_ph_overall)],
+                        "ph_diff":r_[0:len(cpmg_ph_diff)],
+                        "nEcho":r_[0:int(config_dict['nEchoes'])]+1,}
+                        )
+        cpmg_data.setaxis("nScans", r_[0 : int(config_dict["nScans"])])
+        cpmg_data.name("CPMG_thermal_Ep_%j"%j)
+        cpmg_data.set_prop("stop_time", time.time())
+        cpmg_data.set_prop("start_time", ini_time)
+        cpmg_data.set_prop("acq_params", config_dict.asdict())
+        cpmg_data.set_prop("postproc_type", cpmg_postproc)
+        nodename = cpmg_data.name()
+        # {{{ again, implement a file fallback
+        with h5py.File(
+            os.path.normpath(os.path.join(target_directory, f"{filename}"))
+            ) as fp:
+            tempcounter = 1
+            orig_nodename = nodename
+            while nodename in fp.keys():
+                nodename = "%s_temp_thermal_%d"%(orig_nodename,j)
+                final_log.append("this nodename already exists, so I will call it {nodename}")
+                final_log.append(
+                    f"I had problems writing to the correct file {filename} so I'm going to try to save this node as {nodename}"
+                )
+                cpmg_data.name(nodename)
+                tempcounter += 1
+        # hdf5_write should be outside the h5py.File with block, since it opens the file itself
+        cpmg_data.hdf5_write(filename, directory=target_directory)
+        # }}}
     power_settings_dBm = np.zeros_like(dB_settings)
     time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
     for j, this_dB in enumerate(dB_settings):

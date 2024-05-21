@@ -1,16 +1,3 @@
-"""
-CPMG
-====
-
-..image:: CPMG_ppg.jpg
-
-This script will perform a standard CPMG experiment. 
-In order to form a symmetric echo, a padding time is added  
-after your tau. Both the initial ninety pulse and 
-subsequent 180 pulses are phase cycled together,
-with a two step phase cycle on the ninety pulse (see
-`:func: apply_cycles` in SpinCore_pp.py)
-"""
 from pylab import *
 from pyspecdata import *
 from numpy import *
@@ -19,7 +6,6 @@ from SpinCore_pp.ppg import generic
 import os
 from datetime import datetime
 import h5py
-
 # {{{importing acquisition parameters
 config_dict = SpinCore_pp.configuration("active.ini")
 nPoints = int(config_dict["echo_acq_ms"] * config_dict["SW_kHz"] + 0.5)
@@ -30,9 +16,9 @@ date = datetime.now().strftime("%y%m%d")
 config_dict["type"] = "CPMG"
 config_dict["date"] = date
 config_dict["cpmg_counter"] += 1
-filename = f"{config_dict['date']}_{config_dict['chemical']}_{config_dict['type']}"
+filename = f"{config_dict['date']}_{config_dict['chemical']}_generic_{config_dict['type']}"
 # }}}
-# {{{set phase cycling
+ {{{set phase cycling
 phase_cycling = True
 if phase_cycling:
     ph_overall = r_[0, 1, 2, 3]
@@ -55,16 +41,60 @@ twice_tau_echo_us = config_dict["echo_acq_ms"] * 1e3 + (
 config_dict["tau_us"] = (
     twice_tau_echo_us / 2.0 - tau_evol_us - config_dict["deblank_us"]
 )
-
 print("using a tau of:",config_dict['tau_us'])
 # }}}
 # {{{check total points
-total_pts = nPoints * nPhaseSteps
-assert total_pts < 2 ** 14, (
-    "You are trying to acquire %d points (too many points) -- either change SW or acq time so nPoints x nPhaseSteps is less than 16384\nyou could try reducing the echo_acq_ms to %f"
-    % (total_pts, config_dict["echo_acq_ms"] * 16384 / total_pts)
-)
+total_pts = nPoints * nPhaseSteps * config_dict['nEchoes']
+#assert total_pts < 2 ** 14, (
+#    "You are trying to acquire %d points (too many points) -- either change SW or acq time so nPoints x nPhaseSteps is less than 16384\nyou could try reducing the echo_acq_ms to %f"
+#    % (total_pts, config_dict["echo_acq_ms"] * 16384 / total_pts)
+#)
 # }}}
+# {{{basic phasecycling
+#data = generic(
+#    ppg_list=[
+#        ("phase_reset", 1),
+#        ("delay_TTL", config_dict["deblank_us"]),
+#        ("pulse_TTL", config_dict["p90_us"], "ph1", r_[0,1,2,3]),
+#        ("delay", config_dict["tau_us"]),
+#        ("delay_TTL", config_dict["deblank_us"]),
+#        ("pulse_TTL", 2.0 * config_dict["p90_us"], "ph2", r_[0]),
+#        ("delay", config_dict["deadtime_us"]),
+#        ("acquire", config_dict["echo_acq_ms"]),
+#        ("delay", pad_end_us),
+#        ("delay", short_delay_us),  # matching the jumpto delay
+#        ("marker", "echo_label", (config_dict["nEchoes"] - 1)),
+#        ("delay_TTL", config_dict["deblank_us"]),
+#        ("pulse_TTL", 2.0 * config_dict["p90_us"], "ph2", r_[0]),
+#        ("delay", config_dict["deadtime_us"]),
+#        ("acquire", config_dict["echo_acq_ms"]),
+#        ("delay", pad_end_us),
+#        ("jumpto", "echo_label"),
+#        ("delay", config_dict["repetition_us"]),
+#    ],
+#    nScans=config_dict["nScans"],
+#    indirect_idx=0,
+#    indirect_len=config_dict["nEchoes"],
+#    adcOffset=config_dict["adc_offset"],
+#    carrierFreq_MHz=config_dict["carrierFreq_MHz"],
+#    nPoints=nPoints,
+#    acq_time_ms=config_dict["echo_acq_ms"],
+#    SW_kHz=config_dict["SW_kHz"],
+#    ret_data=None,
+#)
+## {{{ chunk and save data
+#data.chunk(
+#    "t", 
+#    ["ph1", "nEcho", "t2"], 
+#    [4,int(config_dict['nEchoes']), 
+#        -1]).labels({
+#            "ph1":r_[0:4],
+#            "nEcho":r_[0:int(config_dict['nEchoes'])]+1,
+#                }
+#            )
+#data.setaxis("nScans", r_[0 : config_dict["nScans"]])
+#data.name(config_dict["type"] + "_" + str(config_dict["cpmg_counter"]))
+## }}}
 # {{{run cpmg
 data = generic(
     ppg_list=[
@@ -155,3 +185,4 @@ with figlist_var() as fl:
     fl.next("FTed data")
     fl.image(data)
 # }}}
+
