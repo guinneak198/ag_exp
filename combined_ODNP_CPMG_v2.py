@@ -15,6 +15,7 @@ from pyspecdata import strm
 import os, sys, time
 import h5py
 import SpinCore_pp
+from SpinCore_pp import prog_plen
 from SpinCore_pp.power_helper import gen_powerlist, Ep_spacing_from_phalf
 from SpinCore_pp.ppg import run_spin_echo, run_IR,generic
 from Instruments import power_control
@@ -70,9 +71,11 @@ FIR_rep = 2*(1.0/(config_dict['concentration']*config_dict['krho_hot']+1.0/confi
 config_dict['FIR_rep'] = FIR_rep
 # }}}
 # {{{symmetric tau
+prog_p90_us = prog_plen(config_dict['p90_us'])
+prog_p180_us = prog_plen(2*config_dict['p90_us'])
 short_delay_us = 1.0
 tau_evol_us = (
-    2 * config_dict["p90_us"] / pi
+    prog_p180_us / pi
 )  # evolution during pulse -- see eq 6 of coherence paper
 pad_end_us = (
     config_dict["deadtime_us"] - config_dict["deblank_us"] - 2 * short_delay_us
@@ -251,17 +254,17 @@ cpmg_data = generic(
     ppg_list=[
         ("phase_reset", 1),
         ("delay_TTL", config_dict["deblank_us"]),
-        ("pulse_TTL", config_dict["p90_us"], "ph_cyc", cpmg_ph1_cyc),
+        ("pulse_TTL", prog_p90_us, "ph_cyc", cpmg_ph1_cyc),
         ("delay", config_dict["tau_us"]),
         ("delay_TTL", config_dict["deblank_us"]),
-        ("pulse_TTL", 2.0 * config_dict["p90_us"], "ph_cyc", cpmg_ph2_cyc),
+        ("pulse_TTL", prog_p180_us, "ph_cyc", cpmg_ph2_cyc),
         ("delay", config_dict["deadtime_us"]),
         ("acquire", config_dict["echo_acq_ms"]),
         ("delay", pad_end_us),
         ("delay", short_delay_us),  # matching the jumpto delay
         ("marker", "echo_label", (config_dict["nEchoes"] - 1)),
         ("delay_TTL", config_dict["deblank_us"]),
-        ("pulse_TTL", 2.0 * config_dict["p90_us"], "ph_cyc", cpmg_ph2_cyc),
+        ("pulse_TTL", prog_p180_us, "ph_cyc", cpmg_ph2_cyc),
         ("delay", config_dict["deadtime_us"]),
         ("acquire", config_dict["echo_acq_ms"]),
         ("delay", pad_end_us),
@@ -278,17 +281,13 @@ cpmg_data = generic(
     SW_kHz=config_dict["SW_kHz"],
     ret_data=cpmg_data,
 )
-print("I MADE THE DATA!")
-cpmg_data.setaxis("nScans", r_[0:config_dict["nScans"]])
-print("THE AXIS NSCANS IS SET")
 cpmg_data.name("CPMG_noPower")
-print("NAMED")
+cpmg_data.set_prop('actual_180',prog_p180_us)
 cpmg_data.set_prop("stop_time", time.time())
 cpmg_data.set_prop("start_time", ini_time)
 cpmg_data.set_prop("acq_params", config_dict.asdict())
 cpmg_data.set_prop("postproc_type", cpmg_postproc)
 nodename = cpmg_data.name()
-print("RIGHT BEFORE SAVING")
 # {{{ again, implement a file fallback
 with h5py.File(
     os.path.normpath(os.path.join(target_directory, f"{filename}"))
@@ -390,17 +389,17 @@ with power_control() as p:
             ppg_list=[
                 ("phase_reset", 1),
                 ("delay_TTL", config_dict["deblank_us"]),
-                ("pulse_TTL", config_dict["p90_us"], "ph_cyc", cpmg_ph1_cyc),
+                ("pulse_TTL", prog_p90_us, "ph_cyc", cpmg_ph1_cyc),
                 ("delay", config_dict["tau_us"]),
                 ("delay_TTL", config_dict["deblank_us"]),
-                ("pulse_TTL", 2.0 * config_dict["p90_us"], "ph_cyc", cpmg_ph2_cyc),
+                ("pulse_TTL", prog_p180_us, "ph_cyc", cpmg_ph2_cyc),
                 ("delay", config_dict["deadtime_us"]),
                 ("acquire", config_dict["echo_acq_ms"]),
                 ("delay", pad_end_us),
                 ("delay", short_delay_us),  # matching the jumpto delay
                 ("marker", "echo_label", (config_dict["nEchoes"] - 1)),
                 ("delay_TTL", config_dict["deblank_us"]),
-                ("pulse_TTL", 2.0 * config_dict["p90_us"], "ph_cyc", cpmg_ph2_cyc),
+                ("pulse_TTL", prog_p180_us, "ph_cyc", cpmg_ph2_cyc),
                 ("delay", config_dict["deadtime_us"]),
                 ("acquire", config_dict["echo_acq_ms"]),
                 ("delay", pad_end_us),
@@ -417,8 +416,8 @@ with power_control() as p:
             SW_kHz=config_dict["SW_kHz"],
             ret_data=None,
         )
-        cpmg_data.setaxis("nScans", r_[0 : config_dict["nScans"]])
         cpmg_data.name("CPMG_%ddBm"%this_dB)
+        cpmg_data.set_prop('actual_180',prog_p180_us)
         cpmg_data.set_prop("stop_time", time.time())
         cpmg_data.set_prop("start_time", ini_time)
         cpmg_data.set_prop("acq_params", config_dict.asdict())
@@ -446,7 +445,6 @@ with power_control() as p:
         # }}}DNP_data.set_prop("stop_time", time.time())
     DNP_data.set_prop("postproc_type", "spincore_ODNP_v4")
     DNP_data.set_prop("acq_params", config_dict.asdict())
-    DNP_data.setaxis("nScans", r_[0 : config_dict["nScans"]])
     if phase_cycling:
         DNP_data.chunk("t", ["ph1", "t2"], [len(Ep_ph1_cyc), -1])
         DNP_data.setaxis("ph1", Ep_ph1_cyc / 4)
@@ -488,7 +486,6 @@ with power_control() as p:
         time.sleep(5)
         meter_power = p.get_power_setting()
         vd_data = None
-
         for vd_idx, vd in enumerate(vd_list_us):
             # call B to run_IR
             vd_data = run_IR(
