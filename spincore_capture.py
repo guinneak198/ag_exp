@@ -34,7 +34,7 @@ def verifyParams():
 #}}}
 
 SW_kHz = 200
-output_name = '9p4mM_TEMPOL_noise_bb_'+str(SW_kHz)+'kHz'
+output_name = 'probe_torroid_17N_repeat_'+str(SW_kHz)+'kHz'
 adcOffset = 43
 carrierFreq_MHz = 14.89
 tx_phases = r_[0.0,90.0,180.0,270.0]
