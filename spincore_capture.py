@@ -34,8 +34,8 @@ def verifyParams():
 #}}}
 
 SW_kHz = 200
-output_name = 'probe_torroid_17N_repeat_'+str(SW_kHz)+'kHz'
-adcOffset = 43
+output_name = '27mM_TEMPOL_27chokes_SC_'+str(SW_kHz)+'kHz'
+adcOffset = 37
 carrierFreq_MHz = 14.89
 tx_phases = r_[0.0,90.0,180.0,270.0]
 amplitude = 1.0
@@ -57,7 +57,6 @@ p90 = 4.5
 deadtime = 10.0
 repetition = 1e4
 
-#SW_kHz = 3.9
 nPoints = 2048*2
 
 acq_time = nPoints/SW_kHz + 1.0 # ms
@@ -65,9 +64,7 @@ tau_adjust = 0.0
 deblank = 1.0
 tau = deadtime + acq_time*1e3*(1./8.) + tau_adjust
 # Fixed tau for comparison
-#tau = 100
 pad = 0
-#pad = 2.0*tau - deadtime - acq_time*1e3 - deblank
 #{{{ setting acq_params dictionary
 acq_params = {}
 acq_params['adcOffset'] = adcOffset

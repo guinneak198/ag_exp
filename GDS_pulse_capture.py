@@ -97,7 +97,6 @@ acq_params['nPoints'] = nPoints
 acq_params['tau_adjust_us'] = tau_adjust
 acq_params['deblank_us'] = 1.0
 acq_params['tau_us'] = tau
-#acq_params['pad_us'] = pad 
 #}}}
 amp_list = [1.0,1.0,1.0,1.0,1.0,1.0,1.0]
 for index,val in enumerate(amp_list):
