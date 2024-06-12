@@ -22,7 +22,8 @@ tau = 100
 p90 = 250#us
 prog_p90_us = prog_plen(p90)
 prog_p180_us = prog_plen(2*p90)
-amplitude = 0.1 #full power
+amplitude = 0.004 #full power
+
 SpinCore_pp.configureTX(adcOffset, carrierFreq_MHz, tx_phases, amplitude, nPoints)
 acq_time = SpinCore_pp.configureRX(SW_kHz, nPoints, nScans, nEchoes, nPhaseSteps) #ms
 SpinCore_pp.init_ppg();
