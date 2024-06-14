@@ -72,6 +72,7 @@ echo_data = run_spin_echo(
         nEchoes = config_dict['nEchoes'],
         p90_us = config_dict['p90_us'],
         repetition_us = config_dict['repetition_us'],
+        deadtime_us = config_dict['deadtime_us'],
         tau_us = config_dict['tau_us'],
         SW_kHz = config_dict['SW_kHz'],
         ret_data = None)
