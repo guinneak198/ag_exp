@@ -11,8 +11,8 @@ from SpinCore_pp import prog_plen
 import logging
 fl = figlist_var()
 #{{{Parameters that change for new samples
-output_name = '27mM_TEMPOL_nochokes_nutation_1'
-adcOffset = 36
+output_name = '27mM_TEMPOL_ssProbe_toroid_nutation_1'
+adcOffset = 44
 carrierFreq_MHz = 14.89
 nScans = 4
 nEchoes = 1

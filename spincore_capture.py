@@ -35,8 +35,8 @@ def verifyParams():
 
 SW_kHz = 200
 
-output_name = '27mM_TEMPOL_balProbe_torroid_SC_'+str(SW_kHz)+'kHz'
-adcOffset = 36
+output_name = 'ssProbe_SC_noise_pm_retune_a_'+str(SW_kHz)+'kHz'
+adcOffset = 43
 carrierFreq_MHz = 14.89
 tx_phases = r_[0.0,90.0,180.0,270.0]
 amplitude = 1.0
@@ -54,7 +54,7 @@ if not phase_cycling:
 # as this is generally what the SpinCore takes
 # note that acq_time is always milliseconds
 #}}}
-p90 = 4.5
+p90 = 4.62
 deadtime = 10.0
 repetition = 1e4
 
@@ -164,7 +164,8 @@ save_file = True
 while save_file:
     try:
         print("SAVING FILE...")
-        data.hdf5_write(date+'_'+output_name+'.h5')
+        data.hdf5_write(date+'_'+output_name+'.h5',
+                directory=getDATADIR(exp_type="ODNP_NMR_comp/noise_tests"))
         print("FILE SAVED!")
         print(("Name of saved data",data.name()))
         print(("Units of saved data",data.get_units('t')))
