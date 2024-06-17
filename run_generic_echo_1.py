@@ -7,10 +7,7 @@ from SpinCore_pp.ppg import generic
 import os
 from datetime import datetime
 import h5py
-from SpinCore_pp.ppg import run_spin_echo
-from datetime import datetime
 from Instruments.XEPR_eth import xepr
-from Instruments import power_control
 fl = figlist_var()
 #{{{importing acquisition parameters
 config_dict = SpinCore_pp.configuration("active.ini")
@@ -44,8 +41,10 @@ with xepr() as x:
 phase_cycling = True
 if phase_cycling:
     ph1_cyc = r_[0,1,2,3]
-    ph2_cyc = r_[0]
-    nPhaseSteps = len(ph1_cyc)
+    ph2_cyc = r_[0,2]
+    ph1_cyc = array([(j + k) % 4 for k in ph_overall for j in ph_diff])
+    ph2_cyc = array([(k + 1) % 4 for k in ph_overall for j in ph_diff])
+    nPhaseSteps = len(ph_overall) * len(ph_diff)
 if not phase_cycling:
     nPhaseSteps = 1
 # }}}    
@@ -60,10 +59,10 @@ data = generic(
     ppg_list=[
         ("phase_reset", 1),
         ("delay_TTL", config_dict["deblank_us"]),
-        ("pulse_TTL", prog_p90_us, "ph1", ph1_cyc),
+        ("pulse_TTL", prog_p90_us, "ph_cyc", ph1_cyc),
         ("delay", config_dict["tau_us"]),
         ("delay_TTL", config_dict["deblank_us"]),
-        ("pulse_TTL", prog_p180_us, "ph2", ph2_cyc),
+        ("pulse_TTL", prog_p180_us, "ph_cyc", ph2_cyc),
         ("delay", config_dict["deadtime_us"]),
         ("acquire", config_dict["acq_time_ms"]),
         ("delay", config_dict["repetition_us"]),
@@ -84,9 +83,15 @@ data.set_prop("acq_params", config_dict.asdict())
 data.name(config_dict["type"] + "_" + str(config_dict["cpmg_counter"]))
 data.chunk(
     "t", 
-    ["ph1", "t2"], 
-    [4,-1])
-data.setaxis('ph1',r_[0.,1.,2.,3.]/4)
+    ["ph_overall", "ph_diff", "nEcho", "t2"], 
+    [len(ph_overall),len(ph_diff),int(config_dict['nEchoes']),-1])
+data.labels({"nEcho":r_[0:int(config_dict['nEchoes'])],
+    "ph_overall":r_[0:len(ph_overall)],
+    "ph_diff":r_[0:len(ph_diff)]
+    }
+    )
+data.setaxis('ph_overall',ph_overall/4)
+data.setaxis('ph_diff',ph_diff/4)
 # }}}
 target_directory = getDATADIR(exp_type="ODNP_NMR_comp/Echoes")
 filename_out = filename + ".h5"
