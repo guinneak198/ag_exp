@@ -62,11 +62,11 @@ config_dict["tau_us"] = (
 print("using a tau of:",config_dict['tau_us'])
 # }}}
 # {{{check total points
-total_pts = nPoints * nPhaseSteps
-assert total_pts < 2 ** 14, (
-    "You are trying to acquire %d points (too many points) -- either change SW or acq time so nPoints x nPhaseSteps is less than 16384\nyou could try reducing the echo_acq_ms to %f"
-    % (total_pts, config_dict["echo_acq_ms"] * 16384 / total_pts)
-)
+#total_pts = nPoints * nPhaseSteps
+#assert total_pts < 2 ** 14, (
+#    "You are trying to acquire %d points (too many points) -- either change SW or acq time so nPoints x nPhaseSteps is less than 16384\nyou could try reducing the echo_acq_ms to %f"
+#    % (total_pts, config_dict["echo_acq_ms"] * 16384 / total_pts)
+#)
 # }}}
 # {{{run cpmg
 data = generic(
@@ -107,9 +107,9 @@ data.chunk(
     ["ph_overall", "ph_diff", "nEcho", "t2"], 
     [len(ph_overall), len(ph_diff),int(config_dict['nEchoes']), 
         -1]).labels({
+            "nEcho":r_[0:int(config_dict['nEchoes'])],
             "ph_overall":r_[0:len(ph_overall)],
             "ph_diff":r_[0:len(ph_diff)],
-            "nEcho":r_[0:int(config_dict['nEchoes'])]+1,
                 }
             )
 #data.setaxis("nScans", r_[0 : config_dict["nScans"]])
