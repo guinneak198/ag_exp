@@ -42,8 +42,8 @@ with xepr() as x:
 #{{{set phase cycling
 phase_cycling = True
 if phase_cycling:
-    ph1_cyc = r_[0,1,2,3]
-    ph2_cyc = r_[0,2]
+    ph_overall = r_[0,1,2,3]
+    ph_diff = r_[0,2]
     ph1_cyc = array([(j + k) % 4 for k in ph_overall for j in ph_diff])
     ph2_cyc = array([(k + 1) % 4 for k in ph_overall for j in ph_diff])
     nPhaseSteps = len(ph_overall) * len(ph_diff)
@@ -86,7 +86,7 @@ data = generic(
         ("acquire", config_dict["echo_acq_ms"]),
         ("delay",pad_end_us),
         ("delay",short_delay_us),
-        ("delay","echo_label",(config_dict['nEchoes']-1)),
+        ("marker","echo_label",(config_dict['nEchoes']-1)),
         ("delay_TTL",config_dict['deblank_us']),
         ("pulse_TTL", prog_p180_us,'ph_cyc',ph2_cyc),
         ("delay",config_dict['deadtime_us']),
