@@ -12,12 +12,12 @@ import logging
 fl = figlist_var()
 #{{{Parameters that change for new samples
 output_name = '200uM_TEMPOL_nutation_1'
-adcOffset = 44
-carrierFreq_MHz = 14.882
+adcOffset = 63
+carrierFreq_MHz = 14.89333634
 nScans = 4
 nEchoes = 1
-repetition = 10000000.0
-p90_range = linspace(1,6,10,endpoint=False)
+repetition = 13000000.0
+p90_range = linspace(1,6,5,endpoint=False)
 SW_kHz = 3.9 #24.0 originally
 acq_time = 1024.
 tau_us = 5000
