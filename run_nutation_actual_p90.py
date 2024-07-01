@@ -37,8 +37,6 @@ assert total_pts < 2**14, (
     % (total_pts, config_dict["acq_time_ms"] * 16384 / total_pts)
 )
 # }}}
-
-    )
 # }}}
 prog_p90s = []
 for j in range(len(p90_range)):
@@ -50,14 +48,14 @@ nutation_data = run_spin_echo(
         nScans=config_dict['nScans'], 
         indirect_idx = 0, 
         indirect_len = len(p90_range), 
-        adcOffset = config_dict['adcOffset'],
+        adcOffset = config_dict['adc_offset'],
         carrierFreq_MHz = config_dict['carrierFreq_MHz'], 
         nPoints = nPoints,
         nEchoes=config_dict['nEchoes'], 
         p90_us = p90_range[0], 
         repetition_us = config_dict['repetition_us'],
         tau_us = config_dict['tau_us'], 
-        SW_kHz = SW_kHz, 
+        SW_kHz = config_dict['SW_kHz'], 
         indirect_fields = None, 
         ret_data = None)
 nutation_times = nutation_data.getaxis('indirect')
@@ -68,18 +66,18 @@ for index,p90 in enumerate(p90_range[1:]):
             deadtime_us = 20.0,
             indirect_idx = index+1, 
             indirect_len = len(p90_range), 
-            adcOffset = config_dict['adcOffset'],
+            adcOffset = config_dict['adc_offset'],
             carrierFreq_MHz = config_dict['carrierFreq_MHz'], 
             nPoints = nPoints,
             nEchoes=config_dict['nEchoes'], 
             p90_us = p90, 
             repetition_us = config_dict['repetition_us'],
             tau_us = config_dict['tau_us'], 
-            SW_kHz = SW_kHz, 
+            SW_kHz = config_dict['SW_kHz'], 
             ret_data = nutation_data)
     nutation_times[index + 1] = p90
 # {{{ chunk and save data
-nutation_data.set_prop("postproc_type", "spincore_nutation_v3")
+nutation_data.set_prop("postproc_type", "spincore_nutation_v4")
 nutation_data.set_prop("coherence_pathway", {"ph1": +1})
 nutation_data.set_prop("acq_params", config_dict.asdict())
 nutation_data.name(config_dict["type"] + "_" + str(config_dict["echo_counter"]))

@@ -35,8 +35,8 @@ def verifyParams():
 
 SW_kHz = 200
 
-output_name = 'ssProbe_SC_noise_pm_retune_a_'+str(SW_kHz)+'kHz'
-adcOffset = 43
+output_name = 'probe_SC_toroid_'+str(SW_kHz)+'kHz'
+adcOffset = 35
 carrierFreq_MHz = 14.89
 tx_phases = r_[0.0,90.0,180.0,270.0]
 amplitude = 1.0
