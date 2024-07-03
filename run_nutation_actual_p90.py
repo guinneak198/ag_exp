@@ -9,7 +9,7 @@ from SpinCore_pp import prog_plen
 import h5py
 import logging
 fl = figlist_var()
-p90_range = linspace(1,6,6,endpoint=False)
+p90_range = linspace(1,10,10,endpoint=False)
 # {{{importing acquisition parameters
 config_dict = SpinCore_pp.configuration("active.ini")
 nPoints, config_dict['SW_kHz'], config_dict['acq_time_ms'] = get_integer_sampling_intervals(config_dict['SW_kHz'], config_dict['acq_time_ms'])
@@ -85,11 +85,6 @@ nutation_data.chunk(
         "t", 
         ["ph1", "t2"], 
         [4, -1]
-)
-nutation_data.labels(
-    {
-        "ph1": r_[0 : len(ph1_cyc)]
-    }
 )
 nutation_data.setaxis("ph1", ph1_cyc / 4)
 if config_dict["nScans"] > 1:
