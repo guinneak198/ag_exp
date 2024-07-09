@@ -59,8 +59,8 @@ def API_sender(value):
     return
 #}}}
 date = datetime.now().strftime('%y%m%d')
-output_name = '2tau_p90_5_GDS_1atten'
-adcOffset = 45
+output_name = '25tau_p90_3p1_GDS_1atten'
+adcOffset = 49
 carrierFreq_MHz = 14.89
 tx_phases = r_[0.0,90.0,180.0,270.0]
 nScans = 1
@@ -74,8 +74,8 @@ SW_kHz = 3.9#50.0
 nPoints = 2048#int(aq/SW_kHz+0.5)#1024*2
 acq_time = nPoints/SW_kHz # ms
 tau_adjust = 0.0
-tau = 2#5e3#deadtime + acq_time*1e3*(1./8.) + tau_adjust
-p90 = 5#us (28x expected 90 time)
+tau = 25#5e3#deadtime + acq_time*1e3*(1./8.) + tau_adjust
+p90 = 3.1#us (28x expected 90 time)
 prog_p90_us = prog_plen(p90)
 prog_p180_us = prog_plen(2*p90)
 print("ACQUISITION TIME:",acq_time,"ms")

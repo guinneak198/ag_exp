@@ -78,7 +78,7 @@ echo_data = run_spin_echo(
         ret_data = None)
 #}}}
 #{{{setting acq_params
-echo_data.set_prop("postproc_type","spincore_SE_v1")
+echo_data.set_prop("postproc_type","None")
 echo_data.set_prop("acq_params",config_dict.asdict())
 echo_data.name(config_dict['type']+'_'+str(config_dict['echo_counter']))
 #}}}

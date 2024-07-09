@@ -9,7 +9,7 @@ from SpinCore_pp import prog_plen
 import h5py
 import logging
 fl = figlist_var()
-p90_range = linspace(1,10,10,endpoint=False)
+p90_range = linspace(3,10,8,endpoint=False)
 # {{{importing acquisition parameters
 config_dict = SpinCore_pp.configuration("active.ini")
 nPoints, config_dict['SW_kHz'], config_dict['acq_time_ms'] = get_integer_sampling_intervals(config_dict['SW_kHz'], config_dict['acq_time_ms'])
@@ -77,7 +77,7 @@ for index,p90 in enumerate(p90_range[1:]):
             ret_data = nutation_data)
     nutation_times[index + 1] = p90
 # {{{ chunk and save data
-nutation_data.set_prop("postproc_type", "spincore_nutation_v4")
+nutation_data.set_prop("postproc_type", "spincore_SE_v1")
 nutation_data.set_prop("coherence_pathway", {"ph1": +1})
 nutation_data.set_prop("acq_params", config_dict.asdict())
 nutation_data.name(config_dict["type"] + "_" + str(config_dict["echo_counter"]))
@@ -87,8 +87,8 @@ nutation_data.chunk(
         [4, -1]
 )
 nutation_data.setaxis("ph1", ph1_cyc / 4)
-if config_dict["nScans"] > 1:
-    nutation_data.setaxis("nScans", r_[0 : config_dict["nScans"]])
+#if config_dict["nScans"] > 1:
+#    nutation_data.setaxis("nScans", r_[0 : config_dict["nScans"]])
 nutation_data.reorder(["ph1", "nScans", "t2"])
 filename_out = filename + ".h5"
 nodename = nutation_data.name()
