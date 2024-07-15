@@ -9,7 +9,7 @@ from SpinCore_pp import prog_plen
 import h5py
 import logging
 fl = figlist_var()
-p90_range = linspace(3,10,8,endpoint=False)
+p90_range = linspace(0.5,12,70,endpoint=False)
 # {{{importing acquisition parameters
 config_dict = SpinCore_pp.configuration("active.ini")
 nPoints, config_dict['SW_kHz'], config_dict['acq_time_ms'] = get_integer_sampling_intervals(config_dict['SW_kHz'], config_dict['acq_time_ms'])
