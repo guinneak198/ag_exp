@@ -35,8 +35,8 @@ def verifyParams():
 
 SW_kHz = 200
 
-output_name = 'probe_with_nohighpass_'+str(SW_kHz)+'kHz'
-adcOffset = 42
+output_name = 'VTUprobe_'+str(SW_kHz)+'kHz'
+adcOffset = 36
 carrierFreq_MHz = 14.89
 tx_phases = r_[0.0,90.0,180.0,270.0]
 amplitude = 1.0

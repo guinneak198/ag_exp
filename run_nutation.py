@@ -18,7 +18,7 @@ from numpy import r_
 
 my_exp_type = "ODNP_NMR_comp/nutation"
 assert os.path.exists(psd.getDATADIR(exp_type=my_exp_type))
-p90_range_us = np.linspace(0.1, 15, 20, endpoint=False)
+p90_range_us = np.linspace(0.1, 60, 20, endpoint=False)
 prog_p90 = prog_plen(p90_range_us)
 # {{{importing acquisition parameters
 config_dict = SpinCore_pp.configuration("active.ini")
@@ -93,7 +93,7 @@ if config_dict["nScans"] > 1:
     data.setaxis("nScans", r_[0 : config_dict["nScans"]])
 data.reorder(["nScans", "ph2", "ph1", "p_90", "t2"])
 data.set_units("t2", "s")
-data.set_prop("postproc_type", "None")
+data.set_prop("postproc_type", "spincore_nutation_v5")
 data.set_prop("coherence_pathway", {"ph1": +1, "ph2": -2})
 data.set_prop("acq_params", config_dict.asdict())
 config_dict = save_data(data, my_exp_type, config_dict, "echo")
