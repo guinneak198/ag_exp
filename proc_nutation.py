@@ -20,7 +20,7 @@ import numpy as np
 signal_pathway = {'ph1':1,'ph2':-2}#{'ph1':0,'ph2':1}
 fl = figlist_var()
 for searchstr,exptype,nodename,postproc,freq_slice in [
-    ['240715_27mM_TEMPOL_test_nutation','ODNP_NMR_comp/nutation','nutation_6',
+    ['240715_27mM_TEMPOL_test_nutation','ODNP_NMR_comp/nutation','nutation_5',
         'None',(-800,800)]
     ]:
     s = find_file(searchstr,exp_type=exptype,expno=nodename)
@@ -74,7 +74,7 @@ for searchstr,exptype,nodename,postproc,freq_slice in [
     #lambda_L = fit_envelope(s.C.mean('nScans'), fl=fl)
     s.ft('t2')
     fl.next('apodized and averaged')
-    s.mean('nScans')
+    #s.mean('nScans')
     fl.image(s)
     s.ift('t2')
     s = s['t2':(0,None)]
@@ -87,10 +87,10 @@ for searchstr,exptype,nodename,postproc,freq_slice in [
     #s.ft('t2')
     fl.next('FID slice the phased, apo, and averaged data')
     fl.image(s)
-    s = select_pathway(s,signal_pathway)
-    fl.next('pcolor')
-    s.pcolor()
-    fl.show();quit()
+    #s = select_pathway(s,signal_pathway)
+    #fl.next('pcolor')
+    #s.pcolor()
+    #fl.show();quit()
     #s = s['ph1',1]['ph2',-2].C + s['ph1',-1]['ph2',0].C
     #d = s.real.integrate('t2')
     #print(ndshape(d))
