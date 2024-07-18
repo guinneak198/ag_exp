@@ -1,104 +1,171 @@
-from pylab import *
-from pyspecdata import *
-from scipy.optimize import minimize
-from pyspecProcScripts import *
 from sympy import symbols
-from numpy import *
-fl = fl_mod()
-t2 = symbols('t2')
-logger = init_logging("info")
-max_kHz = 3.9
-signal_pathway = {'ph1':0,'ph2':1}
+import sympy as sp
+from itertools import cycle
+from pylab import axhline, title, gca, axvline, ylabel, tight_layout, legend
+import matplotlib.pyplot as plt
+from pyspecProcScripts import *
+from pyspecdata import (
+    nddata,
+    r_,
+    find_file,
+    lmfitdata,
+    figlist_var,
+    k_B,
+    gammabar_H,
+    hbar,
+    ndshape
+)
+from numpy import std, sqrt, pi, mean, sinc, conj, diff, log10, exp
+import numpy as np
+signal_pathway = {'ph1':1,'ph2':-2}#{'ph1':0,'ph2':1}
+fl = figlist_var()
 for searchstr,exptype,nodename,postproc,freq_slice in [
-    ['230623_pR_batch230605_N187_a_nutation_1','ODNP_NMR_comp/nutation','nutation',
-        'spincore_nutation_v3',(-500,450)]
+    ['240715_27mM_TEMPOL_test_nutation','ODNP_NMR_comp/nutation','nutation_6',
+        'None',(-800,800)]
     ]:
-    s = find_file(searchstr,exp_type=exptype,expno=nodename,postproc=postproc,
-            lookup=lookup_table,fl=fl)
-    s_fullsw = s.C
-    s.ift('t2')
-    s.reorder(['ph1','ph2','indirect','t2'])
-    t_max = s.getaxis('t2')[-1]
-    rx_offset_corr = s['t2':(0.75*t_max,None)] #should be quarter of t_slice onward
-    rx_offset_corr = rx_offset_corr.mean(['t2'])
-    s -= rx_offset_corr
-    s.ft('t2')
-    fl.next('raw')
-    fl.image(s.C.mean('nScans'))
-    d = s_fullsw
-    if 'amp' in s.dimlabels:
-        plen = s.get_prop('acq_params')['p90_us']*1e-6
-        logger.info(strm('pulse length is:',plen))
-    s = s['t2':freq_slice]
-    #s['indirect':-1] *= -1
+    s = find_file(searchstr,exp_type=exptype,expno=nodename)
+    s.set_units('p_90','s')
+    s.ft(['ph1','ph2'],unitary = True)
+    s.reorder(['nScans','ph1','ph2', 'p_90'])
+    s.ft('t2',shift = True)
     s.ift('t2')
     s.set_units('t2','s')
-    best_shift = 0.0035
-    #s.setaxis('t2',lambda x: x-best_shift).register_axis({'t2':0})
-    #{{{zeroth order phasing
-    s /= zeroth_order_ph(select_pathway(s['t2':0].C.mean('nScans'),signal_pathway))
+    for_herm = select_pathway(s,signal_pathway)
     s.ft('t2')
-    fl.next('phase corrected')
-    fl.image(s.C.mean('nScans'))
-    #}}}
+    s = s['t2':freq_slice]
+    fl.next('for herm sign flip')
+    #for_herm *= mysgn
+    fl.image(for_herm)
     s.ift('t2')
+    ## {{{ phasing
+    s['t2'] -= s.getaxis('t2')[0]
+    signflip = for_herm.C.ft('t2')['t2':(-500,500)]
+    idx = abs(signflip).mean_all_but('t2').data.argmax()
+    signflip = signflip['t2',idx]
+    ph0 = zeroth_order_ph(signflip)
+    signflip /= ph0
+    signflip.run(np.real)
+    signflip /= abs(signflip)
+    for_herm /= signflip
+    for_herm.mean_all_but('t2')
+    best_shift = hermitian_function_test(for_herm,fl=fl)
+    best_shift = s.get_prop('acq_params')['tau_us']*1e-6#3.5e-3
+    s.setaxis('t2', lambda x: x - best_shift).register_axis({'t2':0})
+    #ph0 = zeroth_order_ph(s['t2':(-500,500)].C.sum('t2'))
+    #s /= ph0
+    # }}}
+    ## {{{ FID slice
+    #s = s['t2':(0,None)]
+    #s *= 2
+    #s['t2',0] *= 0.5
+    s.ft('t2')
+    fl.next('phased')
+    fl.image(s)
+    fl.next('phased and averaged')
+    fl.image(s.C.mean('nScans'))
+    s.ift('t2')
+    fl.next('time domain phased')
+    fl.image(s)
+    filter_t_const = 10e-3
+    apo_fn = exp(-abs((s.fromaxis('t2')-s.get_prop('acq_params')['tau_us']*1e-6))/filter_t_const)
+    s *= apo_fn
+    #s /= zeroth_order_ph(select_pathway(s['t2':0],signal_pathway))
+    # }}}
+    #lambda_L = fit_envelope(s.C.mean('nScans'), fl=fl)
+    s.ft('t2')
+    fl.next('apodized and averaged')
+    s.mean('nScans')
+    fl.image(s)
+    s.ift('t2')
+    s = s['t2':(0,None)]
+    s *= 2
+    s['t2':0] * 0.5
+    s.ft('t2')
+    #s.ift('t2')
+    #ph0 = zeroth_order_ph(s['t2':(-500,500)].C.sum('t2'))
+    #s /= ph0
+    #s.ft('t2')
+    fl.next('FID slice the phased, apo, and averaged data')
+    fl.image(s)
+    s = select_pathway(s,signal_pathway)
+    fl.next('pcolor')
+    s.pcolor()
+    fl.show();quit()
+    #s = s['ph1',1]['ph2',-2].C + s['ph1',-1]['ph2',0].C
+    #d = s.real.integrate('t2')
+    #print(ndshape(d))
+    #fl.next('integrate the FID slice')
+    #fl.plot(d,'o')
+    #fl.show();quit()
+    ##s.mean('nScans')
+    #fl.next('apodized')
+    #fl.image(s.C.mean('nScans'))
+    #fl.show();quit()
+    # {{{ roughly align
+    #for_sign = s['ph1',1]['ph2',-2].C + s['ph1',-1]['ph2',0].C
+    mysgn = determine_sign(select_pathway(s,signal_pathway))
+    #matched = (select_pathway(s,signal_pathway)*mysgn).ift('t2')
+    #matched *= exp(-pi*lambda_L*matched.fromaxis('t2'))
+    #matched.ft('t2')
+    #frq_atmax = matched.real.argmax('t2')
+    #s.ift('t2')
+    #t2 = s.fromaxis('t2')
+    #s *= exp(-1j*2*pi*frq_atmax*t2)
+    #s.ft('t2')
+    #fl.next('simple shift')
+    #fl.image(s)
+    # }}}
+    # {{{apply correlation alignment
+    s.ift(list(signal_pathway))
+    s *= mysgn
+    fl.next('before alignment')
+    fl.image(select_pathway(s,signal_pathway))
+    opt_shift,sigma,my_mask = correl_align(
+            s,#*mysgn, 
+            indirect_dim='p_90',
+            sigma = 50,
+            signal_pathway=signal_pathway)
+    s.ift('t2')
+    s *= np.exp(-1j*2*pi*opt_shift*s.fromaxis('t2'))
+    s.ft(list(signal_pathway))
     s = s['t2':(0,None)]
     s *= 2
     s['t2':0] *= 0.5
     s.ft('t2')
-    fl.next('phased')
-    fl.plot(select_pathway(s.C.mean('nScans'),signal_pathway))
-     # {{{ do the centering before anything else!
-    # in particular -- if you don't do this before convolution, the
-    # convolution doesn't work properly!
-    d = s.C
-    d.ift('t2')
-    d.set_units('t2','s')
-    fl.next('time')
-    fl.plot(select_pathway(d.C,signal_pathway),alpha = 0.25)
-    filter_t_const = 10e-3
-    apo_fn = exp(-abs((d.fromaxis('t2')-d.get_prop('acq_params')['tau']*1e-6))/filter_t_const)
-    fl.plot(apo_fn*abs(d.C).max(),human_units = False)
-    d *= apo_fn
-    d /= zeroth_order_ph(select_pathway(d,signal_pathway))
-    d.ft('t2')
-    fl.next('apodized')
-    fl.plot(select_pathway(d,signal_pathway))
-    #}}}
-    #{{{ selecting coherence and convolving
-    s = select_pathway(d,signal_pathway)
-    #}}}
-    if 'amp' in s.dimlabels:
-        s.setaxis('amp',lambda x:x*plen)
-        s.set_units('amp','s')
-        ind_dim = '\\tau_p a'
-        s.rename('amp',ind_dim)
-    elif 'p_90' in s.dimlabels:
-        ind_dim = 'p_90'
-    elif 'indirect' in s.dimlabels:
-        p_90 = s.getaxis('indirect')
-        s.setaxis('indirect',p_90)
-        s.rename('indirect','p_90')
-        ind_dim = 'p_90'
-    else:
-        raise ValueError("not sure what the indirect dimenison is!!")
-    for_90 = s.C.mean('nScans')
-    fl.next('p90')
-    for j in range(3):
-        fl.plot(for_90['p_90',j],label = '%d'%j)
-    maxes = []
-    for j in range(len(for_90.getaxis('p_90'))):
-        thismax = abs(for_90['p_90',j]).C.max().real.item()
-        if j ==2:
-            print("last p90 should be inverted")
-            thismax = for_90['p_90',j].C.min().real.item()
-        maxes.append(thismax)
+    fl.next('after alignment')
+    fl.image(select_pathway(s,signal_pathway))
+    s *= mysgn
+    fl.next('after sign flip')
+    fl.image(select_pathway(s,signal_pathway))
+    s = select_pathway(s,signal_pathway)
+    # }}}
     fl.next('line for p90')
-    d = nddata(maxes,[-1],['p90'])
-    d.setaxis('p90',for_90.getaxis('p_90'))
-    fl.plot(d, 'o')
-    fit = d.polyfit('p90',order = 1)
-    p90_fine = nddata(np.linspace(6,d.getaxis('p90')[-1],300),'p90')
-    fit_fine = p90_fine.C.eval_poly(fit,'p90')
-    fl.plot(fit_fine,label = 'fit')
-    fl.show();quit()
+    s.setaxis('p_90',s.get_prop('prog_p90s'))
+    s = s.real.mean('nScans').integrate('t2')
+    #s = s['nScans',1].real.integrate('t2')
+    #s['p_90'] *= 39.4/4.52
+    fl.plot(s,'o',label = 'actual p90s')
+    # {{{ Fit
+    #A, omega, p_90 = symbols("A omega p_90",real=True)
+    #f = lmfitdata(s)
+    #f.functional_form = (A*sp.sin(omega*p_90))
+    #f.set_guess(
+    #        A = dict(value = s.data.max(), min = s.data.max()/1.2, max = s.data.max()*2),
+    #        omega = dict(value = 5e4, min =0, max = 10e6),
+    #        )
+    #f.settoguess()
+    #fl.plot(f.eval(100),color = 'red')
+    #f.fit()
+    #fit = f.eval(100)
+    #fl.plot(fit)
+    #fl.next('Fixed phasing')
+    #fl.plot(s,'o')
+    ##fl.plot(fit)
+    #t90_sqrt_P = fit.argmax('p_90').item()
+    #print(t90_sqrt_P*1e6/(39.4/4.52))
+    ##plt.axvline(t90_sqrt_P*1e6, label = '$t_{90}\sqrt{P}$ = %0.3f$\mu$s$\sqrt{W}$'%(t90_sqrt_P*1e6))
+    ##plt.xlabel('$t_{90}\sqrt{P}$')
+    ##plt.legend()
+    ## }}}
+    fl.show()
+
