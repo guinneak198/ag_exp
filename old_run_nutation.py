@@ -11,13 +11,13 @@ from SpinCore_pp import prog_plen
 import logging
 fl = figlist_var()
 #{{{Parameters that change for new samples
-output_name = '27mM_TEMPOL_nutation_2'
-adcOffset = 40
+output_name = '27mM_TEMPOL_nutation_5'
+adcOffset = 43
 carrierFreq_MHz = 14.89
 nScans = 4
 nEchoes = 1
 repetition = 1e6
-p90_range = linspace(5,15,5,endpoint=False)
+p90_range = linspace(0.5,12,20,endpoint=False)
 SW_kHz = 3.9 #24.0 originally
 acq_time = 1024.
 tau_us = 5000
@@ -98,4 +98,5 @@ nutation_data.ft('t2',shift=True)
 fl.next('FT raw data')
 fl.image(nutation_data.C.setaxis('indirect','#').set_units('indirect','scan #'))
 fl.show()
+
 

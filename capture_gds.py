@@ -3,8 +3,8 @@ from pyspecdata import *
 from serial.tools.list_ports import comports
 from pylab import axhline, text, gca
 import numpy as np
-expected_amp = 20e-3
-input_amp = 498.849e-3
+expected_amp = 15e-3
+input_amp = 499.300329e-3
 with figlist_var() as fl:
     with GDS_scope() as g:
         # {{{ choose settings we want
