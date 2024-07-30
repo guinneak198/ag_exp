@@ -60,7 +60,7 @@ def API_sender(value):
 #}}}
 date = datetime.now().strftime('%y%m%d')
 output_name = '50tau_p90_11_GDS_1atten'
-adcOffset = 37
+adcOffset = 31
 carrierFreq_MHz = 14.89
 tx_phases = r_[0.0,90.0,180.0,270.0]
 nScans = 1
