@@ -37,18 +37,26 @@ for searchstr,exptype,nodename, label  in [
     #['240802_amp0p2_27mM_TEMPOL_nutation','ODNP_NMR_comp/nutation','nutation_1', 'repetition = 0.8s'],
     #['240802_amp0p2_27mM_TEMPOL_nutation','ODNP_NMR_comp/nutation','nutation_3', 'repetition = 5'],
     #['240802_amp0p2_27mM_TEMPOL_nutation','ODNP_NMR_comp/nutation','nutation_4', 'repetition = 10s'],
-    ['240802_amp1_27mM_TEMPOL_nutation','ODNP_NMR_comp/nutation','nutation_3', 'repetition = 10s'],
+    #['240805_amp0p05_27mM_TEMPOL_FID_nutation','ODNP_NMR_comp/nutation','FID_nutation_1', 'FID'],
+    #['240805_amp0p05_27mM_TEMPOL_nutation','ODNP_NMR_comp/nutation','nutation_1', 'SE'],
+    #['240805_amp0p1_27mM_TEMPOL_FID_nutation','ODNP_NMR_comp/nutation','FID_nutation_1', 'FID'],
+    #['240805_amp0p1_27mM_TEMPOL_nutation','ODNP_NMR_comp/nutation','nutation_1', 'SE'],
+    #['240805_amp0p2_27mM_TEMPOL_FID_nutation','ODNP_NMR_comp/nutation','FID_nutation_1', 'FID'],
+    #['240805_amp0p2_27mM_TEMPOL_nutation','ODNP_NMR_comp/nutation','nutation_1', 'SE'],
+    ['240805_amp1_27mM_TEMPOL_FID_nutation','ODNP_NMR_comp/nutation','FID_nutation_1', 'FID'],
+    ['240805_amp1_27mM_TEMPOL_nutation','ODNP_NMR_comp/nutation','nutation_1', 'SE'],
     ]:
     s = find_file(searchstr,exp_type=exptype,expno=nodename, lookup = lookup_table)
     signal_pathway = s.get_prop("coherence_pathway")
     label += "amplitude = %s"%str(s.get_prop('acq_params')['amplitude'])  
     fl.next('Raw Freq %s'%label)
-    fl.image(s)
+    fl.image(select_pathway(s,s.get_prop('coherence_pathway')))
     s.ift('t2')
     fl.next('Raw Time %s'%label)
     fl.image(s)
     s.ft('t2')
-    s.mean('nScans')
+    if 'nScans' in s.dimlabels:
+        s.mean('nScans')
     rough_int = select_pathway(s['t2':(-250,250)],signal_pathway).C.real.integrate('t2')
     fl.next('Integrate raw')
     fl.plot(rough_int,  label = label)
@@ -70,21 +78,21 @@ for searchstr,exptype,nodename, label  in [
                 )
         total_corr += corr
     s *= np.exp(-1j*2*pi*total_corr*s.fromaxis('beta'))
-    #for j in range(len(s.getaxis('beta'))):
-    #    ph0 = zeroth_order_ph(
-    #            select_pathway(
-    #                s['beta',j]['t2':signal_range], s.get_prop('coherence_pathway')
-    #                )
-    #            )
-    #    s['beta',j] /= ph0
+    for j in range(len(s.getaxis('beta'))):
+        ph0 = zeroth_order_ph(
+                select_pathway(
+                    s['beta',j]['t2':signal_range], s.get_prop('coherence_pathway')
+                    )
+                )
+        s['beta',j] /= ph0
     mysigns = determine_sign(
             select_pathway(s["t2":signal_range],
                 s.get_prop('coherence_pathway'))
             )
     if label == 'amplitude = 1':
-        s *= -mysigns
+        s *= -mysgn
     else:
-        s *= mysigns
+        s *= mysgn
     fl.next('with sign flip %s'%label)
     fl.image(s)
     s.ift('t2')
@@ -96,6 +104,17 @@ for searchstr,exptype,nodename, label  in [
     s['t2',0] *= 0.5
     #fl.basename = label
     #s = fid_from_echo(s,signal_pathway,fl = fl)
+    s.ft('t2')
+    # {{{ correl align
+    s.ift(list(s.get_prop('coherence_pathway').keys()))
+    opt_shift, sigma, mask_func = correl_align(
+            s*mysgn,
+            indirect_dim = 'beta',
+            signal_pathway = s.get_prop('coherence_pathway'),
+            sigma = 50)
+    s.ift('t2')
+    #s *= np.exp(-1j*2*pi*opt_shift*s.fromaxis('t2'))
+    s.ft(list(s.get_prop('coherence_pathway').keys()))
     s.ft('t2')
     s *= mysigns
     fl.next('phased %s'%label)
