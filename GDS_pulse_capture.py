@@ -31,12 +31,6 @@ def verifyParams():
         quit()
     else:
         print("VERIFIED PULSE TIME.")
-    if (tau < 0.065):
-        print("ERROR: DELAY TIME TOO SMALL.")
-        print("EXITING.")
-        quit()
-    else:
-        print("VERIFIED DELAY TIME.")
     return
 #}}}
 #{{{ for setting EPR magnet
@@ -60,7 +54,7 @@ def API_sender(value):
 #}}}
 date = datetime.now().strftime('%y%m%d')
 output_name = 'beta_21p6us_amp0p1_GDS_1atten_actual'
-adcOffset = 36
+adcOffset = 46
 carrierFreq_MHz = 14.89
 tx_phases = r_[0.0,90.0,180.0,270.0]
 nScans = 1
@@ -73,14 +67,10 @@ repetition = 0.25e6
 SW_kHz = 3.9#50.0
 nPoints = 2048#int(aq/SW_kHz+0.5)#1024*2
 acq_time = nPoints/SW_kHz # ms
-tau_adjust = 0.0
-tau = 25#5e3#deadtime + acq_time*1e3*(1./8.) + tau_adjust
-beta90 = 21.6e-6#11#us (28x expected 90 time)
-amp = 0.05
-prog_p90_us = prog_plen(beta90,amplitude = amp)
-prog_p180_us = prog_plen(2*beta90, amplitude = amp)
+beta90 = 20e-6#11#us (28x expected 90 time)
+amplitude = 1.0
+prog_p90_us = prog_plen(beta90,amplitude = amplitude)
 print("ACQUISITION TIME:",acq_time,"ms")
-print("TAU DELAY:",tau,"us")
 data_length = 2*nPoints*nEchoes*nPhaseSteps
 amp_range = np.linspace(0,0.5,200)[1:]#,endpoint=False)
 #{{{ setting acq_params dictizaonary
@@ -95,15 +85,11 @@ acq_params['deadtime_us'] = deadtime
 acq_params['repetition_us'] = repetition
 acq_params['SW_kHz'] = SW_kHz
 acq_params['nPoints'] = nPoints
-acq_params['tau_adjust_us'] = tau_adjust
 acq_params['deblank_us'] = 1.0
-acq_params['tau_us'] = tau
 #}}}
 #amp_list = [1.0,1.0,1.0,1.0,1.0,1.0,1.0]
 amp_list = [0.1,0.1,0.1,0.1,0.1,0.1,0.1]
 for index,val in enumerate(amp_list):
-    #p90 = val # us
-    amplitude = 0.05 # pulse amp, set from 0.0 to 1.0
     print("***")
     print("INDEX %d - AMPLITUDE %f"%(index,val))
     print("***")
@@ -112,17 +98,10 @@ for index,val in enumerate(amp_list):
     acq_params['acq_time_ms'] = acq_time
     SpinCore_pp.init_ppg();
     SpinCore_pp.load([
-        ('marker','thisstart',1),
         ('phase_reset',1),
-        ('delay_TTL',1.0),
+        ('delay_TTL',30.0),
         ('pulse_TTL',prog_p90_us,0),
-        ('delay',tau),
-        ('delay_TTL',1.0),
-        ('pulse_TTL',prog_p180_us,0),
         ('delay',deadtime),
-        ('acquire',acq_time),
-        ('delay',repetition),
-        ('jumpto','thisstart'),
         ])
     SpinCore_pp.stop_ppg();
     SpinCore_pp.runBoard();
@@ -136,9 +115,6 @@ for index,val in enumerate(amp_list):
         print("ACQUIRED")
         for j in range(1,len(amp_list)+1):
             print("TRYING TO GRAB WAVEFORM")
-            datalist.append(g.waveform(ch=2))
-        print("GOT WAVEFORM")
-        nutation_data = concat(datalist,'ch').reorder('t')
     SpinCore_pp.stopBoard();
 print("EXITING...\n")
 print("\n*** *** ***\n")

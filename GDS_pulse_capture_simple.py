@@ -3,42 +3,29 @@
 from pyspecdata import *
 from Instruments import *
 import SpinCore_pp
-from SpinCore_pp import prog_plen
-adcOffset = 45
-carrierFreq_MHz = 14.89
+from SpinCore_pp import prog_plen, configuration, get_integer_sampling_intervals
+# {{{ importing acquisition parameters
+config_dict = configuration("active.ini")
+(
+    nPoints,
+    config_dict["SW_kHz"],
+    config_dict["acq_time_ms"],
+) = get_integer_sampling_intervals(
+    config_dict["SW_kHz"], config_dict["acq_time_ms"]
+)
+# }}}
 # {{{ parameters
 tx_phases = r_[0.0,90.0,180.0,270.0]
-nScans = 1
-nEchoes = 1
-nPhaseSteps = 1
-# NOTE: Number of segments is nEchoes * nPhaseSteps
-deadtime = 10.0
-repetition = 0.25e6
-SW_kHz = 0.9#50.0
-nPoints = 2048#int(aq/SW_kHz+0.5)#1024*2
-acq_time = nPoints/SW_kHz # ms
-# }}}
-tau = 100
-p90 = 250#us
-prog_p90_us = prog_plen(p90)
-prog_p180_us = prog_plen(2*p90)
-amplitude = 0.004 #full power
+prog_p90_us = prog_plen(config_dict['beta_90_s_sqrtW'], config_dict['amplitude'])
 
-SpinCore_pp.configureTX(adcOffset, carrierFreq_MHz, tx_phases, amplitude, nPoints)
-acq_time = SpinCore_pp.configureRX(SW_kHz, nPoints, nScans, nEchoes, nPhaseSteps) #ms
+SpinCore_pp.configureTX(config_dict['adc_offset'], config_dict['carrierFreq_MHz'], tx_phases, config_dict['amplitude'], nPoints)
+acq_time = SpinCore_pp.configureRX(config_dict['SW_kHz'], nPoints, config_dict['nScans'], config_dict['nEchoes'], 1) #ms
 SpinCore_pp.init_ppg();
 SpinCore_pp.load([
-    ('marker','thisstart',1),
     ('phase_reset',1),
     ('delay_TTL',1.0),
-    ('pulse_TTL',p90,0),
-    ('delay',tau),
-    ('delay_TTL',1.0),
-    ('pulse_TTL',2*p90,0),
-    ('delay',deadtime),
-    ('acquire',acq_time),
-    ('delay',repetition),
-    ('jumpto','thisstart'),
+    ('pulse_TTL',prog_p90_us,0),
+    ('delay',config_dict['deadtime_us']),
     ])
 SpinCore_pp.stop_ppg();
 SpinCore_pp.runBoard();

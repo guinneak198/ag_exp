@@ -19,7 +19,7 @@ from Instruments.XEPR_eth import xepr
 
 my_exp_type = "ODNP_NMR_comp/nutation"
 assert os.path.exists(psd.getDATADIR(exp_type=my_exp_type))
-beta_range_s_sqrt_W = linspace(0.1e-6,300e-6,32)
+beta_range_s_sqrt_W = linspace(0.1e-6,250e-6,32)
 # {{{importing acquisition parameters
 config_dict = SpinCore_pp.configuration("active.ini")
 (
@@ -41,25 +41,22 @@ adjust_field = True
 if len(sys.argv) == 2 and sys.argv[1] == "stayput":
     adjust_field = False
 # }}}
-input(
-    "I'm assuming that you've tuned your probe to %f since that's what's in your .ini file. Hit enter if this is true"
-    % config_dict["carrierFreq_MHz"]
-)
 # {{{ let computer set field
-print("I'm assuming that you've tuned your probe to",
-        config_dict['carrierFreq_MHz'],
-        "since that's what's in your .ini file",
-        )
-Field = config_dict['carrierFreq_MHz']/config_dict['gamma_eff_MHz_G']
-print(
-        "Based on that, and the gamma_eff_MHz_G you have in your .ini file, I'm setting the field to %f"
-        %Field
-        )
-with xepr() as x:
-    assert Field < 3700, "are you crazy??? field is too high!"
-    assert Field > 3300, "are you crazy?? field is too low!"
-    Field = x.set_field(Field)
-    print("field set to ",Field)
+if adjust_field:
+    input(
+        "I'm assuming that you've tuned your probe to %f since that's what's in your .ini file. Hit enter if this is true"
+        % config_dict["carrierFreq_MHz"]
+    )
+    Field = config_dict['carrierFreq_MHz']/config_dict['gamma_eff_MHz_G']
+    print(
+            "Based on that, and the gamma_eff_MHz_G you have in your .ini file, I'm setting the field to %f"
+            %Field
+            )
+    with xepr() as x:
+        assert Field < 3700, "are you crazy??? field is too high!"
+        assert Field > 3300, "are you crazy?? field is too low!"
+        Field = x.set_field(Field)
+        print("field set to ",Field)
 # }}}
 # {{{set phase cycling
 ph1_cyc = r_[0, 1, 2, 3]

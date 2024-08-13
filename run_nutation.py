@@ -7,6 +7,7 @@ that we are able to see when the signal rotates through 90 to
 180 degrees.
 """
 import pyspecdata as psd
+import sys
 import os
 import SpinCore_pp
 from SpinCore_pp import get_integer_sampling_intervals, save_data
@@ -39,21 +40,18 @@ ph1_cyc = r_[0, 2]
 ph2_cyc = r_[0, 2]
 nPhaseSteps = len(ph1_cyc) * len(ph2_cyc)
 # }}}
-# {{{let computer set field
+# {{{ command-line option to leave the field untouched (if you set it once, why set it again)
+adjust_field = True
+if len(sys.argv) == 2 and sys.argv[1] == "stayput":
+    adjust_field = False
+# }}}
 input(
     "I'm assuming that you've tuned your probe to %f since that's what's in your .ini file. Hit enter if this is true"
     % config_dict["carrierFreq_MHz"]
 )
-field_G = config_dict["carrierFreq_MHz"] / config_dict["gamma_eff_MHz_G"]
-print(
-    "Based on that, and the gamma_eff_MHz_G you have in your .ini file, I'm setting the field to %f"
-    % field_G
-)
-with xepr() as x:
-    assert field_G < 3700, "are you crazy??? field is too high!"
-    assert field_G > 3300, "are you crazy?? field is too low!"
-    field_G = x.set_field(field_G)
-    print("field set to ", field_G)
+# {{{ let computer set field
+if adjust_field:
+    spc.set_field(config_dict)
 # }}}
 # {{{check total points
 total_pts = nPoints * nPhaseSteps
