@@ -17,7 +17,7 @@ from datetime import datetime
 
 my_exp_type = "ODNP_NMR_comp/nutation"
 assert os.path.exists(getDATADIR(exp_type=my_exp_type))
-beta_s_sqrtW_array = linspace(0.5e-6, 150e-6, 50)
+beta_s_sqrtW_array = linspace(0.5e-6, 100e-6, 20)
 # {{{importing acquisition parameters
 config_dict = SpinCore_pp.configuration("active.ini")
 (

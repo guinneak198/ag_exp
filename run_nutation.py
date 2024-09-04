@@ -19,7 +19,7 @@ from numpy import r_
 
 my_exp_type = "ODNP_NMR_comp/nutation"
 assert os.path.exists(psd.getDATADIR(exp_type=my_exp_type))
-beta_range_s_sqrtW = np.linspace(0.5e-6, 150e-6, 50)
+beta_range_s_sqrtW = np.linspace(0.5e-6, 100e-6, 20)
 # {{{importing acquisition parameters
 config_dict = SpinCore_pp.configuration("active.ini")
 prog_p90_us = prog_plen(beta_range_s_sqrtW, config_dict)
@@ -27,9 +27,7 @@ prog_p90_us = prog_plen(beta_range_s_sqrtW, config_dict)
     nPoints,
     config_dict["SW_kHz"],
     config_dict["acq_time_ms"],
-) = get_integer_sampling_intervals(
-    config_dict["SW_kHz"], config_dict["acq_time_ms"]
-)
+) = get_integer_sampling_intervals(config_dict["SW_kHz"], config_dict["acq_time_ms"])
 # }}}
 # {{{add file saving parameters to config dict
 config_dict["type"] = "nutation"
