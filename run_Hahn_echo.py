@@ -12,31 +12,42 @@ the NMR computer to set the field etc.
 from pylab import *
 from pyspecdata import *
 import os
-from pyspecdata.file_saving.hdf_save_dict_to_group import hdf_save_dict_to_group
 import SpinCore_pp
-import h5py
+from SpinCore_pp import get_integer_sampling_intervals, save_data
 from SpinCore_pp.ppg import run_spin_echo
 from datetime import datetime
 from Instruments.XEPR_eth import xepr
-from Instruments import power_control
 fl = figlist_var()
+my_exp_type = "ODNP_NMR_comp/Echoes"
+assert os.path.exists(getDATADIR(exp_type=my_exp_type))
 #{{{importing acquisition parameters
 config_dict = SpinCore_pp.configuration('active.ini')
-nPoints = int(config_dict['acq_time_ms']*config_dict['SW_kHz']+0.5)
-target_directory = getDATADIR(exp_type="ODNP_NMR_comp/Echoes")
+(
+    nPoints,
+    config_dict["SW_kHz"],
+    config_dict["acq_time_ms"],
+) = get_integer_sampling_intervals(
+    SW_kHz=config_dict["SW_kHz"],
+    time_per_segment_ms=config_dict["acq_time_ms"],
+)
 #}}}
 #{{{create filename and save to config file
-date = datetime.now().strftime('%y%m%d')
 config_dict['type'] = 'echo'
-config_dict['date'] = date
+config_dict['date'] = datetime.now().strftime('%y%m%d')
 config_dict['echo_counter'] += 1
-filename = f"{config_dict['date']}_{config_dict['chemical']}_{config_dict['type']}"
 #}}}
-#{{{let computer set field
-print("I'm assuming that you've tuned your probe to",
-        config_dict['carrierFreq_MHz'],
-        "since that's what's in your .ini file",
-        )
+# {{{set phase cycling
+# default phase cycling of run_spin_echo is to use a 4 step on the 90 pulse
+# so this is here just for setting the chunked axis later and calculating the
+# total points
+ph1_cyc = r_[0, 1, 2, 3]
+nPhaseSteps = 4
+# }}}
+input(
+    "I'm assuming that you've tuned your probe to %f since that's what's in your .ini file. Hit enter if this is true"
+    % config_dict["carrierFreq_MHz"]
+)
+
 Field = config_dict['carrierFreq_MHz']/config_dict['gamma_eff_MHz_G']
 print(
         "Based on that, and the gamma_eff_MHz_G you have in your .ini file, I'm setting the field to %f"
@@ -48,99 +59,57 @@ with xepr() as x:
     Field = x.set_field(Field)
     print("field set to ",Field)
 #}}}
-#{{{set phase cycling
-phase_cycling = True
-if phase_cycling:
-    ph1_cyc = r_[0,1,2,3]
-    nPhaseSteps = 4
-if not phase_cycling:
-    nPhaseSteps = 1
-#}}}    
 #{{{check total points
 total_pts = nPoints*nPhaseSteps
-assert total_pts < 2**14, "You are trying to acquire %d points (too many points) -- either change SW or acq time so nPoints x nPhaseSteps is less than 16384"%total_pts
+assert total_pts < 2**14,  "You are trying to acquire %d points (too many points) -- either change SW or acq time so nPoints x nPhaseSteps is less than 16384"%total_pts
 #}}}
-#{{{acquire echo
-echo_data = run_spin_echo(
-        nScans=config_dict['nScans'],
-        indirect_idx = 0,
-        indirect_len = 1,
-        ph1_cyc = ph1_cyc,
-        adcOffset = config_dict['adc_offset'],
-        carrierFreq_MHz = config_dict['carrierFreq_MHz'],
-        nPoints = nPoints,
-        nEchoes = config_dict['nEchoes'],
-        beta_90_s_sqrtW = config_dict['beta_90_s_sqrtW'],
-        repetition_us = config_dict['repetition_us'],
-        deadtime_us = config_dict['deadtime_us'],
-        tau_us = config_dict['tau_us'],
-        SW_kHz = config_dict['SW_kHz'],
-        ret_data = None)
-#}}}
-#{{{setting acq_params
-echo_data.set_prop("postproc_type","None")
-echo_data.set_prop("acq_params",config_dict.asdict())
-echo_data.name(config_dict['type']+'_'+str(config_dict['echo_counter']))
-#}}}
-#{{{Look at raw data
-if phase_cycling:
-    echo_data.chunk('t',['ph1','t2'],[4,-1])
-    echo_data.setaxis('ph1',r_[0.,1.,2.,3.]/4)
-    #if config_dict['nScans'] > 1:
-    #    echo_data.setaxis('nScans',r_[0:config_dict['nScans']])
-    echo_data.reorder(['ph1','nScans','t2'])
-    fl.next('image')
-    fl.image(echo_data.C.mean('nScans'))
-#}}}    
-filename_out = filename + '.h5'
-nodename = echo_data.name()
-if os.path.exists(filename + ".h5"):
-    print("this file already exists so we will add a node to it!")
-    with h5py.File(
-        os.path.normpath(os.path.join(target_directory, f"{filename_out}"))
-    ) as fp:
-        if nodename in fp.keys():
-            print("this nodename already exists, so I will call it temp")
-            echo_data.name("temp")
-            nodename = "temp"
-    echo_data.hdf5_write(f"{filename_out}", directory=target_directory)
-else:
-    try:
-        echo_data.hdf5_write(f"{filename_out}", directory=target_directory)
-    except:
-        print(
-            f"I had problems writing to the correct file {filename}.h5, so I'm going to try to save your file to temp.h5 in the current directory"
-        )
-        if os.path.exists("temp.h5"):
-            print("there is a temp.h5 already! -- I'm removing it")
-            os.remove("temp.h5")
-            echo_data.hdf5_write("temp.h5")
-            print(
-                "if I got this far, that probably worked -- be sure to move/rename temp.h5 to the correct name!!"
-            )
 
-print("\n*** FILE SAVED IN TARGET DIRECTORY ***\n")
-print(("Name of saved data",echo_data.name()))
-print(("Shape of saved data",ndshape(echo_data)))
+#{{{acquire echo
+
+data = run_spin_echo(
+    nScans=config_dict['nScans'],
+    indirect_idx = 0,
+    indirect_len = 1,
+    ph1_cyc = ph1_cyc,
+    amplitude = config_dict["amplitude"],
+    adcOffset = config_dict['adc_offset'],
+    deblank_us=config_dict["deblank_us"],
+    carrierFreq_MHz = config_dict['carrierFreq_MHz'],
+    nPoints = nPoints,
+    nEchoes = 1,
+    plen = config_dict['beta_90_s_sqrtW'],
+    repetition_us = config_dict['repetition_us'],
+    tau_us = config_dict['tau_us'],
+    SW_kHz = config_dict['SW_kHz'],
+    ret_data = None)
+#}}}
+# {{{ chunk and save data
+data.chunk(
+    "t",
+    ["ph1", "t2"],
+    [len(ph1_cyc), -1],
+)
+data.setaxis("ph1", ph1_cyc / 4)
+data.reorder(["ph1", "nScans", "t2"])
+data.set_prop("postproc_type", "spincore_generalproc_v1")
+data.set_units("t2", "s")
+data.set_prop("coherence_pathway", {"ph1": 1})
+data.set_prop("acq_params", config_dict.asdict())
+#{{{Look at raw data
+fl.next('image')
+fl.image(data.C.mean('nScans'))
+#}}}    
+config_dict = save_data(data, my_exp_type, config_dict, "echo")
 config_dict.write()
-if phase_cycling:
-    echo_data.ft('t2',shift=True)
-    fl.next('image - ft')
-    fl.image(echo_data.C.mean('nScans'))
-    fl.next('image - ft, coherence')
-    echo_data.ft(['ph1'])
-    fl.image(echo_data.C.mean('nScans'))
-    fl.next('data plot')
-    data_slice = echo_data['ph1',1].C.mean('nScans')
-    fl.plot(data_slice, alpha=0.5)
-    fl.plot(data_slice.imag, alpha=0.5)
-    fl.plot(abs(data_slice), color='k', alpha=0.5)
-else:
-    fl.next('raw data')
-    fl.plot(echo_data)
-    echo_data.ft('t',shift=True)
-    fl.next('ft')
-    fl.plot(echo_data.real)
-    fl.plot(echo_data.imag)
-    fl.plot(abs(echo_data),color='k',alpha=0.5)
+data.ft('t2',shift=True)
+fl.next('image - ft')
+fl.image(data.C.mean('nScans'))
+fl.next('image - ft, coherence')
+data.ft(['ph1'])
+fl.image(data.C.mean('nScans'))
+fl.next('data plot')
+data_slice = data['ph1',1].C.mean('nScans')
+fl.plot(data_slice, alpha=0.5)
+fl.plot(data_slice.imag, alpha=0.5)
+fl.plot(abs(data_slice), color='k', alpha=0.5)
 fl.show()
