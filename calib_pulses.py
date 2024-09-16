@@ -13,13 +13,20 @@ calibrated using the GDS and AFG beforehand
 """
 import pyspecdata as psd
 import os
+import time
 import SpinCore_pp as spc
 from datetime import datetime
 from Instruments import GDS_scope
+from numpy import r_
 import numpy as np
 
 calibrating = True
+indirect = "t_pulse" if calibrating else "beta"
 my_exp_type = "test_equipment"
+nominal_power = 75
+nominal_atten = 1e4
+num_div_per_screen = 8
+n_lengths = 50
 assert os.path.exists(psd.getDATADIR(exp_type=my_exp_type))
 # {{{ importing acquisition parameters
 config_dict = spc.configuration("active.ini")
@@ -31,17 +38,19 @@ config_dict = spc.configuration("active.ini")
     config_dict["SW_kHz"], config_dict["acq_time_ms"]
 )
 # }}}
-# {{{ if the amplitude is small we want to go out to much longer pulse lengths
-if config_dict["amplitude"] > 0.5:
-    long_t_pulse = 28
-else:
-    long_t_pulse = 280
-# }}}
 if calibrating:
-    t_pulse_range = np.linspace(1, long_t_pulse, 30)
+    t_pulse_us = np.linspace(
+        0.5,
+        350
+        / np.sqrt(nominal_power)
+        / config_dict[
+            "amplitude"
+        ],  # if the amplitude is small we want to go out to much longer pulse lengths
+        n_lengths,
+    )
 else:
-    desired_beta = np.linspace(0.5, 100, 50)
-    t_pulse_range = spc.prog_plen(desired_beta, config_dict["amplitude"])
+    desired_beta = np.linspace(0.5e-6, 400e-6, n_lengths)  # s *sqrt(W)
+    t_pulse_us = spc.prog_plen(desired_beta, config_dict["amplitude"])
 # {{{ add file saving parameters to config dict
 config_dict["type"] = "pulse_calib"
 config_dict["date"] = datetime.now().strftime("%y%m%d")
@@ -49,10 +58,8 @@ config_dict["misc_counter"] += 1
 # }}}
 # {{{ ppg
 tx_phases = np.r_[0.0, 90.0, 180.0, 270.0]
-Rx_scans = 1
-datalist = []
-# {{{ set up settings for GDS
 with GDS_scope() as gds:
+    # {{{ set up settings for GDS
     gds.reset()
     gds.autoset
     gds.CH1.disp = True
@@ -63,8 +70,9 @@ with GDS_scope() as gds:
     gds.write(":CHAN4:DISP OFF")
     gds.write(":CHAN2:IMP 5.0E+1")  # set impedance to 50 ohm
     gds.write(":TRIG:SOUR CH2")
-    gds.write(":TRIG:LEV 1.5E-2")
     gds.write(":TRIG:MOD NORMAL")  # set trigger mode to normal
+    gds.write(":TRIG:LEV 1.5E-2")
+
     if config_dict["amplitude"] > 0.5:
         gds.CH2.voltscal = 500e-3  # set voltscale to 100 mV
         gds.timscal(5e-6, pos = 20e-6)  # set timescale to 50 us
@@ -81,7 +89,11 @@ with GDS_scope() as gds:
             nPoints,
         )
         acq_time = spc.configureRX(
-            config_dict["SW_kHz"], nPoints, Rx_scans, config_dict["nEchoes"], 1
+            config_dict["SW_kHz"], 
+            nPoints, 
+            1,
+            1,
+            1
         )  # Not phase cycling so setting nPhaseSteps to 1
         config_dict["acq_time_ms"] = acq_time
         spc.init_ppg()
