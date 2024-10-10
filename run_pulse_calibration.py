@@ -54,7 +54,7 @@ if calibrating:
     t_pulse_us = np.linspace(
         # if the amplitude is small we want to go out to much longer pulse lengths
         0.5 / np.sqrt(nominal_power) / config_dict["amplitude"],
-        350 / np.sqrt(nominal_power) / config_dict["amplitude"],
+        300 / np.sqrt(nominal_power) / config_dict["amplitude"],
         n_lengths,
     )
 else:

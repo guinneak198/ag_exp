@@ -35,11 +35,11 @@ def verifyParams():
 
 SW_kHz = 200
 
-output_name = '2toroid_2cable_14p89_a_'+str(SW_kHz)+'kHz'
+output_name = 'balProbe_amp0p1_after_c_'+str(SW_kHz)+'kHz'
 adcOffset = 39
 carrierFreq_MHz = 14.89
 tx_phases = r_[0.0,90.0,180.0,270.0]
-amplitude = 1.0
+amplitude = 0.1
 nScans = 100
 nEchoes = 1
 phase_cycling = False
@@ -54,7 +54,7 @@ if not phase_cycling:
 # as this is generally what the SpinCore takes
 # note that acq_time is always milliseconds
 #}}}
-p90 = 4.62
+p90 = 4
 deadtime = 10.0
 repetition = 1e4
 
@@ -112,14 +112,9 @@ for x in range(nScans):
         SpinCore_pp.load([
             ('marker','start',1),
             ('phase_reset',1),
-            #('delay_TTL',deblank),
-            #('pulse_TTL',p90,'ph1',r_[0,1,2,3]),
             ('delay',tau),
-            #('delay_TTL',deblank),
-            #('pulse_TTL',2.0*p90,'ph2',r_[0,2]),
             ('delay',deadtime),
             ('acquire',acq_time),
-            #('delay',pad),
             ('delay',repetition),
             ('jumpto','start')
             ])
@@ -127,14 +122,9 @@ for x in range(nScans):
         SpinCore_pp.load([
             ('marker','start',1),
             ('phase_reset',1),
-            #('delay_TTL',deblank),
-            #('pulse_TTL',p90,0),
             ('delay',tau),
-            #('delay_TTL',deblank),
-            #('pulse_TTL',2.0*p90,0),
             ('delay',deadtime),
             ('acquire',acq_time),
-            #('delay',pad),
             ('delay',repetition),
             ('jumpto','start')
             ])

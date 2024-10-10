@@ -3,8 +3,8 @@ from pyspecdata import *
 from serial.tools.list_ports import comports
 from pylab import axhline, text, gca
 import numpy as np
-expected_amp = 25e-3
-input_amp = 500.877318e-3
+expected_amp = 15e-3
+input_amp = 500.442e-3
 with figlist_var() as fl:
     with GDS_scope() as g:
         # {{{ choose settings we want
@@ -65,8 +65,8 @@ with figlist_var() as fl:
     frq = ph/Dt/2/pi
     # {{{ now, filter the signal
     data.ft('t')
-    data['t':(None,frq-5e6)] = 0
-    data['t':(frq+5e6,None)] = 0
+    data['t':(None,frq-10e6)] = 0
+    data['t':(frq+10e6,None)] = 0
     data.ift('t')
     # }}}
     fl.plot(data, label='filtered analytic signal')
