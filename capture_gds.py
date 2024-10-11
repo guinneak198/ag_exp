@@ -4,7 +4,7 @@ from serial.tools.list_ports import comports
 from pylab import axhline, text, gca
 import numpy as np
 expected_amp = 15e-3
-input_amp = 500.442e-3
+input_amp = 501.975e-3
 with figlist_var() as fl:
     with GDS_scope() as g:
         # {{{ choose settings we want
