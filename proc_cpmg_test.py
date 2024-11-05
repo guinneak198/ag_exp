@@ -6,7 +6,7 @@ fl = figlist_var()
 # {{{ load the files that we're interested in as different nddata objects
 all_data = {}
 pathways = {}
-# {{{ 240624 - 0 dB
+# {{{ 240625 - 0 dB
 #all_data["Hahn 0 dB"] = find_file(
 #    "240625_200uM_TEMPOL_0dB_echo.h5",
 #    exp_type="ODNP_NMR_comp/Echoes",
@@ -25,18 +25,6 @@ pathways = {}
 #    expno="echo_4",
 #    lookup = lookup_table
 #)
-#all_data["CPMG"] = find_file(
-#    "240625_200uM_TEMPOL_prep_generic_CPMG.h5",
-#    exp_type="ODNP_NMR_comp/Echoes",
-#    expno="CPMG_1",
-#    lookup = lookup_table
-#)
-#all_data["CPMG 0 dB - 1"] = find_file(
-#    "240625_200uM_TEMPOL_0dB_generic_CPMG.h5",
-#    exp_type="ODNP_NMR_comp/Echoes",
-#    expno="CPMG_1",
-#    lookup = lookup_table
-#)
 #all_data["CPMG 0 dB - 1"] = find_file(
 #    "240625_200uM_TEMPOL_0dB_generic_CPMG.h5",
 #    exp_type="ODNP_NMR_comp/Echoes",
@@ -51,54 +39,55 @@ pathways = {}
 #)
 # }}}
 # {{{ 240624 - 30 dB
-all_data["CPMG 30 dB - 1"] = find_file(
-    "240625_200uM_TEMPOL_30dB_generic_CPMG.h5",
-    exp_type="ODNP_NMR_comp/Echoes",
-    expno="CPMG_1",
-    lookup = lookup_table
-)
-all_data["CPMG 30 dB - 2"] = find_file(
-    "240625_200uM_TEMPOL_30dB_generic_CPMG.h5",
-    exp_type="ODNP_NMR_comp/Echoes",
-    expno="CPMG_3",
-    lookup = lookup_table
-)
-all_data["SE 30 dB - 1"] = find_file(
-    "240625_200uM_TEMPOL_30dB_generic_echo.h5",
-    exp_type="ODNP_NMR_comp/Echoes",
-    expno="echo_2",
-    lookup = lookup_table
-)
-all_data["SE 30 dB - 2"] = find_file(
-    "240625_200uM_TEMPOL_30dB_generic_echo.h5",
-    exp_type="ODNP_NMR_comp/Echoes",
-    expno="echo_4",
-    lookup = lookup_table
-)
-#all_data["SE 34 dB - 1"] = find_file(
-#    "240625_200uM_TEMPOL_34dB_generic_echo.h5",
-#    exp_type="ODNP_NMR_comp/Echoes",
-#    expno="echo_2",
-#    lookup = lookup_table
-#)
-#all_data["SE 34 dB - 2"] = find_file(
-#    "240625_200uM_TEMPOL_34dB_generic_echo.h5",
-#    exp_type="ODNP_NMR_comp/Echoes",
-#    expno="echo_4",
-#    lookup = lookup_table
-#)
-#all_data["CPMG 34 dB - 1"] = find_file(
-#    "240625_200uM_TEMPOL_34dB_generic_CPMG.h5",
+#all_data["CPMG 30 dB - 1"] = find_file(
+#    "240625_200uM_TEMPOL_30dB_generic_CPMG.h5",
 #    exp_type="ODNP_NMR_comp/Echoes",
 #    expno="CPMG_1",
 #    lookup = lookup_table
 #)
-#all_data["CPMG 34 dB - 2"] = find_file(
-#    "240625_200uM_TEMPOL_34dB_generic_CPMG.h5",
+#all_data["CPMG 30 dB - 2"] = find_file(
+#    "240625_200uM_TEMPOL_30dB_generic_CPMG.h5",
 #    exp_type="ODNP_NMR_comp/Echoes",
 #    expno="CPMG_3",
 #    lookup = lookup_table
 #)
+#all_data["SE 30 dB - 1"] = find_file(
+#    "240625_200uM_TEMPOL_30dB_generic_echo.h5",
+#    exp_type="ODNP_NMR_comp/Echoes",
+#    expno="echo_2",
+#    lookup = lookup_table
+#)
+#all_data["SE 30 dB - 2"] = find_file(
+#    "240625_200uM_TEMPOL_30dB_generic_echo.h5",
+#    exp_type="ODNP_NMR_comp/Echoes",
+#    expno="echo_4",
+#    lookup = lookup_table
+#)
+# {{{ 240625 34 dBm
+all_data["SE 34 dB - 1"] = find_file(
+    "240625_200uM_TEMPOL_34dB_generic_echo.h5",
+    exp_type="ODNP_NMR_comp/Echoes",
+    expno="echo_2",
+    lookup = lookup_table
+)
+all_data["SE 34 dB - 2"] = find_file(
+    "240625_200uM_TEMPOL_34dB_generic_echo.h5",
+    exp_type="ODNP_NMR_comp/Echoes",
+    expno="echo_4",
+    lookup = lookup_table
+)
+all_data["CPMG 34 dB - 1"] = find_file(
+    "240625_200uM_TEMPOL_34dB_generic_CPMG.h5",
+    exp_type="ODNP_NMR_comp/Echoes",
+    expno="CPMG_1",
+    lookup = lookup_table
+)
+all_data["CPMG 34 dB - 2"] = find_file(
+    "240625_200uM_TEMPOL_34dB_generic_CPMG.h5",
+    exp_type="ODNP_NMR_comp/Echoes",
+    expno="CPMG_3",
+    lookup = lookup_table
+)
 # }}}
 with figlist_var() as fl:
     for thislabel, thisd in all_data.items():
@@ -109,10 +98,6 @@ with figlist_var() as fl:
             thisd *= thisd.shape['nScans']
             thisd.mean('nScans')
         d = thisd
-        if 'Hahn' in thislabel:
-            d /= sqrt(d.shape['ph1'])
-        else:
-            d /= sqrt(d.shape['ph_overall']*d.shape['ph1'])
         d.ift('t2')
         fl.next('raw data for %s'%thislabel)
         #if 'indirect' in d.dimlabels:
