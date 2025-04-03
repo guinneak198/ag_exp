@@ -19,15 +19,18 @@ from numpy import r_
 
 my_exp_type = "ODNP_NMR_comp/nutation"
 assert os.path.exists(psd.getDATADIR(exp_type=my_exp_type))
-beta_range_s_sqrtW = np.linspace(0.5e-6, 100e-6, 60)
 # {{{importing acquisition parameters
 config_dict = SpinCore_pp.configuration("active.ini")
+# cover 2 lobes based on expected beta_range_s_sqrtW in active.ini
+beta_range_s_sqrtW = r_[1:1+config_dict['indirect_pts']]/config_dict['indirect_pts'] * 3.5 * config_dict['beta_90_s_sqrtW']
 prog_p90_us = prog_plen(beta_range_s_sqrtW, config_dict)
 (
     nPoints,
     config_dict["SW_kHz"],
     config_dict["acq_time_ms"],
-) = get_integer_sampling_intervals(config_dict["SW_kHz"], config_dict["acq_time_ms"])
+) = get_integer_sampling_intervals(
+    config_dict["SW_kHz"], config_dict["acq_time_ms"]
+)
 # }}}
 # {{{add file saving parameters to config dict
 config_dict["type"] = "nutation"
@@ -41,13 +44,14 @@ nPhaseSteps = len(ph1_cyc) * len(ph2_cyc)
 # }}}
 # {{{let computer set field
 input(
-    "I'm assuming that you've tuned your probe to %f since that's what's in your .ini file. Hit enter if this is true"
+    "I'm assuming that you've tuned your probe to %f since that's what's in   "
+    " your .ini file. Hit enter if this is true"
     % config_dict["carrierFreq_MHz"]
 )
 field_G = config_dict["carrierFreq_MHz"] / config_dict["gamma_eff_MHz_G"]
 print(
-    "Based on that, and the gamma_eff_MHz_G you have in your .ini file, I'm setting the field to %f"
-    % field_G
+    "Based on that, and the gamma_eff_MHz_G you have in your .ini file, I'm   "
+    " setting the field to %f" % field_G
 )
 with xepr() as x:
     assert field_G < 3700, "are you crazy??? field is too high!"
@@ -58,7 +62,9 @@ with xepr() as x:
 # {{{check total points
 total_pts = nPoints * nPhaseSteps
 assert total_pts < 2**14, (
-    "You are trying to acquire %d points (too many points) -- either change SW or acq time so nPoints x nPhaseSteps is less than 16384\nyou could try reducing the acq_time_ms to %f"
+    "You are trying to acquire %d points (too many points) -- either change SW"
+    "    or acq time so nPoints x nPhaseSteps is less than 16384\nyou could"
+    " try    reducing the acq_time_ms to %f"
     % (total_pts, config_dict["acq_time_ms"] * 16384 / total_pts)
 )
 # }}}

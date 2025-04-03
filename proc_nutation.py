@@ -1,171 +1,97 @@
-from sympy import symbols
-import sympy as sp
-from itertools import cycle
-from pylab import axhline, title, gca, axvline, ylabel, tight_layout, legend
-import matplotlib.pyplot as plt
-from pyspecProcScripts import *
-from pyspecdata import (
-    nddata,
-    r_,
-    find_file,
-    lmfitdata,
-    figlist_var,
-    k_B,
-    gammabar_H,
-    hbar,
-    ndshape
-)
-from numpy import std, sqrt, pi, mean, sinc, conj, diff, log10, exp
-import numpy as np
-signal_pathway = {'ph1':1,'ph2':-2}#{'ph1':0,'ph2':1}
-fl = figlist_var()
-for searchstr,exptype,nodename,postproc,freq_slice in [
-    ['240715_27mM_TEMPOL_test_nutation','ODNP_NMR_comp/nutation','nutation_5',
-        'None',(-800,800)]
-    ]:
-    s = find_file(searchstr,exp_type=exptype,expno=nodename)
-    s.set_units('p_90','s')
-    s.ft(['ph1','ph2'],unitary = True)
-    s.reorder(['nScans','ph1','ph2', 'p_90'])
-    s.ft('t2',shift = True)
-    s.ift('t2')
-    s.set_units('t2','s')
-    for_herm = select_pathway(s,signal_pathway)
-    s.ft('t2')
-    s = s['t2':freq_slice]
-    fl.next('for herm sign flip')
-    #for_herm *= mysgn
-    fl.image(for_herm)
-    s.ift('t2')
-    ## {{{ phasing
-    s['t2'] -= s.getaxis('t2')[0]
-    signflip = for_herm.C.ft('t2')['t2':(-500,500)]
-    idx = abs(signflip).mean_all_but('t2').data.argmax()
-    signflip = signflip['t2',idx]
-    ph0 = zeroth_order_ph(signflip)
-    signflip /= ph0
-    signflip.run(np.real)
-    signflip /= abs(signflip)
-    for_herm /= signflip
-    for_herm.mean_all_but('t2')
-    best_shift = hermitian_function_test(for_herm,fl=fl)
-    best_shift = s.get_prop('acq_params')['tau_us']*1e-6#3.5e-3
-    s.setaxis('t2', lambda x: x - best_shift).register_axis({'t2':0})
-    #ph0 = zeroth_order_ph(s['t2':(-500,500)].C.sum('t2'))
-    #s /= ph0
-    # }}}
-    ## {{{ FID slice
-    #s = s['t2':(0,None)]
-    #s *= 2
-    #s['t2',0] *= 0.5
-    s.ft('t2')
-    fl.next('phased')
-    fl.image(s)
-    fl.next('phased and averaged')
-    fl.image(s.C.mean('nScans'))
-    s.ift('t2')
-    fl.next('time domain phased')
-    fl.image(s)
-    filter_t_const = 10e-3
-    apo_fn = exp(-abs((s.fromaxis('t2')-s.get_prop('acq_params')['tau_us']*1e-6))/filter_t_const)
-    s *= apo_fn
-    #s /= zeroth_order_ph(select_pathway(s['t2':0],signal_pathway))
-    # }}}
-    #lambda_L = fit_envelope(s.C.mean('nScans'), fl=fl)
-    s.ft('t2')
-    fl.next('apodized and averaged')
-    #s.mean('nScans')
-    fl.image(s)
-    s.ift('t2')
-    s = s['t2':(0,None)]
-    s *= 2
-    s['t2':0] * 0.5
-    s.ft('t2')
-    #s.ift('t2')
-    #ph0 = zeroth_order_ph(s['t2':(-500,500)].C.sum('t2'))
-    #s /= ph0
-    #s.ft('t2')
-    fl.next('FID slice the phased, apo, and averaged data')
-    fl.image(s)
-    #s = select_pathway(s,signal_pathway)
-    #fl.next('pcolor')
-    #s.pcolor()
-    #fl.show();quit()
-    #s = s['ph1',1]['ph2',-2].C + s['ph1',-1]['ph2',0].C
-    #d = s.real.integrate('t2')
-    #print(ndshape(d))
-    #fl.next('integrate the FID slice')
-    #fl.plot(d,'o')
-    #fl.show();quit()
-    ##s.mean('nScans')
-    #fl.next('apodized')
-    #fl.image(s.C.mean('nScans'))
-    #fl.show();quit()
-    # {{{ roughly align
-    #for_sign = s['ph1',1]['ph2',-2].C + s['ph1',-1]['ph2',0].C
-    mysgn = determine_sign(select_pathway(s,signal_pathway))
-    #matched = (select_pathway(s,signal_pathway)*mysgn).ift('t2')
-    #matched *= exp(-pi*lambda_L*matched.fromaxis('t2'))
-    #matched.ft('t2')
-    #frq_atmax = matched.real.argmax('t2')
-    #s.ift('t2')
-    #t2 = s.fromaxis('t2')
-    #s *= exp(-1j*2*pi*frq_atmax*t2)
-    #s.ft('t2')
-    #fl.next('simple shift')
-    #fl.image(s)
-    # }}}
-    # {{{apply correlation alignment
-    s.ift(list(signal_pathway))
-    s *= mysgn
-    fl.next('before alignment')
-    fl.image(select_pathway(s,signal_pathway))
-    opt_shift,sigma,my_mask = correl_align(
-            s,#*mysgn, 
-            indirect_dim='p_90',
-            sigma = 50,
-            signal_pathway=signal_pathway)
-    s.ift('t2')
-    s *= np.exp(-1j*2*pi*opt_shift*s.fromaxis('t2'))
-    s.ft(list(signal_pathway))
-    s = s['t2':(0,None)]
-    s *= 2
-    s['t2':0] *= 0.5
-    s.ft('t2')
-    fl.next('after alignment')
-    fl.image(select_pathway(s,signal_pathway))
-    s *= mysgn
-    fl.next('after sign flip')
-    fl.image(select_pathway(s,signal_pathway))
-    s = select_pathway(s,signal_pathway)
-    # }}}
-    fl.next('line for p90')
-    s.setaxis('p_90',s.get_prop('prog_p90s'))
-    s = s.real.mean('nScans').integrate('t2')
-    #s = s['nScans',1].real.integrate('t2')
-    #s['p_90'] *= 39.4/4.52
-    fl.plot(s,'o',label = 'actual p90s')
-    # {{{ Fit
-    #A, omega, p_90 = symbols("A omega p_90",real=True)
-    #f = lmfitdata(s)
-    #f.functional_form = (A*sp.sin(omega*p_90))
-    #f.set_guess(
-    #        A = dict(value = s.data.max(), min = s.data.max()/1.2, max = s.data.max()*2),
-    #        omega = dict(value = 5e4, min =0, max = 10e6),
-    #        )
-    #f.settoguess()
-    #fl.plot(f.eval(100),color = 'red')
-    #f.fit()
-    #fit = f.eval(100)
-    #fl.plot(fit)
-    #fl.next('Fixed phasing')
-    #fl.plot(s,'o')
-    ##fl.plot(fit)
-    #t90_sqrt_P = fit.argmax('p_90').item()
-    #print(t90_sqrt_P*1e6/(39.4/4.52))
-    ##plt.axvline(t90_sqrt_P*1e6, label = '$t_{90}\sqrt{P}$ = %0.3f$\mu$s$\sqrt{W}$'%(t90_sqrt_P*1e6))
-    ##plt.xlabel('$t_{90}\sqrt{P}$')
-    ##plt.legend()
-    ## }}}
-    fl.show()
+"""
+Process nutation data
+=====================
 
+`py proc_nutation.py NODENAME FILENAME EXP_TYPE`
+
+Fourier transforms (and any needed data corrections for older data) are
+performed according to the `postproc_type` attribute of the data node.
+This script plots the result as well as examines the phase variation along the
+indirect dimension.
+Finally, the data is integrated and fit to a sin**3 function to find the
+optimal beta_ninety.
+
+Tested with:
+
+``py proc_nutation.py nutation_1 240805_amp0p1_27mM_TEMPOL_nutation.h5\
+        ODNP_NMR_comp/nutation``
+"""
+
+import pyspecdata as psd
+import pyspecProcScripts as prscr
+import sympy as sp
+import sys, os
+from numpy import r_
+
+# even though the following comes from pint, import the instance from
+# pyspecdata, because we might want to mess with it.
+from pyspecdata import Q_
+
+if (
+    "SPHINX_GALLERY_RUNNING" in os.environ
+    and os.environ["SPHINX_GALLERY_RUNNING"] == "True"
+):
+    sys.argv = [
+        sys.argv[0],
+        "nutation_1",
+        "240805_amp0p1_27mM_TEMPOL_nutation.h5",
+        "ODNP_NMR_comp/nutation",
+    ]
+
+slice_expansion = 5
+assert len(sys.argv) == 4
+s = psd.find_file(
+    sys.argv[2],
+    exp_type=sys.argv[3],
+    expno=sys.argv[1],
+    lookup=prscr.lookup_table,
+)
+with psd.figlist_var() as fl:
+    frq_center, frq_half = prscr.find_peakrange(s, fl=fl)
+    signal_range = tuple(slice_expansion * r_[-1, 1] * frq_half + frq_center)
+    if "nScans" in s.dimlabels:
+        s.mean("nScans")
+    s.set_plot_color(
+        "g"
+    )  # this affects the 1D plots, but not the images, etc.
+    # {{{ generate the table of integrals and fit
+    s, ax_last = prscr.rough_table_of_integrals(
+        s, signal_range, fl=fl, title=sys.argv[2], echo_like=True
+    )
+    prefactor_scaling = 10 ** psd.det_unit_prefactor(s.get_units("beta"))
+    A, R, beta_ninety, beta = sp.symbols("A R beta_ninety beta", real=True)
+    s = psd.lmfitdata(s)
+    s.functional_form = (
+        A * sp.exp(-R * beta) * sp.sin(beta / beta_ninety * sp.pi / 2) ** 3
+    )
+    s.set_guess(
+        A=dict(
+            value=s.data.max(),
+            min=s.data.max() * 0.8,
+            max=s.data.max() * 1.5,
+        ),
+        R=dict(
+            value=1e3 * prefactor_scaling, min=0, max=3e4 * prefactor_scaling
+        ),
+        beta_ninety=dict(
+            value=20e-6 / prefactor_scaling,
+            min=0,
+            max=1000e-6 / prefactor_scaling,
+        ),
+    )
+    s.fit()
+    # }}}
+    # {{{ show the fit and the β₉₀
+    fit = s.eval(500)
+    psd.plot(fit, ax=ax_last, alpha=0.5)
+    ax_last.set_title("Integrated and fit")
+    beta_90 = s.output("beta_ninety")
+    ax_last.axvline(beta_90, color="b")
+    ax_last.text(
+        beta_90 + 5,
+        5e4,
+        r"$\beta_{90} = " + f"{Q_(beta_90,s.get_units('beta')):0.1f~L}$",
+        color="b",
+    )
+    # }}}
+    ax_last.grid()
