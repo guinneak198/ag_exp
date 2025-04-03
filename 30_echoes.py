@@ -12,7 +12,7 @@ from Instruments import power_control
 from datetime import datetime
 
 logger = init_logging(level="debug")
-target_directory = getDATADIR(exp_type="ODNP_NMR_comp/ODNP")
+target_directory = getDATADIR(exp_type="ODNP_NMR_comp/Echoes")
 fl = figlist_var()
 # {{{ import acquisition parameters
 parser_dict = SpinCore_pp.configuration("active.ini")
@@ -20,11 +20,12 @@ nPoints = int(parser_dict["acq_time_ms"] * parser_dict["SW_kHz"] + 0.5)
 # }}}
 # {{{create filename and save to config file
 date = datetime.now().strftime("%y%m%d")
-parser_dict["type"] = "ODNP"
+parser_dict["type"] = "echo"
 parser_dict["date"] = date
-parser_dict["odnp_counter"] += 1
-filename = f"{parser_dict['date']}_{parser_dict['chemical']}_{parser_dict['type']}_{parser_dict['odnp_counter']}"
+parser_dict["echo_counter"] += 1
+filename = f"{parser_dict['date']}_{parser_dict['chemical']}_{parser_dict['type']}"
 filename_out = filename + ".h5"
+n_repeats = 60
 # }}}
 # {{{phase cycling
 Ep_ph1_cyc = r_[0, 1, 2, 3]
@@ -45,13 +46,15 @@ if os.path.exists(filename_out):
 DNP_data = run_spin_echo(
     nScans=parser_dict["nScans"],
     indirect_idx=0,
-    indirect_len=29 + 1,
+    indirect_len=n_repeats,
     ph1_cyc=Ep_ph1_cyc,
+    deblank_us=parser_dict["deblank_us"],
     adcOffset=parser_dict["adc_offset"],
     carrierFreq_MHz=parser_dict["carrierFreq_MHz"],
     nPoints=nPoints,
     nEchoes=parser_dict["nEchoes"],
-    p90_us=parser_dict["p90_us"],
+    amplitude = parser_dict["amplitude"],
+    plen=parser_dict["beta_90_s_sqrtW"],
     repetition_us=parser_dict["repetition_us"],
     tau_us=parser_dict["tau_us"],
     SW_kHz=parser_dict["SW_kHz"],
@@ -64,16 +67,18 @@ DNP_data = run_spin_echo(
 #                         designed to be moved outside the module
 time_axis_coords = DNP_data.getaxis("indirect")
 time_axis_coords[0] = 0
-for j in range(29):
+for j in range(n_repeats-1):
     run_spin_echo(
+        deblank_us=parser_dict["deblank_us"],
         nScans=parser_dict["nScans"],
         indirect_idx=j + 1,
-        indirect_len=29 + 1,
+        indirect_len=n_repeats,
         adcOffset=parser_dict["adc_offset"],
         carrierFreq_MHz=parser_dict["carrierFreq_MHz"],
         nPoints=nPoints,
         nEchoes=parser_dict["nEchoes"],
-        p90_us=parser_dict["p90_us"],
+        amplitude = parser_dict["amplitude"],
+        plen=parser_dict["beta_90_s_sqrtW"],
         repetition_us=parser_dict["repetition_us"],
         tau_us=parser_dict["tau_us"],
         SW_kHz=parser_dict["SW_kHz"],
@@ -84,8 +89,12 @@ DNP_data.chunk("t", ["ph1", "t2"], [len(Ep_ph1_cyc), -1])
 DNP_data.setaxis("ph1", Ep_ph1_cyc / 4)
 DNP_data.setaxis("nScans", r_[0 : parser_dict["nScans"]])
 DNP_data.reorder(["ph1", "nScans", "t2"])
-DNP_data.name('echo')
-nodename = 'echo'
+nodename = (
+    parser_dict["type"]
+    + "_"
+    + str(parser_dict["echo_counter"])
+)
+DNP_data.name(nodename)
 try:
     DNP_data.hdf5_write(f"{filename_out}", directory=target_directory)
 except:

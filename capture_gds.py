@@ -9,7 +9,7 @@ from Instruments import GDS_scope
 from pyspecdata import figlist_var
 from pylab import axhline, text, gca
 
-expected_Vamp = 500e-3  # what is expected on the GDS
+expected_Vamp = 250e-3  # what is expected on the GDS
 assert expected_Vamp < 505e-3, (
     "That's way too high of a peak voltage! You either need an attenuator or"
     " you didn't put the input in units of V"
